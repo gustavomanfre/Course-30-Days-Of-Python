@@ -1,0 +1,137 @@
+✅ 1. Variables en Python.
+
+╔══════════════════════════════════╗
+║            OBJETO                ║
+╠══════════════════════════════════╣
+║ Identidad (id)                   ║
+║ Tipo/clase                       ║
+║ Valor interno                    ║
+║ Atributos                        ║
+║ Métodos                          ║
+║ Métodos mágicos (dunder)         ║
+║ Diccionario interno (__dict__)   ║
+║ Slots internos (si existen)      ║
+╚══════════════════════════════════╝
+
+Todo en Python es un objeto: números, funciones, módulos, clases, tipos, listas, excepciones, etc.
+
+obj = [1, 2, 3]
+
+print("Tipo:", type(obj))   #type() → clase del objeto
+Tipo: <class 'list'>
+
+print("ID:", id(obj))       #id() → dirección en memoria (o referencia única)
+ID: 140045331029264
+
+print("Valor interno:", obj) #Valor interno → lo que contiene el objeto
+Valor interno: [1, 2, 3]
+
+print(dir(obj))             #Esto muestra todos los atributos, métodos mágicos, métodos disponibles, etc.
+['__add__', '__class__', '__contains__', ..., 'append', 'clear', 'copy', 'extend', ...]
+
+print(obj.__dict__)         #Muchos objetos en Python tienen un diccionario interno donde guardan atributos. Esto es normal: las listas optimizan memoria y no tienen __dict__.
+AttributeError: 'list' object has no attribute '__dict__'
+
+help(obj)                   #Esto muestra toda la documentación oficial del tipo.
+
+print(obj.__class__)        # Para ver la clase del objeto, indican que las listas heredan de object.
+
+print(obj.__class__.mro())  #Method Resolution Order (orden de herencia)
+[<class 'list'>, <class 'object'>]
+
+import inspect
+print(inspect.getmembers(obj)) #muestra todo: métodos, atributos, valores internos, funciones heredadas, funciones mágicas
+
+# Inspeccionar un objeto totalmente.
+import inspect
+
+def inspeccionar(o):
+    print("=== INSPECCIÓN DE OBJETO ===")
+    print("Tipo:", type(o))
+    print("ID:", id(o))
+    print("Valor interno:", repr(o))
+    print("\nAtributos y métodos:")
+    print(dir(o))
+    print("\nAtributos del objeto (si existen):")
+    print(getattr(o, "__dict__", "No tiene __dict__"))
+    print("\nMRO (Jerarquía):")
+    print(type(o).mro())
+    print("\nMétodos:")
+    print([m for m in dir(o) if callable(getattr(o, m))])
+    print("\nAtributos no llamables:")
+    print([a for a in dir(o) if not callable(getattr(o, a))])
+
+obj = [1, 2, 3]
+inspeccionar(obj)
+
+✅ 2. En Python, una variable es simplemente un nombre que referencia un objeto en memoria.
+
+    ∙ Se crea un objeto de tipo int con valor 10.
+    ∙ El nombre x apunta a ese objeto.
+
+         x = 10
+
+✅ 3. Variables y mapeo en memoria 
+
+x = 10
+y = 10
+x = y
+x = 20
+
+Analicemos paso por paso:
+
+x = 10
+x → objeto 10 // x contiene referencia (apuntan) a objeto 10
+
+y = 10
+Como los enteros pequeños están internados (“interning”), Python reutiliza el mismo objeto:
+y → objeto 10 // x e y contienen referencia (apuntan) al mismo objeto 10
+
+x = 20
+Ahora x contiene referencia (apunta) a un nuevo objeto 20, y sigue apuntando a 10.
+x → 20
+y → 10
+
+✅ 4. Tipado dinámico y fuerte en Python
+
+✅ 5. Variables como argumentos de funciones (pass-by-object-reference).
+
+    ∙ Se pasan las referencias a los objetos, no copias.
+    ∙ Pero no se pasa la variable, es decir, dentro de la función NO puedes cambiar qué variable externa apunta a un objeto.
+
+-Objeto inmutable (int, str, tuple)
+
+    def incrementar(n):
+        n = n + 1
+        print("Dentro:", n)
+
+    x = 10
+    incrementar(x)
+    print("Fuera:", x)
+
+Salida
+Dentro: 11
+Fuera: 10
+
+Explicación:
+
+    ∙n recibe la referencia al objeto 10. Luego n = n + 1 crea un nuevo objeto 11. x no cambia porque los enteros son inmutables.
+
+-Objeto mutable (list, dict, set)
+    def agregar(lista):
+        lista.append(4)
+        print("Dentro:", lista)
+
+    x = [1, 2, 3]
+    agregar(x)
+    print("Fuera:", x)
+
+Salida:
+Dentro: [1, 2, 3, 4]
+Fuera: [1, 2, 3, 4]
+
+Explicación:
+
+    ∙lista apunta al mismo objeto que x.
+    ∙.append() modifica el objeto, no la referencia.
+    ∙Por eso el cambio se ve fuera de la función.
