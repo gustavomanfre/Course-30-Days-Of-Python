@@ -1,0 +1,26 @@
+######################################################################################################################################################
+El for en Colecciones (Listas o Cadenas) 
+
+frutas = ["🍎", "🍌", "🍇"]
+for fruta in frutas:
+    print(f"Hoy comeré: {fruta}")
+
+La variable fruta va tomando el valor de cada elemento de la lista automáticamente.
+
+######################################################################################################################################################
+El for con range() (Para contar), este es el más parecido a otros lenguajes. Se usa cuando sabes exactamente cuántas veces quieres que se repita algo.
+
+# Imprime los números del 0 al 2
+for i in range(3):
+    print(f"Número: {i}") # Imprime 0, 1, 2 es decir imprime 3 numeros, range(3) genera una secuencia que empieza en 0 desde 0 hasta i-1 con i=3
+
+######################################################################################################################################################
+
+El for con enumerate() (Valor e Índice).
+A veces necesitas el objeto, pero también saber en qué posición está (el índice).
+
+nombres = ["Ana", "Luis"]
+for indice, nombre in enumerate(nombres):
+    print(f"Posición {indice}: {nombre}")
+    
+######################################################################################################################################################

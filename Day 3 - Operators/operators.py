@@ -81,9 +81,12 @@ import math
 d = math.sqrt((x2-x1)**2 + (y2-y1)**2)
 print(d)
 
-#Compare las pendientes en las tareas 8 y 9.
+#10-Compare las pendientes en las tareas 8 y 9.
+        #Pendiente de la Tarea 8 (m8​): 2
+        #Pendiente de la Tarea 9 (m9​): 2
 
 #Calcular el valor de y (y = x^2 + 6x + 9). Trate de utilizar diferentes valores de x y averiguar en qué valor de x y va a ser 0.
+
 
 #Encuentre la longitud de 'pitón' y 'dragón' y haga una declaración de comparación falsa.
 
