@@ -1,26 +1,52 @@
+
 ######################################################################################################################################################
-El for en Colecciones (Listas o Cadenas) 
+FOR EN COLECCIONES (LISTAS O CADENAS) 
 
 frutas = ["🍎", "🍌", "🍇"]
 for fruta in frutas:
     print(f"Hoy comeré: {fruta}")
 
 La variable fruta va tomando el valor de cada elemento de la lista automáticamente.
+________________________________________________________________________________________________________________________________________________________
 
-######################################################################################################################################################
-El for con range() (Para contar), este es el más parecido a otros lenguajes. Se usa cuando sabes exactamente cuántas veces quieres que se repita algo.
+FOR CON RANGE (PARA CONTAR)
+Este es el más parecido a otros lenguajes. Se usa cuando sabes exactamente cuántas veces quieres que se repita algo.
 
 # Imprime los números del 0 al 2
 for i in range(3):
     print(f"Número: {i}") # Imprime 0, 1, 2 es decir imprime 3 numeros, range(3) genera una secuencia que empieza en 0 desde 0 hasta i-1 con i=3
 
-######################################################################################################################################################
+________________________________________________________________________________________________________________________________________________________
 
-El for con enumerate() (Valor e Índice).
+FOR CON ENUMERATE (VALOR E INDICE).
 A veces necesitas el objeto, pero también saber en qué posición está (el índice).
 
 nombres = ["Ana", "Luis"]
 for indice, nombre in enumerate(nombres):
     print(f"Posición {indice}: {nombre}")
-    
+######################################################################################################################################################
+
+######################################################################################################################################################
+
+OPERADORES DE COMPARACION.
+==       EQUAL                       x == y
+!=       NOT EQUAL                   x != y
+>        GREATER THAN                x > y
+<        LESS THAN                   x < y
+>=       GREATER THAN OR EQUAL TO    x >= y
+<=       LESS THAN OR EQUAL TO       x <= y
+
+######################################################################################################################################################
+
+######################################################################################################################################################
+OPERADOR "==" E "IS"
+En Python, "==" e "is" se usan para comparar, operan en niveles diferentes de la realidad de un programa.
+
+    -Operador == (Igualdad) 💰: Compara los valores (el contenido) de los objetos.
+    -Operador is (Identidad) 🆔: Compara la identidad u ubicación en memoria. Se pregunta: "¿Estas dos variables apuntan exactamente al mismo objeto físico en la memoria RAM?".Aquí Python revisa la identidad (su lugar en la memoria).
+
+
+
+
+
 ######################################################################################################################################################

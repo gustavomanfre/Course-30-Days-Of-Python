@@ -82,15 +82,36 @@ d = math.sqrt((x2-x1)**2 + (y2-y1)**2)
 print(d)
 
 #10-Compare las pendientes en las tareas 8 y 9.
-        #Pendiente de la Tarea 8 (m8​): 2
-        #Pendiente de la Tarea 9 (m9​): 2
+        # == (Igualdad de Valor 🤝): Este operador pregunta: "¿Tienen el mismo contenido?"Compara los valores (el contenido) de los objetos.
+        #is (Identidad de Objeto 🧠): Este operador pregunta: "¿Son exactamente el mismo objeto en la memoria de la computadora?" Compara las direcciones de memoria (la identidad única) de los objetos.
+print((2 == (y2-y1)/(x2-x1)))
 
-#Calcular el valor de y (y = x^2 + 6x + 9). Trate de utilizar diferentes valores de x y averiguar en qué valor de x y va a ser 0.
+#11-Calcular el valor de y (y = x^2 + 6x + 9). Trate de utilizar diferentes valores de x y averiguar en qué valor de x y va a ser 0.
+for x in range (-10,11):
+   y = x**2 + 6*x + 9
+
+   if y == 0:
+      print(f"Se encontró el cero en x = {x}")
+      break
+   else:
+        print("La solucion no se encontro en el valor actual")
 
 
-#Encuentre la longitud de 'pitón' y 'dragón' y haga una declaración de comparación falsa.
+#12-Encuentre la longitud de 'pythón' y 'dragón' y haga una declaración de comparación falsa.
+p = 'python'
+d = 'dragon'
 
-#Utilizar y operario para comprobar si 'encendido' se encuentra tanto en 'python' como en 'dragon'
+l1 = len(p)
+l2 = len(d)
+
+resultado = l1 > l2 
+
+print(f"Longitud de '{p}': {l1}")
+print(f"Longitud de '{d}': {l2}")
+print(f"¿Es la longitud de '{p}' mayor que la de '{d}'?: {resultado}")
+
+#13-Utilizar operador "and" para comprobar si 'on' se encuentra tanto en 'python' como en 'dragon'
+
 
 #Espero que este curso no esté lleno de jerga. Utilice en el operador para comprobar si la jerga está en la oración.
 
