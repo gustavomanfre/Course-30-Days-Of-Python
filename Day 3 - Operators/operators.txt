@@ -38,6 +38,15 @@ OPERADORES DE COMPARACION.
 
 ######################################################################################################################################################
 
+OPERADORES ARIMECTICOS
+    Addition(+): a + b              #Suma: Agrega un valor a otro.
+    Subtraction(-): a - b           #Resta: Quita un valor de otro.
+    Multiplication(*): a * b        #Calcula el producto. Ejemplo: 3 * 4
+    Division(/): a / b              #Divide el primer número por el segundo.
+    Modulus(%): a % b               #Módulo (%): Devuelve el residuo o lo que sobra de la división. Ejemplo: 7 % 2
+    Floor division(//): a // b      #División de piso (//): Realiza la división y descarta la parte decimal, devolviendo solo el número entero hacia abajo
+    Exponentiation(**): a ** b      #Eleva el primer número a la potencia del segundo. 2 ** 3 es lo mismo que 23 (2×2×2), lo que resulta en 8.
+
 ######################################################################################################################################################
 OPERADOR "==" E "IS"
 En Python, "==" e "is" se usan para comparar, operan en niveles diferentes de la realidad de un programa.

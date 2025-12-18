@@ -113,29 +113,37 @@ print(f"¿Es la longitud de '{p}' mayor que la de '{d}'?: {resultado}")
 #13-Utilizar operador "and" para comprobar si 'on' se encuentra tanto en 'python' como en 'dragon'
 
 
-#Espero que este curso no esté lleno de jerga. Utilice en el operador para comprobar si la jerga está en la oración.
+#14-"Espero que este curso no esté lleno de jerga". Utilice "in" el operador para comprobar si la "jerga" está en la oración.
+phrase = "Espero que este curso no esté lleno de jerga"
+word = "jerga"
+print(word in phrase) #True
 
-#No hay un "encendido" tanto en el dragón como en la pitón
 
-#Encuentre la longitud de la pitón de texto y convierta el valor en flotar y conviértalo en cadena
+#15-No hay un "on" tanto en el "dragón" como en la "python".
+print("on" not in "python" and "dragon")
 
-#Incluso los números son divisibles por 2 y el resto es cero. ¿Cómo comprobar si un número está incluso o no usando python?
+#16-Encuentre la longitud del texto "python" y convierta el valor en float y conviértalo en string.
+word = "python"
+print(str(float(len(word)))) # <class 'str'>
 
-#Compruebe si la división de piso de 7 por 3 es igual al valor de conversión int de 2.7.
+#17- Muestra los números pares son divisibles por 2 y el resto es cero. ¿Cómo compruebas si un número es par o no usando Python?"
 
-#Compruebe si el tipo de '10' es igual al tipo de 10
 
-#Compruebe si int('9.8') es igual a 10
+#18-Compruebe si la división de piso de 7 por 3 es igual al valor de conversión int de 2.7.
 
-#Escriba un script que le incite al usuario a ingresar horas y tarifa por hora. ¿Calcular el sueldo de la persona?
+#19-Compruebe si el tipo de '10' es igual al tipo de 10
+
+#20-Compruebe si int('9.8') es igual a 10
+
+#21-Escriba un script que le incite al usuario a ingresar horas y tarifa por hora. ¿Calcular el sueldo de la persona?
 
         #Enter hours: 40
         #Enter rate per hour: 28
         #Your weekly earning is 1120
 
-#Escriba un script que le incite al usuario a ingresar el número de años. Calcula el número de segundos que una persona puede vivir. Supongamos que una persona puede vivir cien años
+#22-Escriba un script que le incite al usuario a ingresar el número de años. Calcula el número de segundos que una persona puede vivir. Supongamos que una persona puede vivir cien años
 
-#Enter number of years you have lived: 100
+#23-Enter number of years you have lived: 100
 #You have lived for 3153600000 seconds.
 
     #Escriba un script de Python que muestre la siguiente tabla
