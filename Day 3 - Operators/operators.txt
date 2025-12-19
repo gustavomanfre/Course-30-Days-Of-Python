@@ -190,3 +190,15 @@ OPERADORES LOGICOS
     and,Devuelve True si ambos enunciados son ciertos.,x < 5 and x < 10
     or,Devuelve True si uno de los enunciados es cierto.,x < 5 or x < 4
     not,Revierte el resultado (devuelve False si el resultado es True).,not(x < 5 and x < 10)
+
+######################################################################################################################################################
+
+1. El Operador Ternario (Condicional en una línea)
+        #[valor_si_cierto] if [condición] else [valor_si_falso]
+        #"Even": Es el resultado si la condición es verdadera.
+        #if ... % 2 == 0: Es la evaluación lógica (si el residuo de la división por 2 es cero).
+        #else "Odd": Es el camino de salida si la condición es falsa.
+######################################################################################################################################################
+input("Enter integer: "):
+Función: Detiene la ejecución para capturar la entrada del usuario por teclado.
+Dato importante: Siempre devuelve un tipo str (cadena de texto), incluso si el usuario escribe un número.

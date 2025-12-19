@@ -118,7 +118,6 @@ phrase = "Espero que este curso no esté lleno de jerga"
 word = "jerga"
 print(word in phrase) #True
 
-
 #15-No hay un "on" tanto en el "dragón" como en la "python".
 print("on" not in "python" and "dragon")
 
@@ -127,6 +126,8 @@ word = "python"
 print(str(float(len(word)))) # <class 'str'>
 
 #17- Muestra los números pares son divisibles por 2 y el resto es cero. ¿Cómo compruebas si un número es par o no usando Python?"
+
+
 
 
 #18-Compruebe si la división de piso de 7 por 3 es igual al valor de conversión int de 2.7.
