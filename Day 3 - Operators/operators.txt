@@ -143,3 +143,50 @@ Existen dos formas en las que esto sucede:
     -Conversión Explícita (Casting): Es cuando tú fuerzas el cambio usando las funciones que mencionamos antes (str(), int(), etc.).
 
 ######################################################################################################################################################
+######################################################################################################################################################
+OPERADOR "IN"
+En Python, el operador in se define técnicamente como un operador de pertenencia (membership operator). 
+Su función principal es validar si un objeto (el operando de la izquierda) se encuentra contenido dentro de un iterable o colección (el operando de la derecha). 
+
+1. Operador de Pertenencia (Evaluación Booleana)
+En este contexto, in evalúa una expresión y devuelve un valor de tipo bool (True o False). 
+Es altamente eficiente para verificar la existencia de datos sin necesidad de iterar manualmente.
+
+    -En Colecciones (Listas, Tuplas, Sets): Compara el objeto contra cada elemento de la colección mediante el operador de igualdad ==.
+        items = [10, 20, 30]
+        is_present = 20 in items  # True
+
+    -En Cadenas (Strings): Verifica si una subcadena está contenida dentro de otra. A diferencia de las listas, aquí busca una secuencia de caracteres.
+        "py" in "python"  # True
+    
+    -En Diccionarios: Por defecto, in verifica la existencia de llaves (keys), no de valores.
+        data = {"id": 1, "name": "Gemini"}
+        "id" in data       # True (verifica llaves)
+        "Gemini" in data   # False (no verifica valores directamente)
+
+2. Estructura de Control: Bucle for...in
+En el ámbito de los bucles, in no actúa como un comparador, sino como un conector lógico que vincula una variable local con un objeto iterable.
+    -Bucle for ... in 
+        for element in iterable:
+            # Bloque de código
+
+Aquí, in instruye al intérprete para llamar al método interno _iter_() del objeto y asignar secuencialmente cada valor a la variable definida hasta agotar la secuencia
+
+3. Comprensión de Listas (List Comprehensions)
+    # Genera una lista de cuadrados solo para números pares
+    cuadrados = [n**2 for n in range(10) if n % 2 == 0]
+
+
+4. Operador Negado not in
+Es la contraparte lógica. Se prefiere por legibilidad sobre la negación manual de la expresión (not x in y).
+    -Operador negado "In"
+        user_status = "banned"
+        if user_status not in ["active", "pending"]:
+        print("Acceso denegado")
+
+######################################################################################################################################################
+
+OPERADORES LOGICOS
+    and,Devuelve True si ambos enunciados son ciertos.,x < 5 and x < 10
+    or,Devuelve True si uno de los enunciados es cierto.,x < 5 or x < 4
+    not,Revierte el resultado (devuelve False si el resultado es True).,not(x < 5 and x < 10)

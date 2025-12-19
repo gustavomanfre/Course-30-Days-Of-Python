@@ -111,7 +111,7 @@ print(f"Longitud de '{d}': {l2}")
 print(f"¿Es la longitud de '{p}' mayor que la de '{d}'?: {resultado}")
 
 #13-Utilizar operador "and" para comprobar si 'on' se encuentra tanto en 'python' como en 'dragon'
-
+print ("on" in python and "on" in dragon)
 
 #14-"Espero que este curso no esté lleno de jerga". Utilice "in" el operador para comprobar si la "jerga" está en la oración.
 phrase = "Espero que este curso no esté lleno de jerga"
