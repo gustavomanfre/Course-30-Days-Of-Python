@@ -135,3 +135,50 @@ Explicación:
     ∙lista apunta al mismo objeto que x.
     ∙.append() modifica el objeto, no la referencia.
     ∙Por eso el cambio se ve fuera de la función.
+
+######################################################################################################################################################
+¿Primitivos u Objetos? El Modelo de CPython 🧠
+
+En Python, no existen los tipos de datos primitivos en el sentido estricto (como en C o Java). Todos los tipos de datos son objetos.
+    -Cada variable es una referencia a un objeto en el heap. 
+    -Incluso un simple entero como 5 tiene una cabecera de objeto (PyObject) que incluye un contador de referencias y un puntero a su tipo.
+
+1. La estructura PyObject 🏗️
+
+En el nivel de C, todo objeto comienza con una estructura llamada PyObject. Esta es la "cabecera" que mencionamos. Si miramos el código fuente de Python, verás algo como esto:
+    - ob_refcnt (Reference Count): Un entero que lleva la cuenta de cuántas variables están apuntando a este objeto. Cuando llega a cero, el Garbage Collector libera la memoria.
+    - ob_type: Un puntero a otro objeto que representa el tipo (por ejemplo, el objeto clase int). Esto es lo que le dice a Python que el objeto debe comportarse como un número y no como una lista.
+
+2. El fenómeno del "Interning" (Caché de objetos) 🧠
+
+Ahora, volviendo a tu duda sobre por qué 256 es el mismo objeto y 257 no, la respuesta reside en una optimización del intérprete.
+    -Enteros Pequeños: Python asume que usarás números pequeños muy seguido. Por eso, al arrancar, crea una matriz estática de objetos int para todos los números en el rango de -5 a 256.
+    -Reutilización: Cuando escribes a = 256, Python no crea un objeto nuevo; simplemente apunta a al objeto que ya existe en esa matriz global.
+    -Nuevas Instancias: Para 257, Python generalmente crea un objeto nuevo en el heap cada vez que se asigna (fuera de optimizaciones específicas del compilador de bloques de código).
+
+El Árbol de Herencia de Tipos 🌳
+Todos los tipos en Python derivan de una única raíz: la clase object
+
+OBJECT
+ ├── int
+ │    └── bool (True, False)
+ ├── float
+ ├── complex
+ ├── str
+ ├── list
+ ├── dict
+ ├── set
+ └── tuple
+
+ Una curiosidad técnica: ¿Sabías que bool es una subclase de int? Por eso puedes hacer operaciones como True + True y obtener 2.
+
+ 3. Métodos y Protocolos (Dunder Methods) 🛠️
+ Al ser objetos, todos tienen métodos. Se dividen principalmente en dos categorías:
+
+Categoría               Descripción                                                                 Ejemplos
+Métodos 
+Públicos                Acciones específicas del tipo.                                           "list.append(), str.upper()"
+Métodos Dunder          Implementan protocolos del lenguaje (aritmética, comparación).            __add__, __len__, __eq__"
+
+
+

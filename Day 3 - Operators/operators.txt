@@ -198,7 +198,10 @@ OPERADORES LOGICOS
         #"Even": Es el resultado si la condición es verdadera.
         #if ... % 2 == 0: Es la evaluación lógica (si el residuo de la división por 2 es cero).
         #else "Odd": Es el camino de salida si la condición es falsa.
+
 ######################################################################################################################################################
 input("Enter integer: "):
 Función: Detiene la ejecución para capturar la entrada del usuario por teclado.
 Dato importante: Siempre devuelve un tipo str (cadena de texto), incluso si el usuario escribe un número.
+
+######################################################################################################################################################

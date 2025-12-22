@@ -111,7 +111,7 @@ print(f"Longitud de '{d}': {l2}")
 print(f"¿Es la longitud de '{p}' mayor que la de '{d}'?: {resultado}")
 
 #13-Utilizar operador "and" para comprobar si 'on' se encuentra tanto en 'python' como en 'dragon'
-print ("on" in python and "on" in dragon)
+print ("on" in "python" and "on" in "dragon")
 
 #14-"Espero que este curso no esté lleno de jerga". Utilice "in" el operador para comprobar si la "jerga" está en la oración.
 phrase = "Espero que este curso no esté lleno de jerga"
@@ -125,9 +125,9 @@ print("on" not in "python" and "dragon")
 word = "python"
 print(str(float(len(word)))) # <class 'str'>
 
-#17- Muestra los números pares son divisibles por 2 y el resto es cero. ¿Cómo compruebas si un número es par o no usando Python?"
+#17- Muestra even si el número son divisibles por 2 y el resto es cero. ¿Cómo compruebas si un número es par o no usando Python?"
 
-
+print("even" if 2 % int(input("Ingrese numero"))== 0 else "odd")
 
 
 #18-Compruebe si la división de piso de 7 por 3 es igual al valor de conversión int de 2.7.
