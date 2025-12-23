@@ -147,14 +147,21 @@ print(int("9.8") == 10) # false
 
 horas = input("Enter Hours")
 tarifaxhoras = input("Enter tarifa")
-print(horas * tarifaxhoras)
+float(print(horas * tarifaxhoras))
 
-#22-Escriba un script que le incite al usuario a ingresar el número de años. Calcula el número de segundos que una persona puede vivir. Supongamos que una persona puede vivir cien años
+print(f'El pago sera de {float("Ingrese tarifa por horas")*int(input("Ingrese cantidad de horas"))}')
 
-#23-Enter number of years you have lived: 100
-#You have lived for 3153600000 seconds.
+# 22 - Escribir un script que le pida al usuario que ingrese el número de años. 
+# Calcula el número de segundos que una persona puede vivir. 
+# Supongamos que una persona puede vivir cien años
 
-    #Escriba un script de Python que muestre la siguiente tabla
+print(f'Has vivido{int(input("Ingrese su edad")*360*12*30*24*60)} segundos')
+
+
+
+#23-Escriba un script de Python que muestre la siguiente tabla
+
+
 
 '''
         1 1 1 1 1
@@ -164,3 +171,5 @@ print(horas * tarifaxhoras)
         5 1 5 25 125
 '''
 
+for i in range(0,4):
+    for i in range()

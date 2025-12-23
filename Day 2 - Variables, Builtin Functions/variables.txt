@@ -137,11 +137,44 @@ Explicación:
     ∙Por eso el cambio se ve fuera de la función.
 
 ######################################################################################################################################################
-¿Primitivos u Objetos? El Modelo de CPython 🧠
+Primitivos u Objetos. El Modelo de CPython 🧠
 
 En Python, no existen los tipos de datos primitivos en el sentido estricto (como en C o Java). Todos los tipos de datos son objetos.
-    -Cada variable es una referencia a un objeto en el heap. 
-    -Incluso un simple entero como 5 tiene una cabecera de objeto (PyObject) que incluye un contador de referencias y un puntero a su tipo.
+
+En CPython, la memoria se divide principalmente en dos áreas: el Stack (pila) y el Heap (montículo). 
+Vamos a realizar el mapeo técnico de qué sucede exactamente cuando ejecutas una instrucción simple como x = 5.
+
+El Mapeo de Memoria: Stack vs. Heap 🛠️
+
+1. En el Stack (Pila de Llamadas)
+El Stack almacena los marcos de referencia (frames). Cuando declaras x, no se guarda el número 5 ahí. 
+Se guarda una referencia (un puntero de 8 bytes en sistemas de 64 bits).
+
+    Variable: x
+    Contenido: 0x10A2 (Una dirección de memoria que apunta al Heap).
+
+2. En el Heap (Montículo de Objetos)
+Aquí es donde reside el objeto real. En la dirección 0x10A2, no solo hay un "5", hay una estructura compleja de C llamada PyLongObject (para los enteros).
+
+Anatomía de un Objeto Entero en el Heap 🧬
+
+Si hiciéramos una "autopsia" al objeto en la dirección 0x10A2, veríamos estos campos (simplificando la estructura de CPython):
+
+Campo en Memoria            Nombre Técnico              Descripción
+Cabecera 1                  ,ob_refcnt,                 "Contador de Referencias: Si x = 5, aquí habrá un 1. Si haces y = x, subirá a 2."
+Cabecera 2,                 ob_type,                    Puntero al Tipo: Un puntero a la dirección de memoria de la clase int. Así sabe Python que puede sumar este objeto.
+Valor,                      ob_digit,                   "El valor real (en este caso, el binario para 5). En Python los enteros son de precisión arbitraria, por lo que esta parte puede crecer."
+
+¿Por qué esto es relevante para el rendimiento? 🏎️
+
+-Indirección: Cada vez que accedes a x, Python debe:
+    -Ir al Stack para buscar la dirección.
+    -Saltar al Heap en esa dirección.
+    -Leer el ob_type para saber qué operaciones están permitidas.
+    -Finalmente, acceder al valor.
+    -Esto explica por qué Python es más lento que C (donde el 5 estaría directamente en el Stack).
+
+-Inmutabilidad: Si haces x = x + 1, Python no cambia el valor en el Heap. Crea un nuevo objeto (por ejemplo en 0x20B4) con el valor 6, y actualiza la referencia en el Stack de x para que apunte a la nueva dirección. El objeto viejo (5) reduce su ob_refcnt.
 
 1. La estructura PyObject 🏗️
 
@@ -176,9 +209,73 @@ OBJECT
  Al ser objetos, todos tienen métodos. Se dividen principalmente en dos categorías:
 
 Categoría               Descripción                                                                 Ejemplos
-Métodos 
-Públicos                Acciones específicas del tipo.                                           "list.append(), str.upper()"
+Métodos Públicos        Acciones específicas del tipo.                                           "list.append(), str.upper()"
 Métodos Dunder          Implementan protocolos del lenguaje (aritmética, comparación).            __add__, __len__, __eq__"
 
+Cuando tú escribes objeto.metodo(), Python inicia un proceso llamado Atribute Lookup. 
+No importa si es un método público o un Dunder; el mecanismo base es similar, pero el dunder suele activarse por "atajos" del intérprete.
 
+1-El flujo de resolución:
+    1-Instancia (__dict__): Python busca primero en el diccionario local del objeto. Aquí suelen estar solo los datos (atributos como self.x), no los métodos.
+    2-Clase (type(objeto)): Si no está en la instancia, Python salta al objeto Clase en el Heap. Aquí es donde viven los métodos (las funciones que todos los objetos de ese tipo comparten).
+    3-Herencia (MRO): Si no está en su clase, busca en sus padres siguiendo el árbol de herencia hasta llegar a object.
+
+2. Métodos Públicos: Despacho Explícito
+Cuando haces lista.append(x):
+    -Python ve el punto (.).
+    -Busca en la clase list el nombre append.
+    -Encuentra una función.
+    -El paso clave: Python convierte lista.append(x) en list.append(lista, x). Pasa automáticamente la dirección del objeto como el primer argumento: el famoso self.
+
+3. ¿Qué es un método "Dunder"? : Despacho Implícito (Slots)
+El término proviene de "Double Under" (doble guion bajo). 
+No son métodos mágicos, aunque a veces se les llame así (magic methods); 
+son simplemente hooks (ganchos) predefinidos que el intérprete de Python utiliza para ejecutar operaciones estándar.
+
+Aquí es donde Python se pone serio por rendimiento. Para no hacer una búsqueda lenta en un diccionario cada vez que sumas 1 + 1, CPython utiliza Slots.
+
+    -En el C-Level: El objeto PyTypeObject (la clase) tiene una estructura fija con "huecos" (slots) para los dunders más comunes (como tp_as_number para __add__).
+    -El Camino Directo: Cuando escribes a + b, el intérprete no busca la cadena "__add__" en un diccionario. Va directamente al puntero de memoria del "slot" de suma en la estructura de la clase. Es casi tan rápido como una llamada a función en C.
+
+Cuando tú usas un operador como + o una función como len(), Python no sabe por sí solo cómo sumar o contar los elementos de un objeto que tú hayas creado. 
+Lo que hace es delegar esa responsabilidad al objeto mismo preguntándole: "¿Tienes implementado el contrato para esta operación?" 🤝
+
+4. Visualización del mapeo Stack-Heap con Métodos
+Si tenemos x = [1, 2]:
+    -Stack: x -> 0xABC (Dirección en el Heap).
+    -Heap (Instancia 0xABC):
+        ob_refcnt: 1
+        ob_type: 0x999 (Puntero a la clase list).
+        ob_item: Puntero a los datos [1, 2].
+    -Heap (Clase list en 0x999):
+        __add__: Puntero a código binario de suma.
+        append: Puntero a código binario de inserción.
+        __len__: Puntero a código que lee el tamaño.
+
+4. Los Protocolos: El "Contrato" de Python 📜
+En lugar de depender de una jerarquía de herencia rígida (como en Java), Python usa Duck Typing. Si tu objeto implementa el método dunder necesario, entonces "sigue el protocolo".
+Aquí tienes los protocolos más importantes:
+
+Protocolo               Método Dunder               Acción que lo activa
+Aritmético             "__add__(self, other)"       El operador +
+Representación          __str__(self)               La función print() o str()
+Contenedor             ,__len__(self),              La función len()
+Comparación,            "__eq__(self, other)",      El operador ==
+In-place,               "__iadd__(self, other)",    El operador +=
+
+5. La diferencia entre + e += (Mutabilidad) 🧠
+Retomando tu pregunta anterior sobre la memoria, aquí es donde los dunders revelan la verdad:
+
+1. __add__ (Suma normal a + b): Por convención, este método debe crear un objeto nuevo y devolverlo. No debe modificar self. Por eso id(lista_a) cambia si haces lista_a = lista_a + [4].
+2. __iadd__ (Suma in-place a += b): Este método está diseñado para modificar el objeto existente si es posible (como en las listas). Si el objeto es mutable, __iadd__ modifica self y lo devuelve, manteniendo el mismo id.
+
+######################################################################################################################################################
+1. La Función print(): La Anatomía de la Salida
+La firma técnica es: print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)
+
+    -*objects (Argumentos posicionales): El asterisco significa que puedes pasar N objetos. Python llamará internamente a str(objeto) para cada uno antes de imprimirlos.
+    -sep (Separador): Lo que se inyecta entre cada objeto. Por defecto es un espacio ' '.
+    -end (Finalizador): Lo que se inyecta al final de la línea. Por defecto es \n (salto de línea). Si quieres imprimir en la misma línea varias veces, cámbialo a end=''.
+    -file (El destino): Por defecto es sys.stdout (la pantalla). Pero aquí podrías pasar un archivo abierto. Dato Senior: print es solo un envoltorio elegante sobre el método .write() de cualquier objeto que se comporte como un archivo.
+    -flush (Vaciado de búfer): Normalmente, Python guarda los caracteres en memoria antes de mandarlos a la pantalla para ahorrar recursos. Si flush=True, obliga al sistema a mostrarlo ahora mismo. Vital para barras de carga.
 
