@@ -145,6 +145,10 @@ print(int("9.8") == 10) # false
         #Enter rate per hour: 28
         #Your weekly earning is 1120
 
+horas = input("Enter Hours")
+tarifaxhoras = input("Enter tarifa")
+print(horas * tarifaxhoras)
+
 #22-Escriba un script que le incite al usuario a ingresar el número de años. Calcula el número de segundos que una persona puede vivir. Supongamos que una persona puede vivir cien años
 
 #23-Enter number of years you have lived: 100
