@@ -126,15 +126,18 @@ word = "python"
 print(str(float(len(word)))) # <class 'str'>
 
 #17- Muestra even si el número son divisibles por 2 y el resto es cero. ¿Cómo compruebas si un número es par o no usando Python?"
-
 print("even" if 2 % int(input("Ingrese numero"))== 0 else "odd")
-
 
 #18-Compruebe si la división de piso de 7 por 3 es igual al valor de conversión int de 2.7.
 
+True if 7//3 == int(2.7) else False
+print(7 // 3 == int(2.7)) # True
+
 #19-Compruebe si el tipo de '10' es igual al tipo de 10
+print(type('10')==type(10)) # false
 
 #20-Compruebe si int('9.8') es igual a 10
+print(int("9.8") == 10) # false
 
 #21-Escriba un script que le incite al usuario a ingresar horas y tarifa por hora. ¿Calcular el sueldo de la persona?
 
