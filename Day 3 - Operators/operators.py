@@ -172,4 +172,4 @@ print(f'Has vivido{int(input("Ingrese su edad")*360*12*30*24*60)} segundos')
 '''
 
 for i in range(0,4):
-    for i in range()
+        print(i, i**0,i**1,i**2)
