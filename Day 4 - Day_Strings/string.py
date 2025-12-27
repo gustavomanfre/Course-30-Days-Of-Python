@@ -72,18 +72,78 @@ print(empresa.replace('Codificación',"").strip())
 
 #10- Compruebe si la cadena "Coding For All" contiene una palabra Coding utilizando el índice de método, encontrar u otros métodos.
 phrase = "Coding For All"
-phrase.index('Coding').
+
+try:
+    phrase.index('Coding')
+
+except ValueError
+    print('No se encontro en la frase')
+
+
+state = True if phrase.find("Coding") != -1 else False
+
+"""
+1. La Comparación (phrase.find(...) != -1)
+Es una expresión lógica. Su única misión es responder a una pregunta de "sí o no".
+    Resultado: Siempre será un Booleano (True o False).
+    Uso: Ideal para filtros rápidos o condiciones directas.
+
+2. El Operador Ternario (A if condicion else B)
+Es una estructura de decisión. Su misión es elegir entre dos opciones cualesquiera.
+    Resultado: Puede ser cualquier cosa (un string, un número, una lista, una función, o un booleano).
+    Uso: Cuando quieres transformar el resultado de la comparación en algo más "humano" o útil para tu programa.
+
+"""
+
+#MEJORANDOLO
+state = phrase.find("Coding") != -1 
+
+#Solucion
+
+state = "Coding" in phrase
+
+#11- Reemplace la palabra codificación en la cadena 'Codificación para todos' a Python.
+phrase = phrase.replace("Coding", "python")
+print(f'La frase es {phrase}')
+
+"""
+1. El error de Inmutabilidad
+En Python, los strings son inmutables. Esto significa que métodos como .replace() no modifican la variable original, sino que crean una copia nueva con el cambio aplicado.
+    Lo que pasa en tu código: Python hace el reemplazo en memoria, pero como no guardas ese resultado en ninguna parte, el cambio se "pierde" inmediatamente después de ejecutarse.
+    La solución: Debes asignar el resultado de nuevo a la variable phrase o a una nueva.
+
+"""
+
+#12- Cambiar "Python para todos" a "Python para todos" usando el método de reemplazo u otros métodos.
+
+phrase = "Python para todos"
+phrase = phrase.replace("todos","todxs")
+
+#13- Dividir la cadena 'Codificación para todos' usando el espacio como el separador (split()) .
+phrase = 'Codificación para todos'
+print(phrase.split(" "))
+
+
+#14-"Facebook, Google, Microsoft, Apple, IBM, Oracle, Amazon" dividieron la cadena en la coma.
+phrase = "Facebook, Google, Microsoft, Apple, IBM, Oracle, Amazon"
+print(phrase.split(","))
+
+#15- ¿Cuál es el carácter en el índice 0 en la cadena "Codificación para todos".
+phrase = 'Codificación para todos'
+print(phrase[0])
+
+#16-¿Cuál es el último índice de la cadena "Codificación para todos"?
+phrase = 'Codificación para todos'
+print(phrase[len(phrase)-1])
+
+#17-¿Qué carácter está en el índice 10 en la cadena "Codificación para todos".
+
+#18-Crear un acrónimo o una abreviatura para el nombre 'Python For Everyone'.
+
+
 
 '''
 
-Reemplace la palabra codificación en la cadena 'Codificación para todos' a Python.
-Cambiar Python para todos a Python para todos usando el método de reemplazo u otros métodos.
-Dividir la cadena 'Codificación para todos' usando el espacio como el separador (split()) .
-"Facebook, Google, Microsoft, Apple, IBM, Oracle, Amazon" dividieron la cadena en la coma.
-¿Cuál es el carácter en el índice 0 en la cadena Codificación para todos.
-¿Cuál es el último índice de la cadena Codificación para todos?
-¿Qué carácter está en el índice 10 en la cadena "Codificación para todos".
-Crear un acrónimo o una abreviatura para el nombre 'Python For Everyone'.
 Crear un acrónimo o una abreviatura para el nombre 'Codificación para todos'.
 Utilice el índice para determinar la posición de la primera ocurrencia de C en Codificación para todos.
 Utilice el índice para determinar la posición de la primera ocurrencia de F en la codificación para todos.
