@@ -137,55 +137,178 @@ phrase = 'Codificación para todos'
 print(phrase[len(phrase)-1])
 
 #17-¿Qué carácter está en el índice 10 en la cadena "Codificación para todos".
+phrase = 'Codificación para todos'
+print (phrase[10])
 
 #18-Crear un acrónimo o una abreviatura para el nombre 'Python For Everyone'.
+phrase = 'Codificación para todos'
+cut_phrase = phrase.split()
+
+acronym = "" # Paso vital: inicializar la variable
+
+for word in cut_phrase:
+    acronym += word[0]
+
+print(acronym.upper())
+
+#19-Crear un acrónimo o una abreviatura para el nombre 'Codificación para todos'.
+phrase = "Codificación para todos"
+cut_phrase = phrase.split()
+
+acronym = "" # Paso vital: inicializar la variable
+
+for word in cut_phrase:
+    acronym += word[0]
+
+print(acronym.upper())
+
+#20-Utilice el índice para determinar la posición de la primera ocurrencia de C en Codificación para todos.
+phrase = "Codificación para todos"
+sub_string = "C"
+print(phrase.index(sub_string))
+
+#21- Utilice el índice para determinar la posición de la primera ocurrencia de F en la "Codificación para todos".
+phrase = "Codificación para todos"
+sub_string = "F"
+print(phrase.index(sub_string))
+
+#22-Utilice rfind para determinar la posición de la última ocurrencia de l en Codificación para todas las personas.
+phrase = "Codificación para todos"
+sub_string = "l"
+print(phrase.ridex(sub_string))
+
+#23-Use el índice o encuentre la posición de la primera aparición de la palabra "porque" en la siguiente oración: "No se puede terminar una oración con porque porque porque es una conjunción"
+phrase = "No se puede terminar una oración con porque porque porque es una conjunción"
+sub_string = "porque"
+print(phrase.index(sub_string))
+
+#24-Utilice rinex para encontrar la posición de la última aparición de la palabra "porque" en la siguiente oración: "No se puede terminar una oración con porque porque porque es una conjunción"
+phrase = "No se puede terminar una oración con porque porque porque es una conjunción"
+sub_string = "porque"
+print(phrase.ridex(sub_string)) 
+
+#25-Cortar la frase 'porque porque' en la siguiente oración: 'No se puede terminar una oración con porque porque es una conjunción'
+phrase = 'No se puede terminar una oración con porque porque es una conjunción'
+sub_string = 'porque porque'
+
+phrase = phrase.replace(sub_string,"")
+# 'No se puede terminar una oración con porque porque es una conjunción'
+# 'No se puede terminar una oración con+ Espacio + Espacio+es una conjunción'
+phrase = phrase.split("") # Por defecto (cuando los paréntesis están vacíos: .split()), Python no solo busca "un espacio", sino que busca cualquier cantidad de espacios en blanco y los trata como si fueran uno solo.
+phrase = phrase.join()
+print(phrase)
+
+#strip() no busca una "palabra" o una "frase", busca una colección de caracteres sueltos.
+#.strip(): Su única función es eliminar los espacios en blanco (o caracteres que le indiques) que estén al principio y al final de una cadena. No toca nada de lo que esté en medio de las palabras.
+#Imagina que strip es como un limpiaparabrisas. Empieza desde afuera y limpia hacia adentro, pero se detiene en seco en cuanto encuentra algo que NO debe borrar.
+#   challenge = 'thirty days of pythoonnn'
+#   print(challenge.strip('noth')) # 'irty days of py'
+#En tu ejemplo de 'noth':
+#   Izquierda: Borra t, borra h. Llega a la i. Como la i no está en tu lista 'noth', el guardia de strip dice: "Aquí hay algo importante, no paso de aquí".
+#   Derecha: Borra todas las n y o. Llega a la y. Como la y no está en tu lista, se detiene.
+#Lo que hay en el medio está protegido por las letras que NO borraste.
+
+#26-Encuentre la posición de la primera aparición de la palabra "porque" en la siguiente oración: "No se puede terminar una oración con porque porque porque es una conjunción"
+
+#index(): Devuelve el índice más bajo de una subcadena, los argumentos adicionales indican el índice de inicio y finalización (predeterminado 0 y longitud de cadena - 1). Si no se encuentra la subcadena, aumenta un valorError.
+#ridex(): Devuelve el índice más alto de una subcadena, los argumentos adicionales indican el índice de inicio y finalización (predeterminado 0 y longitud de cadena - 1)
 
 
+#find(): Devuelve el índice de la primera aparición de una subcadena, si no se encuentran retornos -1
+#rfind(): Devuelve el índice de la última ocurrencia de una subcadena, si no se encuentran retornos -1
 
-'''
+phrase = "No se puede terminar una oración con porque porque porque es una conjunción"
+print(phrase.find("porque"))
 
-Crear un acrónimo o una abreviatura para el nombre 'Codificación para todos'.
-Utilice el índice para determinar la posición de la primera ocurrencia de C en Codificación para todos.
-Utilice el índice para determinar la posición de la primera ocurrencia de F en la codificación para todos.
-Utilice rfind para determinar la posición de la última ocurrencia de l en Codificación para todas las personas.
-Use el índice o encuentre la posición de la primera aparición de la palabra "porque" en la siguiente oración: "No se puede terminar una oración con porque porque porque es una conjunción"
-Utilice ridsex para encontrar la posición de la última aparición de la palabra porque en la siguiente oración: "No se puede terminar una oración con porque porque porque es una conjunción"
-Cortar la frase 'porque porque' en la siguiente oración: 'No se puede terminar una oración con porque porque es una conjunción'
-Encuentre la posición de la primera aparición de la palabra "porque" en la siguiente oración: "No se puede terminar una oración con porque porque porque es una conjunción"
-Cortar la frase 'porque porque' en la siguiente oración: 'No se puede terminar una oración con porque porque es una conjunción'
-¿'Coding For All' comienza con una subcadena de codificación?
-¿La 'codificación para todos' termina con una codificación de subcadena?
-' Codificación para todos ' , retire los espacios de arrastre izquierdo y derecho en la cuerda dada.
-¿Cuál de las siguientes variables devuelve True cuando usamos el método isidentifier():
+#27- Cortar la frase 'porque porque' en la siguiente oración: 'No se puede terminar una oración con porque porque es una conjunción'
+phrase = 'No se puede terminar una oración con porque porque es una conjunción'
+sub_string = 'porque porque'
 
-    30DaysOfPython
-    treinta_días_de_python
+phrase = phrase.replace(sub_string,"")
+# 'No se puede terminar una oración con porque porque es una conjunción'
+# 'No se puede terminar una oración con+ Espacio + Espacio+es una conjunción'
+phrase = phrase.split("") # Por defecto (cuando los paréntesis están vacíos: .split()), Python no solo busca "un espacio", sino que busca cualquier cantidad de espacios en blanco y los trata como si fueran uno solo.
+phrase = phrase.join()
+print(phrase)
 
-La siguiente lista contiene los nombres de algunas de las bibliotecas de python: ['Django', 'Flask', 'Botella', 'Pyramid', 'Falcon']. Únete a la lista con un hash con la cadena espacial.
-Utilice la nueva secuencia de escape de línea para separar las siguientes oraciones.
+#28- ¿'Coding For All' comienza con una subcadena de "codificación"?
+phrase = 'Coding For All'
+print(phrase.startswith('codificación'))
 
-I am enjoying this challenge.
-I just wonder what is next.
+#29- ¿La 'codificación para todos' termina con una codificación de subcadena?
+phrase = 'Coding For All'
+print(phrase.endswith('codificación'))
 
-Utilice una secuencia de escape de pestañas para escribir las siguientes líneas.
+#30- 'Codificación para todos', retire los espacios de arrastre izquierdo y derecho en la cuerda dada.
+phrase = 'Coding For All'
+print(phrase.strip())
 
-Name      Age     Country   City
-Asabeneh  250     Finland   Helsinki
+#31- ¿Cuál de las siguientes variables devuelve True cuando usamos el método isidentifier():
+    # 30DaysOfPython
+    # treinta_días_de_python
 
-    Utilice el método de formato de cadena para mostrar lo siguiente:
+# Nomnbres NO VALIDOS
+    #1- Comenzar con un número, Un identificador puede tener números, pero nunca al principio.
+    #2- Contener espacios, Los espacios no están permitidos en medio de un nombre de variable.
+    #3- Usar caracteres especiales o símbolos, Cualquier símbolo que no sea el guion bajo (_) hará que devuelva False. Esto incluye guiones medios, puntos, @, $, #, etc
+    #4- Cadenas vacías, Una cadena sin caracteres no puede ser un identificador.
+            # print("".isidentifier())  # False
 
-radius = 10
-area = 3.14 * radius ** 2
-The area of a circle with radius 10 is 314 meters square.
+#30DaysOfPython = ""
+#print(30DaysOfPython.isidentifier()) FALSE
+#treinta_días_de_python = ""
+#treinta_días_de_python.isidentifier()
 
-    Haga lo siguiente usando métodos de formato de cadena:
+# En Python, la regla de oro es el snake_case (usar guiones bajos intermedios: is_movil).
+# Aunque isMovil (llamado camelCase) es técnicamente un identificador válido y .isidentifier() devolverá True, no es la forma "correcta" de escribir Python.
 
-8 + 6 = 14
-8 - 6 = 2
-8 * 6 = 48
-8 / 6 = 1.33
-8 % 6 = 2
-8 // 6 = 1
-8 ** 6 = 262144
+#32- La siguiente lista contiene los nombres de algunas de las bibliotecas de python: ['Django', 'Flask', 'Botella', 'Pyramid', 'Falcon'].
+# Únete a la lista con un hash con la cadena espacial.
+language_list = ['Django', 'Flask', 'Botella', 'Pyramid', 'Falcon']
+print(" ".join(language_list))
 
-'''
+#33- Utilice la nueva secuencia de escape de línea para separar las siguientes oraciones.
+        #-I am enjoying this challenge. I just wonder what is next.
+print(f"I am enjoying this challenge\nI just wonder what is next")
+
+# \n: nueva línea
+
+#34- Utilice una secuencia de escape de pestañas para escribir las siguientes líneas.
+    # Name      Age     Country   City
+    # Asabeneh  250     Finland   Helsinki
+
+# \n: nueva línea
+# \t: Tab media(8 espacios)
+
+print(f"Name\tAge\tCountry\tCity\n"
+      f"Asabeneh\t250\tFinland\tHelsinki")
+
+#35-Utilice el método de formato de cadena para mostrar lo siguiente:
+    #radius = 10
+    #area = 3.14 * radius ** 2
+#The area of a circle with radius 10 is 314 meters square.
+
+print (f' radius = 10 \n'
+       f'area = 3.14 * radius ** 2\n'
+       f'The area of a circle with radius 10 is 314 meters square.'
+       )
+
+#36- Haga lo siguiente usando métodos de formato de cadena:
+#   8 + 6 = 14
+#   8 - 6 = 2
+#   8 * 6 = 48
+#   8 / 6 = 1.33
+#   8 % 6 = 2
+#   8 // 6 = 1
+#   8 ** 6 = 262144
+
+# \n: nueva línea
+
+print(f'8+6 = {8+6}\n'
+      f'8-6 = {8-6}\n'
+      f"8 * 6 = {8 * 6}\n"
+      f"8 / 6 = {8 / 6:.2f}\n"# 2f indica dos decimales despues de la coma.
+      f"8 % 6 = {8 % 6}\n"
+      f"8 // 6 = {8 // 6}\n"
+      f"8 ** 6 = {8 ** 6}\n"
+      )
