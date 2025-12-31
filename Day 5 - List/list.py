@@ -1,4 +1,3 @@
-
 #💻 Ejercicios: Día 5
 
 #EJERCICIOS: NIVEL 1
@@ -66,18 +65,24 @@ print(is_boolean)
 print(it_companies.sort())
 
 #17- Invierta la lista en orden descendente utilizando el método reverse()
+it_companies.reverse() #El método reverse() invierte el orden de una lista, 
+print(it_companies)    #En Python, los métodos que modifican el objeto original devuelven por defecto None.
 
 
+#18- Reparte las 3 primeras empresas de la lista
+print(it_companies[0:3])
+
+#19- Reduzca la empresa de TI del medio o las empresas de la lista.
+
+
+#20- Eliminar la primera empresa de TI de la lista
+it_companies.pop(0)
+print(it_companies) 
+
+#El método de remove elimina un elemento especificado de una lista
+#El método pop() elimina el índice especificado (o el último elemento si no se especifica el índice)
+#La palabra clave del elimina el índice especificado y también se puede utilizar para eliminar elementos dentro del rango de índice. También puede eliminar la lista por completo
 """"
-
-Reparte las 3 primeras empresas de la lista
-
-Remarca las últimas 3 compañías de la lista
-
-Reduzca la empresa de TI del medio o las empresas de la lista
-
-Eliminar la primera empresa de TI de la lista
-
 Eliminar la mediana empresa de TI o las empresas de la lista
 
 Eliminar la última empresa de TI de la lista

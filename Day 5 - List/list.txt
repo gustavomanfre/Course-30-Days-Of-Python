@@ -1,3 +1,11 @@
+Listas
+Hay cuatro tipos de datos de recolección en Python:
+    -Lista: es una colección ORDENADA, MUTABLE (modificar). Permite  DUPLICADOS.
+    -Tupla: es una colección ORDENADA, INMUTABLE (no modificable) Permite  DUPLICADOS.
+    -Set:   es una colección ORDENADA, INMUTABLE (no modificable). NO Permiten  DUPLICADOS. NO INDEXADA  pero podemos agregar nuevos elementos al conjunto. 
+    -Diccionario: colección  ORDENADA, MUTABLE (modificar) NO Permiten  DUPLICADOS. INDEXADA. NO Permiten  DUPLICADOS.
+
+__________________________________________________________________________________________________________________________________________________________________________________
 Gestión de Memoria y Desempaquetado en Python: Un Análisis de Bajo Nivel
 
 En Python (específicamente en su implementación estándar, CPython), la manipulación de listas y variables implica una interacción compleja entre el Stack (pila) y el Heap (montón). A continuación, analizamos qué sucede internamente al ejecutar operaciones de asignación y desempaquetado.
