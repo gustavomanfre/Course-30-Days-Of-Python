@@ -117,9 +117,10 @@ print(lst_copy)
 
 #El Operador + (Concatenación)
 #Comportamiento: Crea un Nuevo Objeto. Cuando haces lista_nueva = lista_a + lista_b
-# Unir usando el método extend() El método extend() permite añadir la lista en una lista. 
 
-# El Método .extend()
+# El Método .extend() 
+# # Unir usando el método extend() El método extend() permite añadir la lista en una lista. 
+
 #Comportamiento: Modifica "In-Place" (Mutación). Cuando haces lista_a.extend(lista_b):
 #   En el Heap: Python va al bloque de memoria de lista_a.
 #    Redimensionamiento (Realloc): Verifica si hay espacio libre al final del bloque de lista_a. Si no lo hay, solicita al sistema operativo agrandar ese mismo bloque.
