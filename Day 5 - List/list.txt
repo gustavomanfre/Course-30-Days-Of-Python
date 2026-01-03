@@ -104,3 +104,22 @@ does_exist = 'lime' in fruits
 print(does_exist)  # False
 
 __________________________________________________________________________________________________________________________________________________________________________________
+
+-List (Lista): Colección ordenada y mutable.
+    1. Métodos para Agregar Elementos (Mutan la lista)
+    .append(obj): Agrega un elemento al final de la lista. Es la operación más común.
+    .extend(iterable): Une otra colección (lista, tupla, etc.) al final de la lista actual.
+    .insert(índice, obj): Inserta un elemento en una posición específica y desplaza el resto a la derecha.
+
+    2. Métodos para Eliminar Elementos (Mutan la lista)
+    .pop(índice): Elimina y devuelve el elemento en esa posición. Si no pasas un índice, elimina el último.
+    .remove(valor): Busca la primera aparición de un valor y lo elimina. Si el valor no existe, lanza un error (ValueError).
+    .clear(): Vacía la lista por completo, dejándola como [].
+
+    3. Métodos de Orden y Reordenamiento (Mutan la lista)
+    .sort(key=..., reverse=...): Ordena los elementos (por defecto de menor a mayor). Modifica la lista original.
+    .reverse(): Invierte el orden de los elementos (el primero pasa a ser el último).
+
+    4. Métodos de Información (No mutan la lista).count(valor): Cuenta cuántas veces aparece un elemento exacto en la lista.
+    .index(valor): Devuelve la posición (índice) de la primera aparición de un valor.
+    .copy(): Crea una copia superficial (Shallow Copy) de la lista en una nueva dirección de memoria.

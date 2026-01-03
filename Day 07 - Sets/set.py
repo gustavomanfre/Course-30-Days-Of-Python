@@ -72,10 +72,33 @@ print(f"Age set bigger than age list: {len(age_st) > len(age)}")
 
 #    Explique la diferencia entre los siguientes tipos de datos: cadena, lista, tupla y conjunto
 """ 
-String (Cadena): Texto inmutable.
-List (Lista): Colección ordenada y mutable.
-Tuple (Tupla): Colección ordenada e inmutable.
-Set (Conjunto): Elementos únicos, desordenados y mutables.
+-String (Cadena): Texto inmutable, ejemplo:
+    texto = "Python"
+    texto = "Cython"
+Creó un objeto completamente nuevo en otra dirección y movió la etiqueta texto hacia él. El objeto original "Python" queda huérfano y será borrado por el Garbage Collector.
+
+-List (Lista): Colección ordenada y mutable.
+    1. Métodos para Agregar Elementos (Mutan la lista)
+    .append(obj): Agrega un elemento al final de la lista. Es la operación más común.
+    .extend(iterable): Une otra colección (lista, tupla, etc.) al final de la lista actual.
+    .insert(índice, obj): Inserta un elemento en una posición específica y desplaza el resto a la derecha.
+
+    2. Métodos para Eliminar Elementos (Mutan la lista)
+    .pop(índice): Elimina y devuelve el elemento en esa posición. Si no pasas un índice, elimina el último.
+    .remove(valor): Busca la primera aparición de un valor y lo elimina. Si el valor no existe, lanza un error (ValueError).
+    .clear(): Vacía la lista por completo, dejándola como [].
+
+    3. Métodos de Orden y Reordenamiento (Mutan la lista)
+    .sort(key=..., reverse=...): Ordena los elementos (por defecto de menor a mayor). Modifica la lista original.
+    .reverse(): Invierte el orden de los elementos (el primero pasa a ser el último).
+
+    4. Métodos de Información (No mutan la lista).count(valor): Cuenta cuántas veces aparece un elemento exacto en la lista.
+    .index(valor): Devuelve la posición (índice) de la primera aparición de un valor.
+    .copy(): Crea una copia superficial (Shallow Copy) de la lista en una nueva dirección de memoria.
+
+-Tuple (Tupla): Colección ordenada e inmutable.
+
+-Set (Conjunto): Elementos únicos, desordenados y mutables.
 
 CONCEPTOS USADOS:
 Mutable: Puedes cambiar el contenido del objeto en el Heap sin cambiar su dirección de memoria (ID).
@@ -91,7 +114,7 @@ sentence = "I am a teacher and I love to inspire and teach people."
 print(f"Unique words: {len(set(sentence.split()))}")
 
 """
-1. sentence.split() (Creación de Lista)
+1. sentence.split() (Creación de Lista, split convierte un string en lista, cuando no tiene argumento por defecto usa carcater en blanco su contraparte  pasar lista a string es frase = " ".join(sentence))
 El método .split() toma el string y lo divide cada vez que encuentra un espacio en blanco.
     Resultado: Crea una lista con todas las palabras: ['I', 'am', 'a', 'teacher', 'and', 'I', 'love', 'to', 'inspire', 'and', 'teach', 'people.'].
     Estado en memoria: En esta etapa, palabras como "I" y "and" aparecen repetidas (están dos veces cada una).
