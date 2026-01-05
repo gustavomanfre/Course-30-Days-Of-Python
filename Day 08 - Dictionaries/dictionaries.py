@@ -10,9 +10,11 @@ perro['nombre', 'color', 'raza', 'piernas', 'edad'] =  'Bracko', 'Mixto', 'San B
 estudiantes = {}
 estudiantes['first_name', 'last_name', 'gender', 'age', 'marital status', 'skills', 'country', 'city', 'addres'] = 'Lionel', 'Messi', 'Masculino', 36, 'Casado', ['Regate', 'Tiro Libre'], 'Argentina','Rosario','Valle de las Leñas'
 
-#4-Obtenga la duración del diccionario de estudiantes
+#4-Obtenga la longitud del diccionario de estudiantes
+print(estudiantes)
 
-#5-Obtenga el valor de las habilidades y verifique el tipo de datos, debería ser una lista
+#5-Obtenga el valor de las habilidades y verifique el tipo de datos, debería ser una lista.
+
 
 #6-Modificar los valores de las habilidades añadiendo una o dos habilidades
 
