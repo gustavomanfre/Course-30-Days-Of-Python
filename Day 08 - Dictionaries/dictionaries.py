@@ -14,17 +14,24 @@ estudiantes['first_name', 'last_name', 'gender', 'age', 'marital status', 'skill
 print(estudiantes)
 
 #5-Obtenga el valor de las habilidades y verifique el tipo de datos, debería ser una lista.
+print(type(estudiantes['skills']))
 
 
-#6-Modificar los valores de las habilidades añadiendo una o dos habilidades
+#6-Modificar los valores de las habilidades añadiendo una o dos habilidades.
+estudiantes['skills'][0][1]= 'izquierdo','Pelota Parada'
 
-#7-Obtenga las teclas del diccionario como una lista
+#7-Obtenga las teclas del diccionario como una lista.
+estudiantes_list = estudiantes.keys()
 
-#8-Obtener los valores del diccionario como una lista
+#8-Obtener los valores del diccionario como una lista.
+estudiantes_list = estudiantes.values()
 
-#9-Cambiar el diccionario a una lista de tuplas usando el método items()
+#9-Cambiar el diccionario a una lista de tuplas usando el método items().
+estudiantes_list = estudiantes.items()
 
-#10-Borrar uno de los elementos del diccionario
+#10-Borrar uno de los elementos del diccionario.
+print(estudiantes.clear())
 
-#11-Borrar uno de los diccionarios
+#11-Borrar uno de los diccionarios.
+del estudiantes
 
