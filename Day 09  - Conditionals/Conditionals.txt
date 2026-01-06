@@ -54,3 +54,5 @@ Seria como los indices se manejan en salto para llegar a una pocision entonces p
 
 # ['JavaScript', 'React', 'Node', 'MongoDB']
 #       0           1       2         3          3     =  3 // 2 = 1
+
+______________________________________________________________________________________________________________________________________________
