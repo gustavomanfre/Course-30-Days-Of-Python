@@ -54,28 +54,21 @@ Cuando haces lista3 = lista1 + lista2, Python se comporta como un arquitecto que
     En la Memoria (Heap): Python crea un tercer objeto list totalmente nuevo.
 
     Proceso:
-
-        Calcula el tamaño total necesario (len1+len2).
-
-        Reserva un nuevo bloque de memoria contiguo.
-
-        Copia los punteros de lista1 y luego los de lista2 al nuevo bloque.
+        -Calcula el tamaño total necesario (len1+len2).
+        -Reserva un nuevo bloque de memoria contiguo.
+        -Copia los punteros de lista1 y luego los de lista2 al nuevo bloque.
 
     Estado final: Las listas originales (lista1 y lista2) permanecen intactas en sus direcciones de memoria originales.
 
 2. El Método .extend() (Mutación: Modifica el original)
 
 Cuando haces lista1.extend(lista2), Python actúa como un equipo de remodelación que añade una extensión a un edificio existente.
-
     En la Memoria (Heap): No se crea una lista nueva para el resultado. Se modifica el objeto lista1 directamente (in-place).
 
     Proceso:
-
-        Python revisa si el bloque de memoria actual de lista1 tiene espacio libre (las listas suelen tener un pequeño margen extra).
-
-        Si no hay espacio, Python redimensiona el bloque original de lista1 (lo hace más grande).
-
-        Copia los punteros de lista2 al final del bloque de lista1.
+        -Python revisa si el bloque de memoria actual de lista1 tiene espacio libre (las listas suelen tener un pequeño margen extra).
+        -Si no hay espacio, Python redimensiona el bloque original de lista1 (lo hace más grande).
+        -Copia los punteros de lista2 al final del bloque de lista1.
 
     Estado final: lista1 ahora apunta a un bloque más grande que contiene los elementos de ambos. lista2 no cambia.
 __________________________________________________________________________________________________________________________________________________________________________________
