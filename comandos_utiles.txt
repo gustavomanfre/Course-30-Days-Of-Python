@@ -12,13 +12,9 @@ Arepl for Python: Es increíble para aprender. Abre una ventana a la derecha que
 AREPL es una maravilla porque no necesitas darle a ningún botón.
 
     Activación: Ya lo tienes abierto (es el panel negro a la derecha que dice "AREPL v3.0.0").
-
     Uso: Simplemente empieza a escribir código en el archivo loops.py de la izquierda.
-
     Resultados: AREPL evalúa el código mientras escribes.
-
         Si escribes print(fruits), el resultado aparecerá instantáneamente en el panel derecho.
-
         Si tienes un error, te lo marcará en rojo en el panel derecho en tiempo real.
 
 Nota importante: En tu imagen, AREPL dice "Start typing or make a change". Haz un pequeño cambio (como borrar un espacio y volverlo a poner) y verás cómo se activa.
@@ -27,11 +23,7 @@ ________________________________________________________________________________
 El "Debug Console" (Para inspeccionar variables)
 
 Si quieres ver qué hay dentro de tus acumuladores (sum_par, word_list) paso a paso mientras el bucle corre, el Debugger es tu mejor amigo.
-
     Pon un "Breakpoint": Haz clic justo a la izquierda del número de línea donde empieza tu bucle (aparecerá un punto rojo).
-
     Inicia el Debugging: Presiona F5 (elige "Python File").
-
     Inspecciona: El código se detendrá en ese punto. En el panel de la izquierda verás la sección "Variables". Podrás ver cómo cambian los valores en cada vuelta del bucle.
-
     Consola de depuración: En la parte inferior, busca la pestaña "Debug Console". Ahí puedes escribir el nombre de una variable (ej: invert_fruits) y presiona Enter para ver su estado actual en ese segundo.
