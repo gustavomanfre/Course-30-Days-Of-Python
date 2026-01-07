@@ -3,22 +3,37 @@
 
 #Ejercicios: Nivel 1
 
-"""
-    Declarar una función add_two_numbers. Se necesitan dos parámetros y se devuelve una suma.
-    El área de un círculo se calcula de la siguiente manera: área = π x r x r. Escriba una función que calcule area_of_circle.
-    Escriba una función llamada add_all_nums que toma un número arbitrario de argumentos y suma todos los argumentos. Compruebe si todos los elementos de la lista son tipos de números. Si no, da una retroalimentación razonable.
-    La temperatura en °C se puede convertir a °F usando esta fórmula: °F = (°C x 9/5) + 32. Escriba una función que convierta °C a °F, .
-    Escriba una función llamada check-season, toma un parámetro de mes y devuelve la temporada: otoño, invierno, primavera o verano.
-    Escribir una función llamada calcula_slope que devuelve la pendiente de una ecuación lineal
-    La ecuación cuadrática se calcula como sigue: ax2 + bx + c = 0. Escriba una función que calcule el conjunto de soluciones de una ecuación cuadrática, solve_quadratic_eqn.
-    Declarar una función llamada print_list. Toma una lista como parámetro e imprime cada elemento de la lista.
-    Declarar una función llamada reverse_list. Toma una matriz como parámetro y devuelve lo contrario de la matriz (utiliza bucles).
+#1-Declarar una función add_two_numbers. Se necesitan dos parámetros y se devuelve una suma.
+def add_two_numbers (a,b):
+    return a+b
+a = 1
+b = 2
+print(add_two_numbers(a,b))
 
-print(reverse_list([1, 2, 3, 4, 5]))
+#2-El área de un círculo se calcula de la siguiente manera: área = π x r x r. 
+#Escriba una función que calcule area_of_circle.
+
+def area_circle(r,π):
+    area = π * r * r
+    return area
+r = 2
+π = 3.14
+print(area_circle(r,π))
+
+#Escriba una función llamada add_all_nums que toma un número arbitrario de argumentos y suma todos los argumentos. Compruebe si todos los elementos de la lista son tipos de números. Si no, da una retroalimentación razonable.
+#La temperatura en °C se puede convertir a °F usando esta fórmula: °F = (°C x 9/5) + 32. Escriba una función que convierta °C a °F, .
+#Escriba una función llamada check-season, toma un parámetro de mes y devuelve la temporada: otoño, invierno, primavera o verano.
+#Escribir una función llamada calcula_slope que devuelve la pendiente de una ecuación lineal
+#La ecuación cuadrática se calcula como sigue: ax2 + bx + c = 0. Escriba una función que calcule el conjunto de soluciones de una ecuación cuadrática, solve_quadratic_eqn.
+#Declarar una función llamada print_list. Toma una lista como parámetro e imprime cada elemento de la lista.
+#Declarar una función llamada reverse_list. Toma una matriz como parámetro y devuelve lo contrario de la matriz (utiliza bucles).
+
+#print(reverse_list([1, 2, 3, 4, 5]))
 # [5, 4, 3, 2, 1]
-print(reverse_list1(["A", "B", "C"]))
+#print(reverse_list1(["A", "B", "C"]))
 # ["C", "B", "A"]
 
+"""
     Declarar una función llamada capitalize_list_items. Toma una lista como parámetro y devuelve una lista en mayúscula de elementos
     Declarar una función llamada add_item. Se necesita una lista y un elemento de parámetros. Devuelve una lista con el elemento añadido al final.
 
