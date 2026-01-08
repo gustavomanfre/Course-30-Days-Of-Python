@@ -1,0 +1,85 @@
+
+Módulo de Estadística
+
+El módulo de estadísticas proporciona funciones para estadísticas matemáticas de datos numéricos. Las funciones estadísticas populares que se definen en este módulo: media, mediana, modo, stdev, etc.
+
+from statistics import * # importing all the statistics modules
+ages = [20, 20, 4, 24, 25, 22, 26, 20, 23, 22, 26]
+print(mean(ages))       # ~22.9
+print(median(ages))     # 23
+print(mode(ages))       # 20
+print(stdev(ages))      # ~2.3
+La razón por la que no ves el prefijo statistics. es por la forma específica en la que se importó el módulo en la primera línea: from statistics import *.
+
+En Python, existen tres formas principales de importar herramientas, y cada una cambia cómo debes escribir el código después:
+1. El uso del Asterisco (from statistics import *)
+
+Cuando usas el asterisco, le dices a Python: "Trae todas las funciones de este módulo y ponlas directamente en mi archivo".
+
+    Resultado: Puedes usar median(), mean() o mode() directamente, como si tú mismo las hubieras escrito en ese archivo.
+
+    Ventaja: Escribes menos código.
+
+    Desventaja: Si tienes muchas funciones, podrías confundirte de dónde viene cada una.
+
+2. Importación Estándar (import statistics)
+
+Si el código hubiera empezado así, sí tendrías que usar el punto obligatoriamente.
+
+    Código: import statistics
+
+    Llamada: statistics.median(ages)
+
+    Por qué: Aquí el módulo actúa como un "contenedor" o carpeta. Para entrar a la carpeta y sacar la herramienta, necesitas usar el punto.
+
+3. Importación Específica (from statistics import median)
+
+Esta es una mezcla de ambas. Solo traes la herramienta que necesitas.
+
+    Código: from statistics import median
+
+    Llamada: median(ages)
+
+    Por qué: Solo "importaste" la mediana, por lo que no necesitas el prefijo para ella, pero si intentas usar mean(), el programa fallará porque no la trajiste.
+Pero si queremos importar toda la función en el módulo matemático podemos utilizar *.
+
+from math import *
+print(pi)                  # 3.141592653589793, pi constant
+print(sqrt(2))             # 1.4142135623730951, square root
+print(pow(2, 3))           # 8.0, exponential
+print(floor(9.81))         # 9, rounding to the lowest
+print(ceil(9.81))          # 10, rounding to the highest
+print(math.log10(100))     # 2
+    ---------------------------------------------------------------------------------------------------------------------------
+
+    Ahora, hemos importado el módulo de matemáticas que contiene mucha función que puede ayudarnos a realizar cálculos matemáticos. 
+    Para comprobar qué funciones tiene el módulo, podemos usar help(math) o dir(math). E
+    sto mostrará las funciones disponibles en el módulo. Si queremos importar solo una función específica del módulo la importamos de la siguiente manera:
+
+from math import pi
+print(pi)
+---------------------------------------------------------------------------------------------------------------------------
+ join(random.choices(caracteres_hex, k=6)) 
+
+ Esta es una de las líneas más potentes de tu código porque combina tres conceptos diferentes en una sola instrucción. Para entenderla, debemos leerla de adentro hacia afuera, como si estuviéramos pelando una cebolla.
+
+Aquí tienes el desglose técnico:
+1. random.choices(caracteres_hex, k=6)
+
+Esta función es la encargada de la "selección".
+
+    caracteres_hex: Es tu "bolsa" de símbolos (0123456789abcdef).
+
+    k=6: Le dice a Python: "Mete la mano en la bolsa y saca 6 elementos".
+
+    Comportamiento: choices permite repeticiones (puedes sacar dos veces la letra 'a').
+
+    Resultado en Memoria: Esta función crea una Lista en el Heap que se ve así: ['a', '3', 'e', '1', '2', 'f'].
+
+2. "".join(...)
+
+Aquí es donde ocurre la magia de la unión. El método .join() toma todos los elementos de esa lista y los pega.
+
+    El Separador "": El string vacío al principio indica que no quieres nada entre los caracteres. Si usaras "-".join(), el resultado sería a-3-e-1-2-f.
+
+    Eficiencia: Python mira la lista, calcula cuánto espacio sumarán los 6 caracteres y reserva un solo bloque de memoria en el Heap para crear el string final.

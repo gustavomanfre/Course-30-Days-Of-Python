@@ -1,63 +1,44 @@
 Pass-by-Object-Reference
-El concepto fundamental de cómo Python maneja la memoria, conocido técnicamente como "Pass-by-Object-Reference" (Paso por Referencia de Objeto).
 
+El concepto fundamental de cómo Python maneja la memoria, conocido técnicamente como "Pass-by-Object-Reference" (Paso por Referencia de Objeto).
 Es la respuesta definitiva a la eterna duda: "¿Python pasa por valor o por referencia?". La respuesta corta es: Ninguna de las dos. Pasa referencias a objetos.
 
 Aquí te explico la imagen paso a paso, dividida en tres zonas clave:
+
 1. Izquierda: El Estado Inicial (Stack vs. Heap)
-
     STACK (Pila - Variables): Aquí viven los nombres de tus variables (x, s, b, L...). Piensa en ellas como "etiquetas" o post-its. No contienen el dato real, solo saben dónde está.
-
     HEAP (Montículo - Objetos): Aquí viven los datos reales. Fíjate en el círculo del 10 o la lista [1, 2]. Cada objeto tiene una dirección de memoria (ej: 0x100).
-
     Las Flechas (Referencias): Lo más importante. La variable x no vale 10, la variable x apunta al objeto 10.
 
 2. Centro: La Llamada a la Función (my_func)
-
 Cuando llamas a una función y le pasas parámetros (my_func(x, s, L...)):
-
     No se copian los objetos: Python no duplica la lista [1, 2] ni el número 10. Eso sería muy lento.
-
     Se copian las flechas: Python crea nuevas variables locales dentro de la función (a, b, c...) y hace que apunten exactamente a los mismos objetos que las variables de afuera.
-
     En este momento exacto, x (afuera) y a (adentro) son gemelos: miran al mismo sitio.
 
 3. Derecha: El Comportamiento (La gran diferencia)
-
 Aquí es donde ocurre la magia y la confusión. ¿Qué pasa si intentamos cambiar los datos dentro de la función? Depende del tipo de dato.
-A. Tipos Inmutables (int, str, bool, tuple)
+    A. Tipos Inmutables (int, str, bool, tuple)
+    Fíjate en las primeras flechas de arriba (enteros y strings).
+        La acción: Dentro de la función, hacemos a = 20.
+        El resultado: Como el objeto 10 es inmutable (no se puede cambiar), Python rompe la flecha que unía a con 10 y crea una nueva flecha hacia un nuevo objeto 20.
+        Efecto afuera: La variable original x sigue apuntando al 10.
+        Conclusión: Parece paso por valor (lo que haces adentro no afecta afuera).
 
-Fíjate en las primeras flechas de arriba (enteros y strings).
-
-    La acción: Dentro de la función, hacemos a = 20.
-
-    El resultado: Como el objeto 10 es inmutable (no se puede cambiar), Python rompe la flecha que unía a con 10 y crea una nueva flecha hacia un nuevo objeto 20.
-
-    Efecto afuera: La variable original x sigue apuntando al 10.
-
-    Conclusión: Parece paso por valor (lo que haces adentro no afecta afuera).
-
-B. Tipos Mutables (list, dict, set)
-
-Fíjate en la lista (verde) o el diccionario (naranja).
-
-    La acción: Dentro de la función, hacemos d.append(3).
-
-    El resultado: No estamos rompiendo la flecha (asignando con =). Estamos viajando a través de la flecha hasta el objeto [1, 2] y modificándolo in-situ.
-
-    Efecto afuera: Como la variable original L sigue apuntando a ese mismo objeto (que ahora tiene un 3 extra), el cambio se ve desde afuera.
-
-    Conclusión: Parece paso por referencia (lo que haces adentro afecta afuera).
+    B. Tipos Mutables (list, dict, set)
+    Fíjate en la lista (verde) o el diccionario (naranja).
+        La acción: Dentro de la función, hacemos d.append(3).
+        El resultado: No estamos rompiendo la flecha (asignando con =). Estamos viajando a través de la flecha hasta el objeto [1, 2] y modificándolo in-situ.
+        Efecto afuera: Como la variable original L sigue apuntando a ese mismo objeto (que ahora tiene un 3 extra), el cambio se ve desde afuera.
+        Conclusión: Parece paso por referencia (lo que haces adentro afecta afuera).
 
 Resumen para tu cerebro de programador:
-
     Todo son flechas: Pasar un parámetro es simplemente darle una copia de la flecha a la función.
-
     La Asignación (=) rompe flechas: Si haces variable = algo_nuevo, solo cambias a qué apunta la variable local. No tocas el objeto original ni la variable externa.
-
     La Mutación (.append, .add, [0]=...) viaja por la flecha: Si usas un método que modifica el objeto, el cambio es global.
 
 _____________________________________________________________________________________________________________________________________________________________________________
+
 PASAJE DE FUNCION COMO PARAMETRO.
 
 #You can pass functions around as parameters
@@ -67,49 +48,35 @@ def do_something(f, x):
     return f(x)
 print(do_something(square_number, 3)) # 27
 
-representación técnica de cómo Python gestiona la memoria cuando pasas variables a una función. El concepto clave aquí es el "Paso por referencia de objeto" (Pass-by-object-reference).
+Primero, una pequeña nota de "honestidad intelectual": en tu código pusiste un comentario que dice # 27, pero como bien marca la imagen con una cruz roja, el resultado real es 9 (3×3).
+Aquí tienes la explicación detallada tanto del código como del modelo de memoria de la imagen:
 
-Aquí tienes el desglose de lo que sucede en cada sección:
-1. La división: Stack vs. Heap
+1. Explicación del Código
+Este patrón se conoce como Función de Orden Superior (Higher-Order Function), que es simplemente una función que recibe a otra función como si fuera una variable cualquiera.
+    def square_number(n): Define una lógica básica: tomar un número y devolver su cuadrado.
+    def do_something(f, x): Esta función es un "intermediario". No sabe qué hace f, solo sabe que espera que f sea algo que se pueda ejecutar (una función) y le pasa el valor x.
+    print(do_something(square_number, 3)): Aquí es donde ocurre la magia. Le estamos pasando la "receta" de cómo elevar al cuadrado (square_number) y el ingrediente (3).
 
-    STACK (Pila): A la izquierda y derecha. Aquí es donde viven los nombres de tus variables (las etiquetas). No contienen los datos reales, sino la "dirección" de donde están guardados.
+2. Explicación de la Imagen (Modelo de Memoria)
+La imagen divide la memoria en dos partes fundamentales: el Stack (Pila) y el Heap (Montículo).
+El Heap (Donde viven los Objetos)
 
-    HEAP (Montículo): El centro. Aquí es donde viven los objetos reales (el número 10, el texto 'hello', la lista, etc.). Cada objeto tiene una dirección de memoria (como 0x100).
+En Python, las funciones son objetos. Cuando defines square_number y do_something, se crean dos "cajas" en el Heap que contienen el código de esas funciones. No son simples nombres, son entidades físicas en la memoria.
+El Stack (Donde ocurre la ejecución)
+    Global Frame: Es el espacio principal. Aquí, los nombres square_number y do_something son en realidad punteros (las flechas negras) que indican en qué parte del Heap están las funciones reales.
+    do_something Frame: Cuando llamas a la función, se crea un nuevo bloque en el Stack para su ejecución:
+        El parámetro f recibe una copia de la flecha. Ahora f apunta exactamente al mismo objeto que square_number. Esto es el pasaje por referencia.
+        El parámetro x guarda el valor entero 3.
 
-2. Antes de la llamada (Izquierda)
+El Flujo de Trabajo
+    Dentro de do_something, el código dice return f(x).
+    Python sigue la flecha de f hacia el Heap, llega a la función square_number y la ejecuta con el valor x (que es 3).
+    square_number realiza la operación 3×3.
+    El resultado 9 viaja de regreso y se imprime.
 
-Tus variables globales (x, s, b, L...) apuntan a objetos en el Heap. Por ejemplo, la variable L (una lista) apunta al objeto [1, 2] en la memoria.
-3. El momento de la llamada (my_func)
+Resumen Visual
+¿Por qué es esto importante?
+Al pasar solo la referencia (la flecha) y no copiar toda la función, Python es extremadamente eficiente. Puedes tener una función con miles de líneas de código, pero al pasarla como parámetro, solo estás moviendo un pequeño puntero de memoria.
+¿Te gustaría que probemos a modificar este código para que, por ejemplo, do_something aplique la función dos veces seguidas (composición)? Sería un excelente ejercicio para ver cómo se mueven los resultados en el Stack.
 
-Cuando llamas a la función, Python no copia los objetos. Lo que hace es copiar las "flechas" (las referencias).
-
-    La variable local a dentro de la función ahora apunta al mismo objeto 10 que la variable x de afuera.
-
-    La variable local d apunta a la misma lista [1, 2] que la variable L de afuera.
-
-4. Modificación dentro de la función (El cuadro de texto abajo a la derecha)
-
-Aquí es donde se ve la diferencia crucial entre tipos de datos:
-A. Tipos INMUTABLES (int, str, bool, tuple)
-
-Si intentas cambiar a = 20 o s += '!':
-
-    Como los números y strings no se pueden cambiar (son inmutables), Python rompe la flecha de la variable local y crea un objeto nuevo en el Heap.
-
-    Resultado: La variable de afuera (x) sigue valiendo 10. El cambio no se nota afuera.
-
-B. Tipos MUTABLES (list, dict, set)
-
-Si haces d.append(3) o f['b'] = 2:
-
-    Como las listas y diccionarios sí se pueden modificar, Python viaja por la flecha y modifica el objeto original que está en el Heap.
-
-    Resultado: Como la variable de afuera (L) apunta al mismo objeto, cuando la función termina, la lista de afuera ahora tiene el nuevo elemento. El cambio sí se nota afuera.
-
-Resumen de la imagen:
-
-    Python pasa referencias: No copia datos pesados, lo cual lo hace rápido.
-
-    Reasignar (=) rompe la conexión: Si usas el signo igual para darle un nuevo valor a un parámetro, dejas de afectar al original.
-
-    Mutar (.append, .add, [key]=) mantiene la conexión: Si usas métodos que cambian el objeto "por dentro", estarás afectando a la variable original que pasaste desde afuera.
+_____________________________________________________________________________________________________________________________________________________________________________

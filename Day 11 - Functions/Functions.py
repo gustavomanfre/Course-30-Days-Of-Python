@@ -21,11 +21,17 @@ r = 2
 print(area_circle(r,π))
 
 #Escriba una función llamada add_all_nums que toma un número arbitrario de argumentos y suma todos los argumentos. Compruebe si todos los elementos de la lista son tipos de números. Si no, da una retroalimentación razonable.
+
 #La temperatura en °C se puede convertir a °F usando esta fórmula: °F = (°C x 9/5) + 32. Escriba una función que convierta °C a °F, .
+
 #Escriba una función llamada check-season, toma un parámetro de mes y devuelve la temporada: otoño, invierno, primavera o verano.
+
 #Escribir una función llamada calcula_slope que devuelve la pendiente de una ecuación lineal
+
 #La ecuación cuadrática se calcula como sigue: ax2 + bx + c = 0. Escriba una función que calcule el conjunto de soluciones de una ecuación cuadrática, solve_quadratic_eqn.
+
 #Declarar una función llamada print_list. Toma una lista como parámetro e imprime cada elemento de la lista.
+
 #Declarar una función llamada reverse_list. Toma una matriz como parámetro y devuelve lo contrario de la matriz (utiliza bucles).
 
 #print(reverse_list([1, 2, 3, 4, 5]))
