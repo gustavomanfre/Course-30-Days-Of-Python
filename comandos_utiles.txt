@@ -27,3 +27,49 @@ Si quieres ver qué hay dentro de tus acumuladores (sum_par, word_list) paso a p
     Inicia el Debugging: Presiona F5 (elige "Python File").
     Inspecciona: El código se detendrá en ese punto. En el panel de la izquierda verás la sección "Variables". Podrás ver cómo cambian los valores en cada vuelta del bucle.
     Consola de depuración: En la parte inferior, busca la pestaña "Debug Console". Ahí puedes escribir el nombre de una variable (ej: invert_fruits) y presiona Enter para ver su estado actual en ese segundo.
+
+
+
+
+
+
+
+
+    El error que ves en la terminal (imagen 2) ocurre porque estás intentando ejecutar un comando de Python directamente en la Bash (la terminal de Linux), y la terminal no entiende esa sintaxis.
+
+Aquí te explico los dos motivos principales:
+1. Bash vs. Python
+
+La terminal (itc@itc-Latitude-7480:~$) espera comandos del sistema operativo (como ls, cd, mkdir). Cuando escribes help(random), la terminal intenta interpretarlo como un programa de sistema, no lo encuentra y lanza el "error sintáctico".
+
+    help() es una función interna de Python. Para usarla, primero debes entrar al intérprete de Python escribiendo python3 en la terminal.
+
+2. El módulo no está importado
+
+Incluso dentro de Python, si haces help(random) sin antes haber puesto import random, te dará un error porque Python no sabrá qué es "random".
+Cómo solucionarlo correctamente
+
+Tienes dos formas de consultar la ayuda de un módulo desde la terminal:
+Opción A: Desde el intérprete interactivo (Recomendado)
+
+    En la terminal escribe: python3 (verás que el símbolo cambia a >>>).
+
+    Escribe: import random
+
+    Escribe: help(random)
+
+Opción B: Comando directo desde la terminal
+
+Si solo quieres leer la documentación sin entrar a Python, usa el comando pydoc:
+
+    Escribe: python3 -m pydoc random
+
+Nota sobre tu código de la Imagen 1
+
+Relacionando esto con tu esquema de memoria:
+
+    En el Global Frame, para que square_number o random existan, deben estar definidos o importados.
+
+    Si intentas llamar a algo que no existe en el Heap, Python no puede crear el puntero (la flecha) y el programa falla.
+
+¿Te gustaría que te ayude a crear un script que guarde toda la información del módulo random en un archivo de texto para que lo puedas leer con calma? Sería una buena forma de practicar el uso de sys y archivos.
