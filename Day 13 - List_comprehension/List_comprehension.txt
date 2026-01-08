@@ -1,0 +1,5 @@
+Listas por Comprension
+
+# Generating odd numbers
+odd_numbers = [i for i in range(21) if i % 2 != 0]  # to generate odd numbers in range 0 to 21
+print(odd_numbers)                      # [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
