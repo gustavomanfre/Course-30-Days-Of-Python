@@ -1,0 +1,45 @@
+Esta imagen es la representación visual exacta de lo que ocurre "bajo el capó" de Python cuando ejecutas ese código. Ilustra cómo Python maneja la memoria y, lo más importante, cómo una función puede comportarse como una variable más.
+
+Aquí tienes la explicación desglosada por partes:
+1. La División Principal: Stack vs. Heap
+
+    Izquierda (STACK / Pila): Es la zona de "ejecución ordenada". Aquí se apilan los contextos (Frames) de las funciones que están corriendo. Es temporal; cuando la función termina (hace return), su cuadro desaparece (POP).
+
+    Derecha (HEAP / Montón): Es la zona de "almacenamiento". Aquí viven los Objetos reales. En Python, todo es un objeto (números, listas y funciones). Los datos aquí persisten mientras alguien los necesite.
+
+2. El Flujo Paso a Paso (Siguiendo las flechas)
+A. El Global Frame (Inicio)
+
+En la parte inferior del Stack ves el Global Frame.
+
+    Python lee tu código y crea dos objetos de tipo function en el Heap: Func1 (sum_numbers) y Func2 (higher_order_function).
+
+    Las variables sum_numbers y higher_order_function en el Stack son solo etiquetas (flechas) que apuntan a esos objetos en el Heap.
+
+B. La llamada a higher_order_function (Frame del Medio)
+
+Cuando ejecutas result = higher_order_function(...), se crea un nuevo cuadro en el Stack. Aquí ocurre la magia del "Funcionar como parámetro":
+
+    El parámetro f: Fíjate en la flecha que sale de f. Apunta exactamente al mismo objeto que sum_numbers.
+
+        No se creó una copia de la función.
+
+        Simplemente, f es un nuevo nombre temporal para referirse a la lógica de sum_numbers.
+
+    El parámetro lst: Apunta al objeto List1 en el Heap ([1, 2, 3...]).
+
+C. La ejecución interna sum_numbers (Frame Superior)
+
+Dentro de la función de orden superior, llamamos a f(lst). Como f es sum_numbers, se abre un nuevo cuadro arriba del todo:
+
+    El parámetro nums: Observa que la flecha de nums va al mismo objeto List1 que lst. Python no duplicó la lista, solo pasó la referencia (dirección de memoria).
+
+    El cálculo: La función suma los valores y crea un nuevo objeto entero en el Heap (Int1 con valor 15).
+
+3. Conclusiones Clave de la Imagen
+
+    Las funciones son datos: En el Heap, ves que Func1 y Func2 ocupan espacio igual que la lista List1. Esto demuestra que para Python, una función es un objeto más que se puede pasar de mano en mano.
+
+    Referencias (Las Flechas): El Stack no guarda los datos pesados (como la lista completa o el código de la función), solo guarda "direcciones" o punteros para saber dónde encontrarlos en el Heap.
+
+    Aliasing: sum_numbers (en Global) y f (en local) son dos nombres distintos para el mismo objeto Func1.
