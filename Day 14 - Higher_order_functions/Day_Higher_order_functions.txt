@@ -1,45 +1,603 @@
-Esta imagen es la representación visual exacta de lo que ocurre "bajo el capó" de Python cuando ejecutas ese código. Ilustra cómo Python maneja la memoria y, lo más importante, cómo una función puede comportarse como una variable más.
+Aquí tienes la explicación detallada de la Pila de Ejecución (Call Stack) en Python.
 
-Aquí tienes la explicación desglosada por partes:
+1. ¿Qué es el Stack realmente? (El Algoritmo LIFO)
+
+Imagina una pila de platos sucios en un restaurante.
+    El Algoritmo: Es LIFO (Last In, First Out - Último en entrar, Primero en salir).
+    Solo puedes poner un plato nuevo encima del anterior (PUSH).
+    Solo puedes lavar (sacar) el plato que está arriba de todo (POP).
+
+En Python, cada "plato" es un Frame (Marco de Ejecución).
+2. ¿Qué hay dentro de cada "Plato" (Frame)?
+
+Cada vez que llamas a una función, Python crea un Frame nuevo y lo pone en el tope de la pila. Ese Frame es un espacio aislado que contiene:
+    Las Variables Locales (Nombres): Aquí están los nombres que definiste dentro de la función (ej: summation, nums, f).
+    Las Referencias (Las Flechas): Aquí es donde entra tu duda. En el Stack NO se guardan los objetos.
+        Si tienes x = [1, 2], el Stack guarda el nombre x y una dirección de memoria (puntero) que dice: "El objeto real está en el Heap en la dirección 0x55A...".
+    El "Return Address": La instrucción de a dónde debe volver el control del programa cuando esta función termine.
+
+3. ¿Contexto Global vs. Contexto de Función?
+
+Sí, se guardan en la misma estructura (la Pila), pero en niveles diferentes.
+    Contexto Global (Módulo): Es el primer plato que se pone en la mesa. Es el "Frame base".
+        Contiene las variables definidas fuera de cualquier función.
+        Este Frame nunca muere (nunca se hace pop) hasta que el programa termina por completo.
+    Contexto de Función: Son los platos que se apilan encima.
+        Nacen cuando llamas a la función.
+        Mueren inmediatamente cuando la función hace return.
+
+4. Visualización del Proceso: "Todo es un Objeto"
+
+Vamos a ver cómo interactúa el Stack con el Heap usando tu duda sobre las referencias.
+
+Imagina este código simple:
+
+Aquí tienes la explicación detallada de la Pila de Ejecución (Call Stack) en Python.
+1. ¿Qué es el Stack realmente? (El Algoritmo LIFO)
+
+Imagina una pila de platos sucios en un restaurante.
+    El Algoritmo: Es LIFO (Last In, First Out - Último en entrar, Primero en salir).
+    Solo puedes poner un plato nuevo encima del anterior (PUSH).
+    Solo puedes lavar (sacar) el plato que está arriba de todo (POP).
+
+En Python, cada "plato" es un Frame (Marco de Ejecución).
+2. ¿Qué hay dentro de cada "Plato" (Frame)?
+
+Cada vez que llamas a una función, Python crea un Frame nuevo y lo pone en el tope de la pila. Ese Frame es un espacio aislado que contiene:
+
+    Las Variables Locales (Nombres): Aquí están los nombres que definiste dentro de la función (ej: summation, nums, f).
+    Las Referencias (Las Flechas): Aquí es donde entra tu duda. En el Stack NO se guardan los objetos.
+        Si tienes x = [1, 2], el Stack guarda el nombre x y una dirección de memoria (puntero) que dice: "El objeto real está en el Heap en la dirección 0x55A...".
+    El "Return Address": La instrucción de a dónde debe volver el control del programa cuando esta función termine.
+
+3. ¿Contexto Global vs. Contexto de Función?
+
+Sí, se guardan en la misma estructura (la Pila), pero en niveles diferentes.
+
+    Contexto Global (Módulo): Es el primer plato que se pone en la mesa. Es el "Frame base".
+        Contiene las variables definidas fuera de cualquier función.
+        Este Frame nunca muere (nunca se hace pop) hasta que el programa termina por completo.
+
+    Contexto de Función: Son los platos que se apilan encima.
+        Nacen cuando llamas a la función.
+        Mueren inmediatamente cuando la función hace return.
+
+4. Visualización del Proceso: "Todo es un Objeto"
+
+Vamos a ver cómo interactúa el Stack con el Heap usando tu duda sobre las referencias.
+
+Imagina este código simple:
+
+Paso A: Inicio (Contexto Global)
+Python inicia.
+    Crea el objeto int(10) en el Heap.
+    Crea el Global Frame en el Stack.
+    En ese Frame, escribe el nombre a y le asigna la referencia al objeto 10.
+
+Paso B: Llamada a saludo() (PUSH)
+
+Se llama a la función.
+
+    PUSH: Python crea un nuevo Frame para saludo y lo pone encima del Global Frame.
+    Ahora el "foco" de ejecución está arriba. El Global Frame queda "congelado" abajo.
+    Dentro del Frame de saludo:
+        Se crea el objeto str("Hola") en el Heap.
+        Se escribe el nombre texto en el Stack (Frame saludo) con la referencia al "Hola".
+
+Paso C: Retorno (POP)
+
+La función termina (return texto).
+    Devuelve la referencia del objeto "Hola" a quien lo llamó.
+    POP: El Frame de saludo se destruye.
+        ¡Ojo! La variable texto (el nombre) desaparece.
+        Pero el objeto "Hola" en el Heap sigue existiendo si alguien más lo atrapó. Si nadie lo atrapó, pasa el basurero (Garbage Collector) y lo borra.
+
+---------------------------------------------------------------------------------------------------------------------
+Funciones de orden superior.
+
+    -Una función puede tomar una o más funciones como parámetros
+    -Una función puede ser devuelta como resultado de otra función
+    -Una función puede ser modificada
+    -Una función puede ser asignada a una variable
+
+En esta sección cubriremos:
+
+    -Funciones de manejo como parámetros
+    -Devolución de funciones como valor de retorno de otras funciones
+    -Uso de cierres y decoradores de Python
+
+Funcionar como un parámetro:
+
+def sum_numbers(nums):  # normal function
+    return sum(nums)    # a sad function abusing the built-in sum function :<
+
+def higher_order_function(f, lst):  # function as a parameter
+    summation = f(lst)
+    return summation
+
+result = higher_order_function(sum_numbers, [1, 2, 3, 4, 5])
+print(result)       # 15
+
 1. La División Principal: Stack vs. Heap
 
-    Izquierda (STACK / Pila): Es la zona de "ejecución ordenada". Aquí se apilan los contextos (Frames) de las funciones que están corriendo. Es temporal; cuando la función termina (hace return), su cuadro desaparece (POP).
-
-    Derecha (HEAP / Montón): Es la zona de "almacenamiento". Aquí viven los Objetos reales. En Python, todo es un objeto (números, listas y funciones). Los datos aquí persisten mientras alguien los necesite.
+    (STACK / Pila): Es la zona de "ejecución ordenada". 
+        Aquí se apilan los contextos (Frames) de las funciones que están corriendo. 
+        Es temporal; cuando la función termina (hace return), su cuadro desaparece (POP).
+    (HEAP / Montón): Es la zona de "almacenamiento". 
+    Aquí viven los Objetos reales. 
+    En Python, todo es un objeto (números, listas y funciones). 
+    Los datos aquí persisten mientras alguien los necesite.
 
 2. El Flujo Paso a Paso (Siguiendo las flechas)
+
 A. El Global Frame (Inicio)
-
 En la parte inferior del Stack ves el Global Frame.
-
-    Python lee tu código y crea dos objetos de tipo function en el Heap: Func1 (sum_numbers) y Func2 (higher_order_function).
-
+    Python lee tu código y crea dos objetos de tipo function en el Heap: 
+        -Func1 (sum_numbers)
+        -Func2 (higher_order_function).
     Las variables sum_numbers y higher_order_function en el Stack son solo etiquetas (flechas) que apuntan a esos objetos en el Heap.
 
 B. La llamada a higher_order_function (Frame del Medio)
-
-Cuando ejecutas result = higher_order_function(...), se crea un nuevo cuadro en el Stack. Aquí ocurre la magia del "Funcionar como parámetro":
-
-    El parámetro f: Fíjate en la flecha que sale de f. Apunta exactamente al mismo objeto que sum_numbers.
-
+Cuando ejecutas result = higher_order_function(...), se crea un nuevo cuadro en el Stack. 
+Aquí ocurre la magia del "Funcionar como parámetro":
+    El parámetro f: Fíjate en la flecha que sale de f. 
+    Apunta exactamente al mismo objeto que sum_numbers.
         No se creó una copia de la función.
-
         Simplemente, f es un nuevo nombre temporal para referirse a la lógica de sum_numbers.
-
     El parámetro lst: Apunta al objeto List1 en el Heap ([1, 2, 3...]).
 
 C. La ejecución interna sum_numbers (Frame Superior)
-
-Dentro de la función de orden superior, llamamos a f(lst). Como f es sum_numbers, se abre un nuevo cuadro arriba del todo:
-
-    El parámetro nums: Observa que la flecha de nums va al mismo objeto List1 que lst. Python no duplicó la lista, solo pasó la referencia (dirección de memoria).
-
+Dentro de la función de orden superior, llamamos a f(lst). 
+    Como f es sum_numbers, se abre un nuevo cuadro arriba del todo:
+    El parámetro nums: Observa que la flecha de nums va al mismo objeto List1 que lst. 
+    Python no duplicó la lista, solo pasó la referencia (dirección de memoria).
     El cálculo: La función suma los valores y crea un nuevo objeto entero en el Heap (Int1 con valor 15).
 
 3. Conclusiones Clave de la Imagen
-
-    Las funciones son datos: En el Heap, ves que Func1 y Func2 ocupan espacio igual que la lista List1. Esto demuestra que para Python, una función es un objeto más que se puede pasar de mano en mano.
-
+    Las funciones son datos: En el Heap, ves que Func1 y Func2 ocupan espacio igual que la lista List1. 
+    Esto demuestra que para Python, una función es un objeto más que se puede pasar de mano en mano.
     Referencias (Las Flechas): El Stack no guarda los datos pesados (como la lista completa o el código de la función), solo guarda "direcciones" o punteros para saber dónde encontrarlos en el Heap.
-
     Aliasing: sum_numbers (en Global) y f (en local) son dos nombres distintos para el mismo objeto Func1.
+
+
+---------------------------------------------------------------------------------------------------------------------
+Funcionar como un valor de retorno.
+def square(x):          # a square function
+    return x ** 2
+
+def cube(x):            # a cube function
+    return x ** 3
+
+def absolute(x):        # an absolute value function
+    if x >= 0:
+        return x
+    else:
+        return -(x)
+
+def higher_order_function(type): # a higher order function returning a function
+    if type == 'square':
+        return square
+    elif type == 'cube':
+        return cube
+    elif type == 'absolute':
+        return absolute
+
+result = higher_order_function('square')
+print(result(3))       # 9
+result = higher_order_function('cube')
+print(result(3))       # 27
+result = higher_order_function('absolute')
+print(result(-3))      # 3
+
+1. Funciones como "Ciudadanos de Primera Clase"
+En Python, las funciones son objetos. 
+Cuando escribes square (sin paréntesis), no estás ejecutando nada; 
+estás haciendo referencia a la dirección de memoria donde vive el código de esa función en el Heap.
+    square: Es el objeto función (el "control remoto").
+    square(3): Es la ejecución de la función (el "botón presionado").
+
+2. ¿Es esto Polimorfismo?
+Sí, absolutamente. En el sentido más puro, el polimorfismo es la capacidad de algo para tomar múltiples formas.
+En tu código, la variable result es polimórfica:
+    En una línea, result apunta a la lógica de x2.
+    En otra, apunta a la lógica de x3.
+    La interfaz es la misma: Tú siempre llamas a result(3). No te importa qué hay adentro, solo sabes que "se puede llamar".
+
+    Dato Clave: En programación orientada a objetos (POO), el polimorfismo suele hacerse con clases y herencia. 
+    En Python, gracias al Duck Typing ("si camina como pato y suena como pato..."), 
+    el polimorfismo es mucho más natural: si un objeto tiene el método __call__ (es decir, se puede llamar), Python lo trata como una función y listo.
+
+Esta técnica se usa constantemente para:
+    Configuración dinámica: Elegir un algoritmo de ordenamiento según el tamaño de los datos.
+    Decoradores: Modificar el comportamiento de una función envolviéndola en otra.
+    Callbacks: Decirle a un botón: "No sé qué vas a hacer cuando te presionen, pero aquí tienes la función que debes ejecutar".
+
+---------------------------------------------------------------------------------------------------------------------
+
+Entender cómo funciona este código requiere visualizar el concepto de Closure (Cierre) y cómo Python maneja los ámbitos (scopes) de las variables.
+
+Aquí tienes la explicación detallada del proceso y el algoritmo de búsqueda que utiliza Python.
+El Algoritmo: Regla LEGB
+
+Para alcanzar cada valor, Python aplica un algoritmo de búsqueda llamado LEGB. Cuando el programa encuentra un nombre (como ten o num), busca en este orden estricto:
+
+    L (Local): Dentro de la función actual.
+
+    E (Enclosing): En el ámbito de las funciones que envuelven a la actual (aquí es donde ocurre la magia del closure).
+
+    G (Global): En el nivel superior del archivo/módulo.
+
+    B (Built-in): Nombres preinstalados en Python (como print o len).
+
+Paso a Paso: El viaje de la memoria
+1. La llamada add_ten() (Creación del Closure)
+
+    Se crea un Frame en el Stack para add_ten.
+
+    Se crea la variable ten = 10 dentro de ese Frame.
+
+    Se define la función interna add. En este momento, Python nota que add necesita la variable ten de su "padre".
+
+    La Clave: Aunque add_ten termina y su Frame debería desaparecer del Stack (hacer POP), Python mueve la variable ten a un lugar especial en el Heap vinculado a la función add. Esto es el Closure.
+
+    closure_result ahora es una referencia a esa función add que "lleva puesta una mochila" con el valor 10.
+
+2. La llamada closure_result(5)
+
+    Se crea un nuevo Frame para add.
+
+    Búsqueda de num: Python aplica LEGB. Lo encuentra inmediatamente en L (Local) porque es el argumento (valor 5).
+
+    Búsqueda de ten:
+
+        Busca en L (Local): No está.
+
+        Busca en E (Enclosing): ¡Lo encuentra! Es el valor 10 que quedó guardado en el closure.
+
+    Suma 5+10 y retorna 15.
+
+3. La llamada closure_result(10)
+
+    Se repite el mismo proceso.
+
+    num se encuentra en Local como 10.
+
+    ten se vuelve a encontrar en Enclosing como 10.
+
+    Suma 10+10 y retorna 20.
+
+Visualización del Mapa de Memoria
+
+Para este caso específico, el mapa se vería así:
+
+    Global Frame: Contiene el nombre closure_result apuntando al objeto función en el Heap.
+
+    Heap: El objeto función add tiene un atributo oculto (__closure__) que mantiene una referencia al objeto int(10).
+
+    Stack: Cada vez que llamas a closure_result(), aparece un Frame temporal para la ejecución que desaparece al terminar, pero el valor ten permanece en el Heap mientras la función exista.
+
+Buenísima pregunta, porque la imagen confunde a mucha gente si no se entiende qué está mostrando el visualizador (tipo Python Tutor). Vamos por partes y con precisión técnica.
+
+1️⃣ ¿Por qué en el Global frame aparecen add_ten y closure_result “dentro del mismo recuadro”?
+🔹 Qué representa el Global frame
+
+El Global frame es un solo frame, no varios.
+
+Ese recuadro representa:
+
+El namespace global del programa (el diccionario globals())
+
+Todo lo que se define al nivel del archivo vive ahí:
+add_ten = <function>
+closure_result = <function>
+
+Por eso en la imagen ves:
+Global frame
+├── add_ten
+└── closure_result
+
+👉 No significa que estén relacionados lógicamente, solo que:
+
+Comparten el mismo ámbito
+
+Están almacenados en el mismo diccionario global
+
+Técnicamente:
+
+
+globals() == {
+    'add_ten': <function add_ten>,
+    'closure_result': <function add>
+}
+
+🔹 Por qué parecen “al mismo nivel visual”
+
+El visualizador dibuja frames como cajas, no como pila de llamadas:
+
+Un frame = un entorno de variables
+
+El global frame siempre existe
+
+No se destruye nunca mientras el programa corre
+
+Por eso:
+
+add_ten y closure_result están en el mismo recuadro
+
+No hay jerarquía entre ellos
+
+Son nombres distintos apuntando a objetos distintos
+
+2️⃣ Entonces… ¿qué es la flecha hacia add(num) [parent=f1]?
+
+Esa flecha indica referencia a un objeto función, no ejecución.
+
+closure_result ─────▶ function add(num) [parent=f1]
+
+Significa:
+
+closure_result apunta al objeto función add
+
+Ese objeto función tiene un entorno padre (parent=f1)
+
+Ese parent=f1 es la clave del cierre.
+
+3️⃣ ¿Cómo se busca el valor de ten? (parte más importante)
+
+Vamos paso a paso, exactamente como lo hace Python.
+
+Código ejecutado:
+
+return num + ten
+
+🔍 Resolución de nombres (LEGB)
+
+Python busca ten usando esta regla:
+
+L – Local → ¿ten está en el frame de add?
+
+FRAME add
+└── num = 5
+
+❌ No
+
+E – Enclosing → ¿ten está en el entorno envolvente?
+✔️ Sí
+
+Pero ojo:
+👉 ese entorno NO es el frame de add_ten, porque ese frame ya fue destruido.
+
+4️⃣ Entonces, ¿dónde está realmente ten?
+🔹 Está en una closure cell
+
+Cuando Python crea la función add, detecta que:
+
+ten no es local
+
+No es global
+
+Es una variable libre
+
+Entonces crea una cell object.
+
+Conceptualmente:
+function add
+├── __closure__
+│    └── cell ──▶ 10
+└── code object
+El parent=f1 en la imagen representa:
+
+“Esta función tiene acceso a un entorno envolvente preservado”
+
+5️⃣ Búsqueda real de ten en tiempo de ejecución
+
+Cuando llamás:
+closure_result(5)
+
+Python hace:
+
+Frame actual
+FRAME add
+└── num = 5
+
+Resolución de ten
+
+    Local → ❌
+
+    Enclosing → ✔️
+
+    Busca en add.__closure__
+
+    Encuentra la cell
+
+    Extrae cell_contents = 10
+
+num + ten
+5   + 10 = 15
+
+6️⃣ Por qué la flecha va de add a add(num) [parent=f1]
+
+Esa flecha NO significa llamada, significa:
+
+El objeto función add mantiene una referencia a su entorno léxico
+
+Es una relación estructural, no dinámica.
+
+7️⃣ Resumen visual simplificado
+
+GLOBAL FRAME
+├── add_ten ─────────▶ function
+└── closure_result ──▶ function add
+                         │
+                         └── __closure__
+                              └── cell → 10
+
+Cada llamada crea:
+
+FRAME add
+└── num → valor
+
+8️⃣ Frase técnica clave (para que te quede claro)
+
+ten no se busca en el global frame ni en un frame activo, sino en una closure cell asociada al objeto función, la cual preserva el entorno léxico de la función envolvente.
+------------------------------- idem anterior
+Entender cómo funciona este código requiere visualizar el concepto de Closure (Cierre) y cómo Python maneja los ámbitos (scopes) de las variables.
+
+Aquí tienes la explicación detallada del proceso y el algoritmo de búsqueda que utiliza Python.
+El Algoritmo: Regla LEGB
+
+Para alcanzar cada valor, Python aplica un algoritmo de búsqueda llamado LEGB. Cuando el programa encuentra un nombre (como ten o num), busca en este orden estricto:
+
+    L (Local): Dentro de la función actual.
+
+    E (Enclosing): En el ámbito de las funciones que envuelven a la actual (aquí es donde ocurre la magia del closure).
+
+    G (Global): En el nivel superior del archivo/módulo.
+
+    B (Built-in): Nombres preinstalados en Python (como print o len).
+
+Paso a Paso: El viaje de la memoria
+1. La llamada add_ten() (Creación del Closure)
+
+    Se crea un Frame en el Stack para add_ten.
+
+    Se crea la variable ten = 10 dentro de ese Frame.
+
+    Se define la función interna add. En este momento, Python nota que add necesita la variable ten de su "padre".
+
+    La Clave: Aunque add_ten termina y su Frame debería desaparecer del Stack (hacer POP), Python mueve la variable ten a un lugar especial en el Heap vinculado a la función add. Esto es el Closure.
+
+    closure_result ahora es una referencia a esa función add que "lleva puesta una mochila" con el valor 10.
+
+2. La llamada closure_result(5)
+
+    Se crea un nuevo Frame para add.
+
+    Búsqueda de num: Python aplica LEGB. Lo encuentra inmediatamente en L (Local) porque es el argumento (valor 5).
+
+    Búsqueda de ten:
+
+        Busca en L (Local): No está.
+
+        Busca en E (Enclosing): ¡Lo encuentra! Es el valor 10 que quedó guardado en el closure.
+
+    Suma 5+10 y retorna 15.
+
+3. La llamada closure_result(10)
+
+    Se repite el mismo proceso.
+
+    num se encuentra en Local como 10.
+
+    ten se vuelve a encontrar en Enclosing como 10.
+
+    Suma 10+10 y retorna 20.
+
+Visualización del Mapa de Memoria
+
+Para este caso específico, el mapa se vería así:
+
+    Global Frame: Contiene el nombre closure_result apuntando al objeto función en el Heap.
+
+    Heap: El objeto función add tiene un atributo oculto (__closure__) que mantiene una referencia al objeto int(10).
+
+    Stack: Cada vez que llamas a closure_result(), aparece un Frame temporal para la ejecución que desaparece al terminar, pero el valor ten permanece en el Heap mientras la función exista.
+
+---------------------------------------------------------------------------------------------------------------------
+    Decoradores de Python Un decorador es un patrón de diseño en Python que permite a un usuario añadir nueva funcionalidad a un objeto existente sin modificar su estructura. Los decoradores generalmente se llaman antes de la definición de una función que desea decorar. Creación de decoradores Para crear una función de decorador, necesitamos una función externa con una función de envoltura interna. Ejemplo: # Normal function def greeting(): return 'Welcome to Python' def uppercase_decorator(function): def wrapper(): func = function() make_uppercase = func.upper() return make_uppercase return wrapper g = uppercase_decorator(greeting) print(g()) # WELCOME TO PYTHON ## Let us implement the example above with a decorator '''This decorator function is a higher order function that takes a function as a parameter''' def uppercase_decorator(function): def wrapper(): func = function() make_uppercase = func.upper() return make_uppercase return wrapper @uppercase_decorator def greeting(): return 'Welcome to Python' print(greeting()) # WELCOME TO PYTHON Explicame de forma mas sencilla, parti de la base y anda agregando de forma sencilla para entenderlo
+17:30
+Decoradores de Python - Explicación desde cero
+
+Voy a explicarte los decoradores paso a paso, empezando desde lo más básico.
+1️⃣ Concepto fundamental: Las funciones son objetos
+
+En Python, las funciones son "ciudadanos de primera clase", lo que significa que puedes tratarlas como cualquier otra variable:
+def saludar():
+    return "Hola"
+
+# Puedo guardar la función en una variable
+mi_funcion = saludar
+print(mi_funcion())  # Hola
+
+2️⃣ Funciones dentro de funciones
+Puedes definir una función dentro de otra función:
+
+def funcion_externa():
+    mensaje = "Hola desde afuera"
+    
+    def funcion_interna():
+        return "Hola desde adentro"
+    
+    return funcion_interna()
+
+print(funcion_externa())  # Hola desde adentro
+
+3️⃣ Retornar una función
+Aquí viene lo interesante: una función puede retornar otra función:
+def funcion_externa():
+    
+    def funcion_interna():
+        return "Hola"
+    
+    return funcion_interna  # Retorno la función, no la ejecuto
+
+# Guardo la función retornada
+mi_func = funcion_externa()
+# Ahora la ejecuto
+print(mi_func())  # Hola
+
+4️⃣ Funciones que reciben funciones
+Una función puede recibir otra función como parámetro:
+
+def saludar():
+    return "hola mundo"
+
+def gritar(alguna_funcion):
+    # Ejecuto la función que recibí
+    texto = alguna_funcion()
+    # La convierto a mayúsculas
+    return texto.upper()
+
+resultado = gritar(saludar)
+print(resultado)  # HOLA MUNDO
+
+5️⃣ Combinando todo: El decorador básico
+def saludar():
+    return "hola mundo"
+
+def decorador_mayusculas(funcion_original):
+    # Creo una nueva función que "envuelve" a la original
+    def envoltura():
+        # Ejecuto la función original
+        resultado = funcion_original()
+        # Le agrego funcionalidad (convertir a mayúsculas)
+        return resultado.upper()
+    
+    # Retorno la nueva función
+    return envoltura
+
+# "Decoro" mi función
+saludar_decorado = decorador_mayusculas(saludar)
+print(saludar_decorado())  # HOLA MUNDO
+
+6️⃣ Usando el símbolo @ (azúcar sintáctico)
+El símbolo @ es solo una forma más elegante de hacer lo anterior:
+
+# En lugar de hacer esto:
+# saludar_decorado = decorador_mayusculas(saludar)
+
+# Puedes hacer esto:
+@decorador_mayusculas
+def saludar():
+    return "hola mundo"
+
+print(saludar())  # HOLA MUNDO
+```
+
+## 📝 Resumen visual
+```
+Función original: saludar() → "hola mundo"
+                    ↓
+Decorador la envuelve y agrega funcionalidad
+                    ↓
+Función decorada: saludar() → "HOLA MUNDO"
