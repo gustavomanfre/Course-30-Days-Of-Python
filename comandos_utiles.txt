@@ -73,3 +73,8 @@ Relacionando esto con tu esquema de memoria:
     Si intentas llamar a algo que no existe en el Heap, Python no puede crear el puntero (la flecha) y el programa falla.
 
 ¿Te gustaría que te ayude a crear un script que guarde toda la información del módulo random en un archivo de texto para que lo puedas leer con calma? Sería una buena forma de practicar el uso de sys y archivos.
+
+
+
+____________________________________________________________________________________________________________________________________________________________________________
+Recuerda que para ver el formato visual en VS Code, debes presionar Control + Shift + V.
