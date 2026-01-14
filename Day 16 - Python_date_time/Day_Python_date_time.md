@@ -247,105 +247,51 @@ Python aplica el mismo algoritmo que usamos los humanos para restar horas:
     Si los segundos son insuficientes, pide prestado a los minutos.
     Si los minutos son insuficientes, pide prestado a las horas.
     Si las horas son insuficientes (como en este caso), pide prestado 1 día completo (24 horas).
-
-_______________________________________________________________________________________________________________
-
-1. La diferencia entre el "Molde" y la "Galleta"
-
-Para que no te líes, piensa en esto:
-
-    La Clase (datetime): Es el molde o la receta. No es una fecha real, es la "idea" de una fecha.
-
-    El Objeto (now o d): Es la galleta ya horneada. Es una fecha específica (ej. Hoy a las 10:00).
-
-2. ¿Cómo se crean los Objetos? (Constructores)
-
-Tienes dos formas principales de crear un objeto "inteligente" de fecha:
-
-    Manual: Tú le das los números.
-    Python
-
-    fecha_manual = datetime(2027, 1, 1) # Año, Mes, Día
-
-    Automático: Python mira el reloj del sistema.
-    Python
-
-    fecha_auto = datetime.now()
-
-Ambos crean lo mismo: un objeto datetime.
-3. ¿Cómo se usan los Métodos? (El gran lío)
-
-Aquí es donde te confundes. Hay dos formas de llamar a las funciones, pero la primera es la que usarás el 99% de las veces:
-A. A través del OBJETO (Lo más común ✅)
-
-Una vez que ya tienes la fecha guardada en una variable (el objeto), la variable "sabe" hacer cosas:
-
-    fecha_auto.timestamp() ➔ Te da el número de esa fecha.
-
-    fecha_auto.strftime(...) ➔ Convierte esa fecha en texto.
-
-B. A través de la CLASE (Solo para strptime ⚠️)
-
-Hay funciones que pertenecen a la "receta" porque sirven para crear objetos desde cero. La más importante es strptime:
-
-    datetime.strptime("texto", "formato") ➔ Correcto, porque estás fabricando un objeto nuevo a partir de un texto.
-
-    ¡Ojo! No puedes hacer datetime.timestamp(). Python se enoja porque te dirá: "¿El timestamp de qué fecha? No me has dado ninguna". Tendrías que pasarle el objeto dentro: datetime.timestamp(fecha_auto). Pero es mucho más largo y raro de escribir.
-
-📊 Resumen de uso para tus apuntes
-¿Qué quieres hacer?	¿Cómo se escribe?	¿Quién lo ejecuta?
-Crear fecha ahora	datetime.now()	La Clase
-Crear fecha manual	datetime(2025, 12, 31)	La Clase
-Convertir Texto ➔ Objeto	datetime.strptime(...)	La Clase
-Convertir Objeto ➔ Texto	objeto.strftime(...)	El Objeto
-Obtener segundos	objeto.timestamp()	El Objeto
-💡 Regla de oro:
-
-Si ya tienes la fecha guardada en una variable, usa variable.metodo(). Solo usa datetime.algo() cuando quieras crear o fabricar una fecha nueva (como con now o strptime).
 ____________________________________________________________________________________________________________________________________________________________
 
 La confusión viene de que datetime es un módulo, una clase y tiene métodos, y Python no lo separa visualmente.
 
-Vamos muy ordenado, corrigiendo lo que escribiste y explicando por qué se te mezcla todo.
+1️⃣ Primero: qué es Datetime realmente
 
-1️⃣ Primero: qué es datetime realmente
+En Python pasa esto: 
 
-En Python pasa esto:
-from datetime import datetime
-
-Acá:
+    from datetime import datetime
 
 datetime → es una CLASE
 
-Los objetos datetime representan fecha + hora
+En Python:
 
-Ejemplo de objeto:
-2027-01-01 00:00:00
+Llamar a una clase como si fuera una función CREA un objeto, Eso sí está creando un objeto, aunque no lo veas explícito.
 
-2️⃣ Formas correctas de crear un objeto datetime
+    datetime(2027, 1, 1)
+
+2️⃣ Formas correctas de crear un objeto datetime:
+
 ✔ Opción 1: fecha y hora actual
 datetime.now()
 
 ✔ Crea un objeto datetime con la fecha y hora actual
 ✔ Devuelve un objeto
 
-
 ✔ Opción 2: fecha y hora específica
 datetime(2027, 1, 1)
 ✔ Crea un objeto datetime manualmente
 ✔ Año, mes, día (hora opcional)
 
-❌ Lo que NO es correcto
-datetime.(2027,1,1)   # ❌ incorrecto
-El punto solo se usa para acceder a métodos o atributos, no para crear objetos.
+Los objetos datetime representan fecha + hora
+
+Ejemplo de objeto:
+2027-01-01 00:00:00
 
 3️⃣ La regla de oro (esto aclara todo)
 
 Primero creás un objeto datetime, después llamás métodos sobre ese objeto
 
-4️⃣ Ahora: timestamp() (acá suele estar la confusión)
+4️⃣ Ahora: timestamp().
+
 ❌ Lo que dijiste (incorrecto)
 datetime.timestamp(2027,1,1)  # ❌
+
 Esto NO funciona porque:
 
 timestamp() NO crea fechas
@@ -376,30 +322,27 @@ Se lee:
 
 6️⃣ Por qué se te confunde todo
 
-Porque mezclás tres niveles distintos:
+Hay tres niveles distintos:
 
 Nivel	Qué es
 Módulo	datetime
 Clase	datetime
 Objeto	dt = datetime(...)
 
-Y además:
+Y además: algunos métodos se llaman desde la clase (now, strptime), otros desde el objeto (timestamp, strftime)
 
-algunos métodos se llaman desde la clase (now, strptime)
+7️⃣ Tabla Aclaracion.
 
-otros desde el objeto (timestamp, strftime)
-
-7️⃣ Tabla clara (guardala)
 Qué quiero hacer	Cómo se hace
-Fecha actual	datetime.now()
+Fecha actual	    datetime.now()
 Fecha específica	datetime(2027, 1, 1)
-A timestamp	dt.timestamp()
-A string	dt.strftime()
+A timestamp	        dt.timestamp()
+A string	        dt.strftime()
 De string a fecha	datetime.strptime()
-8️⃣ Forma mental correcta (clave)
 
-❌ “datetime convierte cosas”
-✅ “datetime crea objetos, los objetos hacen cosas”
+8️⃣ Forma mental correcta:
+
+    ✅ “datetime crea objetos, los objetos hacen cosas”
 
 9️⃣ Ejemplo completo correcto
 
@@ -418,8 +361,9 @@ dt2 = datetime.strptime("2027-01-01", "%Y-%m-%d")
 print(dt2)
 
 🔟 Frase final para estudiar
-
 En Python, datetime es una clase que crea objetos de fecha y hora; los métodos de clase crean objetos y los métodos de instancia transforman esos objetos.
+
+____________________________________________________________________________________________________________________________________________________________
 
 
 
