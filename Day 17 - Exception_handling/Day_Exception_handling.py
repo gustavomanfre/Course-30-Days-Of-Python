@@ -104,7 +104,7 @@ print(cadena)
 
 #📝 Ejercicio 7: Buscador de Tesoros con Índice Tenemos una lista de cofres: cofres = ['Vacío', 'Vacío', 'Diamante', 'Vacío'].
 #Tu reto: Usa enumerate() para recorrer la lista y, cuando encuentres el 'Diamante', imprime: "¡Diamante encontrado en el cofre número [índice]!". 💎
-
+cofres = ['Vacío', 'Vacío', 'Diamante', 'Vacío']
 for i, j in enumerate(cofres):
     if j == 'Diamante':  # Comprobamos si el contenido es el Diamante
         print(f"¡Diamante encontrado en el cofre número {i}! 💎")
