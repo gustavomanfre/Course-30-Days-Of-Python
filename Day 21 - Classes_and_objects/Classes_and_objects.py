@@ -6,18 +6,13 @@
 # Ejercicios: Nivel 1
 # ------------------------------------------
 """
-Python tiene el módulo llamado estadísticas y podemos usar 
-este módulo para hacer todos los cálculos estadísticos. Sin embargo, 
-para aprender a hacer la función y reutilizar la función, tratemos de 
-desarrollar un programa, que calcula la medida de la tendencia central 
-de una muestra (media, mediana, modo) y la medida de la variabilidad 
-(intervalo, varianza, desviación estándar). 
+Python tiene el módulo llamado estadísticas y podemos usar este módulo para hacer todos los cálculos estadísticos. Sin embargo, 
+para aprender a hacer la función y reutilizar la función, tratemos de desarrollar un programa, que calcula la medida de la tendencia central 
+de una muestra (media, mediana, modo) y la medida de la variabilidad (intervalo, varianza, desviación estándar). 
 
-Además de esas medidas, encuentre la distribución mínima, max, de recuento, 
-percentil y de frecuencia de la muestra. 
+Además de esas medidas, encuentre la distribución mínima, max, de recuento, percentil y de frecuencia de la muestra. 
 
-Puede crear una clase llamada Statistics y crear todas las funciones 
-que realizan cálculos estadísticos como métodos para la clase Estadística. 
+Puede crear una clase llamada Statistics y crear todas las funciones que realizan cálculos estadísticos como métodos para la clase Estadística. 
 Compruebe la salida a continuación.
 """
 

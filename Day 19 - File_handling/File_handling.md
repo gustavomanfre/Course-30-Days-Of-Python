@@ -455,6 +455,7 @@ Number of lines: 2
     "Un archivo CSV es un formato de texto que representa datos tabulares; en Python se lee usando el módulo csv, donde cada fila se convierte en una lista de valores, permitiendo separar la lógica del encabezado de la de los datos."
 
 __________________________________________________________________________________________________________________________________________________________
+
 # 1. 'def' define la función. 'file_path: str' es un "type hint" que indica que espera un texto. '-> tuple[int, int]' avisa que la función devolverá una tupla con dos números enteros.
 def count_lines_words(file_path: str) -> tuple[int, int]:
     
@@ -580,3 +581,5 @@ La expresión generadora no ✔
 8️⃣ Frase clave para que no se te mezcle
 
 Ese for no es una estructura de control, es una expresión generadora que produce valores para otra función.
+
+__________________________________________________________________________________________________________________________________________________________

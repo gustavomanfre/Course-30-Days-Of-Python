@@ -3,8 +3,8 @@ import json
 import csv
 import re
 from collections import Counter
-sys.path.append("data")
-from stop_words import stop_words as sw # Used in Level 2-7
+#sys.path.append("data")
+#from stop_words import stop_words as sw # Used in Level 2-7
 
 # 💻 Ejercicios: Día 19 - Manejo de Archivos 
 
@@ -346,12 +346,21 @@ def count_languages(file_path: str):
         
         # csv.reader permite leer el archivo línea por línea,
         # donde cada línea se devuelve como una lista de valores (columnas)
+        #Estás creando un objeto lector (iterable). 
+        #Es como un puntero que está listo para recorrer el archivo fila por fila.
+        # id	        title	                    url	                num_points
+        # 1	        Learning Python is fun	    http://python.org	        100
+        # 2	        JS vs Java: The battle	    http://battle.com	        50
+        # 3	        Java for beginners	        http://java.com	            80
+
         csvreader = csv.reader(csvf)
 
         # Recorremos cada fila (row) del archivo CSV
         for row in csvreader:
             
-            # row es una lista (por ejemplo: ["title", "url", "author", ...])
+            #Vuelta1: row es una lista (por ejemplo: ["title", "url", "author", ...])
+            #Vuelta2: row recibe ['1', 'Learning Python is fun', 'http://python.org', '100']
+            #VUelta3: row recibe ['2', 'JavaScript is great', 'http://js.com', '150']
             # " ".join(row) une todos los elementos de la fila en un solo string
             # .lower() convierte todo a minúsculas para evitar problemas de mayúsculas
             line = " ".join(row).lower()
