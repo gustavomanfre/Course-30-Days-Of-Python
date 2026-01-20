@@ -198,27 +198,31 @@ lo más eficiente en Python es que incomes y expenses sean listas de diccionario
 # ESCRIBE TU CÓDIGO AQUÍ PARA LA CLASE PersonAccount
 
 class PersonAccount:
-    def __init__(self, nombre, apellido, ingreso, gastos):
+    def __init__(self, nombre, apellido):
         self.nombre = nombre
         self.apellido = apellido
         # Estructura : [{'amount': 1000, 'description': 'Salario'}]
-        self.ingreso = [] 
+        self.ingresos = [] 
         self.gastos = []
 
     #Ingreso Totales
-    def total_income ():
-        
+    def total_income (self):
+        return sum(self.ingresos)
+    
     #Gastos Totales
-    def total_expense ():
-        pass
+    def total_expense (self):
+        return sum(self.gastos)
+
     #Informacion de la cuenta
-    def add_income ():
-        pass
+    def add_income (self, ingreso, descripcion):
+        self.ingreso.append({"ingreso":ingreso, "descripcion": descripcion})
+
     #Añadir Gastos
-    def add_expense ():
-        pass
+    def add_expense (self, gasto,descripcion):
+        self.gastos.append({"gasto":gasto, "descripcion": descripcion})
+
     #Saldo cuenta
-    def account_balance ():
-        pass
+    def account_balance (self):
+        return self.total_income()- self.total_expense()
 
         
