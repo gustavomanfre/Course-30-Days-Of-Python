@@ -215,7 +215,7 @@ class PersonAccount:
 
     #Informacion de la cuenta
     def add_income (self, ingreso, descripcion):
-        self.ingreso.append({"ingreso":ingreso, "descripcion": descripcion})
+        self.ingresos.append({"ingreso":ingreso, "descripcion": descripcion})
 
     #Añadir Gastos
     def add_expense (self, gasto,descripcion):
