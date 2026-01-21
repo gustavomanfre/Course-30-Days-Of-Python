@@ -6,9 +6,7 @@ Imagina que internet es una biblioteca con billones de páginas, pero están esc
 El Web Scraping es la técnica de construir un "Bibliotecario Robótico" que:
 
     Viaja a la dirección (URL).
-
     Copia el código fuente.
-
     Filtra el ruido (colores, tamaños, botones) y se queda solo con la información pura.
 
 🛠️ Las Herramientas del Maestro
@@ -16,8 +14,18 @@ El Web Scraping es la técnica de construir un "Bibliotecario Robótico" que:
 Para que tu robot funcione en Python, necesitas dos componentes que actúan como los sentidos del robot:
 
     Requests (El Tacto): Permite al robot "tocar" el servidor de la página web y pedirle permiso para leer.
-
     BeautifulSoup (La Vista): Permite al robot "ver" y entender la estructura del código HTML, identificando dónde hay una tabla, un título o un precio.
+
+    1. Contexto general
+        Cuando trabajamos con web scraping, el objetivo no es “ver” una página web, sino leer su estructura.
+
+    Una página HTML está compuesta por:
+
+        etiquetas (table, tr, td, etc.)
+        atributos (id, class, cellpadding, etc.)
+        texto interno
+        
+    BeautifulSoup actúa como un intérprete del HTML, permitiéndonos navegar esa estructura como si fuera un árbol.
 
 💻 El Código Explicado "Desde Cero"
 
@@ -62,13 +70,115 @@ tables = soup.find_all('table', {'cellpadding':'3'})
 table = tables[0]
 
     Explicación: Las páginas web tienen muchas tablas. Con find_all, le decimos al robot: "Busca todas las tablas que tengan una característica (atributo) llamada cellpadding igual a 3". Como find_all devuelve una lista, usamos [0] para agarrar la primera que encontró.
+        -soup es un objeto BeautifulSoup que contiene todo el HTML de la página ya parseado.
+        Pensalo como: “La página web convertida en un objeto que Python puede recorrer”
+        -find_all() significa literalmente:
+        “Buscá TODOS los elementos que cumplan esta condición”
+        En este caso:
+            etiqueta: table
+            atributo: cellpadding="3"
+        Traducción humana:
+            “Buscá todas las tablas que tengan el atributo cellpadding con valor 3”
+        ¿Qué devuelve find_all()?
+            Siempre devuelve una lista, incluso si encuentra una sola tabla.
+        Ejemplo conceptual:
+            tables = [tabla1, tabla2, tabla3]
+        Cada elemento de la lista es un objeto Tag, no texto plano.
+        - Lista table = tables[0]
+        las listas en Python empiezan en índice 0
+            [0] significa “la primera tabla encontrada”
+        Traducción mental:
+            “De todas las tablas encontradas, usá la primera”
+        📌 En scraping esto es común cuando:
+            sabés que la tabla que te interesa siempre aparece primero o ya verificaste la estructura del HTML
+        La salida será algo parecido a esto (formato HTML):
+            <table cellpadding="3">
+            <tr>
+                <td>Edad</td>
+                <td>País</td>
+                <td>Ciudad</td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td>Finland</td>
+                <td>Helsinki</td>
+            </tr>
+            <tr>
+                <td>28</td>
+                <td>Finland</td>
+                <td>Espoo</td>
+            </tr>
+            </table>
 
+            ✔️ Es un objeto Tag que representa ese nodo del HTML
 Python
 
 for td in table.find('tr').find_all('td'):
     print(td.text)
 
     Explicación: Esto es un Bucle (Loop). Imagina que el robot está frente a una fila de la tabla (tr). La orden es: "Por cada celda (td) que veas en esta fila, lee el texto y muéstramelo en pantalla".
+
+    5. table.find('tr')
+    ¿Qué es tr?
+        tr significa table row representa una fila de la tabla
+    Entonces:
+        table.find('tr')
+    Significa:
+        “Dentro de esta tabla, buscá la primera fila (tr)”
+
+    📌 find() devuelve solo el primer elemento que encuentra.
+
+    6. find_all('td') sobre esa fila
+        ¿Qué es td?
+            td significa table data
+        representa una celda de una tabla
+        Entonces:   
+            table.find('tr').find_all('td')
+        
+        Traducción completa: “Dentro de la primera fila de la tabla, buscá todas las celdas”
+
+    Esto devuelve: [td1, td2, td3, ...]
+
+        Una lista de objetos td.
+
+        7. El bucle for
+            for td in table.find('tr').find_all('td'):
+
+        Esto es un bucle de recorrido.
+
+Traducción humana:
+
+“Para cada celda que exista en esta fila…”
+
+    Cada vuelta del bucle:
+    td representa una celda distinta
+    Forma correcta de pensarlo (mentalidad correcta 🧠)
+
+❌ Pensamiento incorrecto:
+
+    “Escribo código hasta que funcione”
+    ✔️ Pensamiento correcto:
+    “Estoy recorriendo un árbol HTML, nodo por nodo”
+    HTML se piensa como:
+
+    table
+    └── tr
+        ├── td
+        ├── td
+        └── td
+
+Tu código sigue exactamente ese camino.
+
+11. Resumen tipo libro 📘
+    find_all() → busca muchos → devuelve lista
+    find() → busca uno → devuelve un elemento
+    table → objeto HTML
+    tr → fila
+    td → celda
+    .text → texto limpio
+    for → recorrido secuencial
+
+
 
 _____________________________________________________________________________________________________________________________
 Bienvenidos al Capítulo: Raspado Web (Web Scraping). Imagina que internet es una biblioteca infinita de libros, pero no tienes permitido llevarte los libros a casa. Solo puedes leerlos en las mesas. El Web Scraping es el arte de construir un pequeño robot que entra a esa biblioteca, lee la información por ti y la anota en un cuaderno de forma organizada para que puedas usarla después.
