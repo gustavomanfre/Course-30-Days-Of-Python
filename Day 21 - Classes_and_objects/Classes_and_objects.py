@@ -6,8 +6,8 @@
 # Ejercicios: Nivel 1
 # ------------------------------------------
 """
-Python tiene el módulo llamado estadísticas y podemos usar este módulo para hacer todos los cálculos estadísticos. Sin embargo, 
-para aprender a hacer la función y reutilizar la función, tratemos de desarrollar un programa, que calcula la medida de la tendencia central 
+Python tiene el módulo llamado estadísticas y podemos usar este módulo para hacer todos los cálculos estadísticos. 
+Sin embargo, para aprender a hacer la función y reutilizar la función, tratemos de desarrollar un programa, que calcula la medida de la tendencia central 
 de una muestra (media, mediana, modo) y la medida de la variabilidad (intervalo, varianza, desviación estándar). 
 
 Además de esas medidas, encuentre la distribución mínima, max, de recuento, percentil y de frecuencia de la muestra. 
@@ -16,11 +16,37 @@ Puede crear una clase llamada Statistics y crear todas las funciones que realiza
 Compruebe la salida a continuación.
 """
 
-ages = [31, 26, 34, 37, 27, 26, 32, 32, 26, 27, 27, 24, 32, 33, 27, 25, 26, 38, 37, 31, 34, 24, 33, 29, 26]
 
 # ESCRIBE TU CÓDIGO AQUÍ PARA LA CLASE Statistics
-# class Statistics:
-#     ...
+class Statistics:
+
+    def __init__(self, ages):
+        self.ages_list = ages
+        self.cnt_nro = len(self.ages_list)
+
+
+    def calcular_media(self):
+        # Es la suma de todos los números dividida por la cantidad de números.
+        sum_nro = 0
+        #for age in self.ages:
+        #    sum_nro += age
+        sum_nro = sum(self.ages_list)
+        return sum_nro/self.cnt_nro
+    
+    def calcular_mediana(self):
+    # Mediana (Median)Es el valor que queda justo en el centro cuando ordenas los datos de menor a mayor.
+        ord_ages = sorted(self.ages_list)
+        if len (ord_ages)%2 == 0:
+            return (ord_ages[len(ord_ages)//2] + ord_ages[(len(ord_ages)//2)-1])/2
+        else:
+            return ord_ages[(len(ord_ages)//2)]
+
+    
+ages = [31, 26, 34, 37, 27, 26, 32, 32, 26, 27, 27, 24, 32, 33, 27, 25, 26, 38, 37, 31, 34, 24, 33, 29, 26]
+s1 = Statistics (ages)
+print(s1.calcular_media())
+print(s1.calcular_mediana())
+
 
 # --- SECCIÓN DE PRUEBAS (Descomentar cuando la clase esté lista) ---
 # data = Statistics(ages)
