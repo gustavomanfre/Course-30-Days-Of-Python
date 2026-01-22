@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 Para explicarte el Web Scraping de la mejor manera, voy a fusionar la claridad técnica de un manual de programación con la narrativa de un libro de aventuras. Imagina que este es el capítulo central de un libro titulado "El Traductor de Internet".
 🏛️ El Concepto: El Bibliotecario Robótico
 
@@ -263,4 +261,4 @@ for td in table.find('tr').find_all('td'):
     for td in ...: Esto es un Bucle. Le decimos: "Por cada celda (llamada td) que encuentres en la primera fila (tr), haz lo siguiente:".
 
     print(td.text): Imprime el texto que hay dentro de cada celda.
->>>>>>> 69388bf4d4d98e65262e3965c0283f912fd174ac
+
