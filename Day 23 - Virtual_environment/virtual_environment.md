@@ -577,8 +577,8 @@ if __name__ == '__main__':
 
 Paso 13: Ejecutar la aplicación
 Con el entorno virtual activado (debes ver (venv)), ejecuta:
-bashpython app.py
-```
+python app.py
+
 
 **Salida esperada:**
 ```
@@ -608,7 +608,7 @@ Press CTRL+C to quit
 
 Paso 15: Desactivar el entorno virtual
 Cuando termines de trabajar:
-bashdeactivate
+deactivate
 Tu prompt volverá a la normalidad (sin (venv)).
 
 🔄 Flujo de trabajo diario
