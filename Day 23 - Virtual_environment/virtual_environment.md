@@ -397,7 +397,9 @@ Paso 5: Verificar que se creó el entorno virtual
 Para Windows:
 bashdir
 Para Mac/Linux:
-bashls -la
+bash
+ls -la
+
 ```
 
 **Salida esperada:**

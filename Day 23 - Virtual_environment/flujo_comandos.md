@@ -112,7 +112,7 @@ cd my_flask_app
 **Tu ubicación actual debe ser:**
 itc@itc-Latitude-7480:~/Documentos/Course-30-Days-Of-Python/Day 23 - Virtual_environment/30DaysOfPython/my_flask_app$ 
 
-# Creamos eln entorno virtual.
+# Creamos el entorno virtual.
 $ virtualenv venv
 created virtual environment CPython3.12.3.final.0-64 in 250ms
   creator CPython3Posix(dest=/home/itc/Documentos/Course-30-Days-Of-Python/Day 23 - Virtual_environment/30DaysOfPython/my_flask_app/venv, clear=False, no_vcs_ignore=False, global=False)
@@ -151,9 +151,12 @@ $ source venv/bin/activate
 ¿Cómo saber si funcionó?
 Tu prompt cambiará para incluir (venv) al inicio:
 Antes:
-bashC:\Users\TuUsuario\Documents\30DaysOfPython\my_flask_app>
+bash
+C:\Users\TuUsuario\Documents\30DaysOfPython\my_flask_app>
+
 Después:
 bash(venv) C:\Users\TuUsuario\Documents\30DaysOfPython\my_flask_app>
+
 Verificación adicional:
 which python     # Mac/Linux
 Esto debe mostrar la ruta dentro de tu carpeta venv, no la ruta global de Python.
@@ -191,7 +194,8 @@ Paso 11: Crear un archivo .gitignore
 Crea un archivo llamado .gitignore en la raíz de tu proyecto:
 
 Para Mac/Linux:
-bashtouch .gitignore
+bash
+touch .gitignore
 ```
 
 Luego abre el archivo con un editor de texto y agrega:
