@@ -293,7 +293,8 @@ Press CTRL+C to quit
 
 Paso 15: Desactivar el entorno virtual
 Cuando termines de trabajar:
-bashdeactivate
+bash
+deactivate
 Tu prompt volverá a la normalidad (sin (venv)).
 
 
