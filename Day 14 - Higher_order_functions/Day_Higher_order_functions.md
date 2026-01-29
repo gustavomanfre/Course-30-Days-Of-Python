@@ -503,9 +503,101 @@ Para este caso específico, el mapa se vería así:
 
     Stack: Cada vez que llamas a closure_result(), aparece un Frame temporal para la ejecución que desaparece al terminar, pero el valor ten permanece en el Heap mientras la función exista.
 
----------------------------------------------------------------------------------------------------------------------
-    Decoradores de Python Un decorador es un patrón de diseño en Python que permite a un usuario añadir nueva funcionalidad a un objeto existente sin modificar su estructura. Los decoradores generalmente se llaman antes de la definición de una función que desea decorar. Creación de decoradores Para crear una función de decorador, necesitamos una función externa con una función de envoltura interna. Ejemplo: # Normal function def greeting(): return 'Welcome to Python' def uppercase_decorator(function): def wrapper(): func = function() make_uppercase = func.upper() return make_uppercase return wrapper g = uppercase_decorator(greeting) print(g()) # WELCOME TO PYTHON ## Let us implement the example above with a decorator '''This decorator function is a higher order function that takes a function as a parameter''' def uppercase_decorator(function): def wrapper(): func = function() make_uppercase = func.upper() return make_uppercase return wrapper @uppercase_decorator def greeting(): return 'Welcome to Python' print(greeting()) # WELCOME TO PYTHON Explicame de forma mas sencilla, parti de la base y anda agregando de forma sencilla para entenderlo
-17:30
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Decoradores de Python 
+
+Un decorador es un patrón de diseño en Python que permite a un usuario añadir nueva funcionalidad a un objeto existente sin modificar su estructura. 
+Los decoradores generalmente se llaman antes de la definición de una función que desea decorar. 
+
+Creación de decoradores 
+Para crear una función de decorador, necesitamos una función externa con una función de envoltura interna. 
+
+# Normal 
+function def greeting(): 
+    return 'Welcome to Python' 
+
+def uppercase_decorator(function): 
+    def wrapper(): 
+        func = function() 
+        make_uppercase = func.upper() 
+        return make_uppercase 
+    return wrapper 
+g = uppercase_decorator(greeting) 
+print(g()) 
+
+# Decoradores
+def uppercase_decorator(function):
+    def wrapper():
+        func = function()
+        make_uppercase = func.upper()
+        return make_uppercase
+    return wrapper
+
+@uppercase_decorator
+def greeting():
+    return 'Welcome to Python'
+print(greeting())   # WELCOME TO PYTHON
+
+1. El Estado Inicial:
+Línea 1-8: Leo la definición de uppercase_decorator. La guardo en memoria. (No ejecuto nada aún).
+
+Línea 10: Veo el símbolo @uppercase_decorator. Python dice: "Anotado, la próxima función que lea la tengo que pasar por acá". 
+
+@uppercase_decorator
+def greeting():
+    return 'Welcome to Python'
+
+En la memoria RAM pasa lo siguiente:
+    - Se crea un objeto de función (un bloque de código binario) en una dirección de memoria, supongamos la 0x001.
+    - Python crea una etiqueta llamada greeting que apunta (como una flecha) a esa dirección 0x001.
+
+2. El Momento del @: La Reasignación
+Línea 13 (EL MOMENTO CLAVE): Ni bien termino de leer el cuerpo de greeting, automáticamente y en milisegundos, ejecuto: greeting = uppercase_decorator(greeting)
+
+    -Acá es cuando se ejecuta el código del decorador.
+    -Acá es cuando se crea el wrapper en memoria.
+    -Acá es cuando la etiqueta greeting es "secuestrada".
+
+Cuando agregás @uppercase_decorator arriba, Python hace un movimiento  antes de que vos puedas siquiera parpadear.
+
+        greeting = uppercase_decorator(greeting)
+
+El proceso de "Secuestro" de la etiqueta:
+
+    Python ejecuta uppercase_decorator(greeting). Es decir, le pasa la dirección 0x001 como argumento.
+    Dentro del decorador, se crea otra función nueva: el wrapper. Esta función vive en otra dirección de memoria, supongamos la 0x002.
+    El decorador devuelve esa dirección 0x002.
+        uppercase_decorator(greeting):
+            ......
+            ......
+            ......
+            return wrapper
+
+    Aquí está tu duda: Python toma la etiqueta greeting y, en lugar de dejarla apuntando a 0x001 (la original), la borra y la apunta a 0x002 (el wrapper).
+ 
+3. El resultado final
+
+Cuando el intérprete llega a la última línea (print(greeting())), el proceso de "re-cableado" ya terminó. El decorador ya se ejecutó, el wrapper ya existe y la etiqueta ya fue cambiada.
+Consecuencia en memoria: La etiqueta greeting ya no apunta a tu función original. Ahora apunta al wrapper que creó el decorador.
+Llamada: Cuando tú escribes greeting(), crees que estás llamando a tu función, pero en realidad estás llamando al wrapper. Por eso el resultado sale en mayúsculas sin que hayas cambiado el código de greeting.
+
+En resumen:
+La ejecución de uppercase_decorator(greeting) ocurre en el momento de la definición (cuando cargás el programa), no en el momento de la llamada.
+
+    Decorador: Se ejecuta una sola vez al principio (para preparar el envoltorio).
+    Wrapper: Se ejecuta cada vez que vos llames a greeting().
+
+Es por esto que en Flask, apenas arrancás el servidor (ejecutás el archivo), Python registra todas las rutas @app.route. 
+No espera a que alguien entre a la web para decorar las funciones; ya las deja "envueltas" y listas desde el segundo uno.
+
+¿Ves ahora por qué el decorador es una herramienta de "configuración"? 
+Prepara todo antes de que el programa empiece a correr de verdad.
+
+¿Te quedó más claro este orden de ejecución? 
+Si querés, podemos meter un print("Hola, soy el decorador") dentro de la función para que veas que sale en la terminal antes de que vos llames a la función.
+    
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 Decoradores de Python - Explicación desde cero
 
 Voy a explicarte los decoradores paso a paso, empezando desde lo más básico.
