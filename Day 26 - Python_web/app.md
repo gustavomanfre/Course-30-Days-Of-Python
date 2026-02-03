@@ -471,18 +471,83 @@ Imagina que en otro archivo escribes import app.
     Acción: El procesador salta todo lo que está dentro del if. El código de la aplicación se carga en memoria (para que puedas usar sus funciones), pero el servidor no se enciende solo.
 _________________________________________________________________________________________________________________________________________________________________________________________
 
-1. La línea: port = int(os.environ.get('PORT', 5000))
+1. La línea: 
+
+# port = int(os.environ.get('PORT', 5000))
 
 Antes de que esta línea se ejecute, Python tiene que hablar con el Sistema Operativo (Linux, en tu caso).
-    os.environ (La Memoria del Sistema): No es una variable de tu código, es un "mapa" (diccionario) que Python trae del sistema operativo. Contiene cosas como tu nombre de usuario, la ruta de las carpetas (PATH), etc.
+    - os.environ: (La Memoria del Sistema): No es una variable de tu código, es un "mapa" (diccionario) que Python trae del sistema operativo. 
+    Contiene cosas como tu nombre de usuario, la ruta de las carpetas (PATH), etc.
+    
+    os.environ → Accede al diccionario de variables de entorno del sistema operativo.
+        ¿Qué es os.environ?
+        os.environ NO es una variable que tú creas. Es un diccionario especial que Python obtiene del sistema operativo cuando importas el módulo os.
 
-    .get('PORT', 5000) (La Búsqueda):
-        Python busca en ese mapa si existe una variable llamada 'PORT'.
-        ¿Por qué? Porque si subís este código a un servidor real (como Render o Heroku), el servidor te dice: "Oye, no uses el puerto 5000, usá el 8080". Esa información la pone en el sistema.
-        El valor por defecto: Si no encuentra nada (como en tu PC local), el método .get devuelve el número 5000.
+        ¿Qué contiene os.environ?
+        Contiene variables de entorno: información que el sistema operativo guarda para que los programas la usen.
 
-    int(...) (Conversión): Las variables del sistema siempre son texto ("5000"). Para que Flask lo entienda como un número de puerto, lo convertimos a entero.
-    Referencia en Memoria: Se crea la etiqueta port apuntando al valor entero 5000.
+        Ejemplo - Ver todas las variables de entorno:
+            import os
+            print(os.environ)
+
+        {
+            'HOME': '/home/usuario',           # Carpeta home del usuario
+            'USER': 'usuario',                 # Nombre del usuario
+            'PATH': '/usr/bin:/usr/local/bin', # Rutas donde buscar programas
+            'LANG': 'es_AR.UTF-8',            # Idioma del sistema
+            'PWD': '/home/usuario/proyecto',   # Directorio actual
+            'SHELL': '/bin/bash',              # Shell por defecto
+            # ... y muchas más
+        }
+
+        Es un diccionario Python normal, puedes usarlo así:
+        import os
+        # Forma 1: Acceso directo (puede lanzar error si no existe)
+        home = os.environ['HOME']  # '/home/usuario'
+
+        # Forma 2: Con .get() (más seguro, devuelve None si no existe)
+        puerto = os.environ.get('PORT')  # None si no está definido
+
+        # Forma 3: Con .get() y valor por defecto
+        puerto = os.environ.get('PORT', 5000)  # 5000 si no está definido
+
+        ¿Dónde está `os.environ` en memoria?
+        Cuando Python se inicia, antes de ejecutar tu código, hace esto:
+            1. Python inicia
+            2. Python pregunta al Sistema Operativo: "Dame todas tus variables de entorno"
+            3. El Sistema Operativo responde con un conjunto de datos
+            4. Python convierte esos datos en un diccionario Python
+            5. Ese diccionario se guarda en memoria y se llama os.environ
+
+        **Visualización en memoria:**
+
+        Memoria del Sistema Operativo (Kernel):
+        ┌────────────────────────────────┐
+        │ Variables de Entorno:          │
+        │ HOME=/home/usuario             │
+        │ USER=usuario                   │
+        │ PATH=/usr/bin:/usr/local/bin   │
+        │ PORT=8080  ← (si existe)       │
+        └────────────────────────────────┘
+                ↓ Python solicita esto
+                ↓
+        Memoria de Python:
+        ┌────────────────────────────────┐
+        │ Módulo os:                     │
+        │   environ = {                  │
+        │     'HOME': '/home/usuario',   │
+        │     'USER': 'usuario',         │
+        │     'PATH': '/usr/bin:...',    │
+        │     'PORT': '8080',  ← String  │
+        │   }                            │
+        └────────────────────────────────┘
+Punto clave: os.environ es como un espejo en Python de la información del sistema operativo.
+
+    - .get('PORT', 5000) → Busca la variable 'PORT', si no existe devuelve 5000
+    - int(...) → Convierte el resultado a número entero
+    - port = ... → Asigna el resultado a la variable port
+
+
 
 2. La línea: app.run(debug=True, host='0.0.0.0', port=port)
 
@@ -523,7 +588,7 @@ Antes de que esta línea se ejecute, Python tiene que hablar con el Sistema Oper
 
 Esta es la llamada al método .run() del objeto app (el que está en la dirección de memoria 0x500). Aquí le pasamos tres "instrucciones" críticas:
 A. debug=True (El modo Vigilante)
-
+7
     En ejecución: Flask activa un proceso extra que se queda mirando tus archivos.
     Memoria: Si detecta que cambiaste algo en el disco duro, Flask vacía la RAM y vuelve a cargar todo el proyecto automáticamente. No tenés que apagar y prender el servidor a mano.
     Debugger: Si tu código falla, en lugar de cerrarse, te muestra una página web con el error exacto y una consola para probar cosas.
