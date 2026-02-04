@@ -471,55 +471,55 @@ Imagina que en otro archivo escribes import app.
     Acción: El procesador salta todo lo que está dentro del if. El código de la aplicación se carga en memoria (para que puedas usar sus funciones), pero el servidor no se enciende solo.
 _________________________________________________________________________________________________________________________________________________________________________________________
 
-1. La línea: 
-
 # port = int(os.environ.get('PORT', 5000))
 
+# Paso 1: os.environ - El Diccionario del Sistema Operativo
 Antes de que esta línea se ejecute, Python tiene que hablar con el Sistema Operativo (Linux, en tu caso).
-    - os.environ: (La Memoria del Sistema): No es una variable de tu código, es un "mapa" (diccionario) que Python trae del sistema operativo. 
-    Contiene cosas como tu nombre de usuario, la ruta de las carpetas (PATH), etc.
+
+- os.environ: (La Memoria del Sistema): No es una variable de tu código, es un "mapa" (diccionario) que Python trae del sistema operativo. Contiene cosas como tu nombre de usuario, la ruta de las carpetas (PATH), etc.
     
-    os.environ → Accede al diccionario de variables de entorno del sistema operativo.
-        ¿Qué es os.environ?
-        os.environ NO es una variable que tú creas. Es un diccionario especial que Python obtiene del sistema operativo cuando importas el módulo os.
+os.environ → Accede al diccionario de variables de entorno del sistema operativo.
 
-        ¿Qué contiene os.environ?
-        Contiene variables de entorno: información que el sistema operativo guarda para que los programas la usen.
+¿Qué es os.environ?
+os.environ NO es una variable que tú creas. Es un diccionario especial que Python obtiene del sistema operativo cuando importas el módulo os.
 
-        Ejemplo - Ver todas las variables de entorno:
-            import os
-            print(os.environ)
+Qué contiene os.environ?
+Contiene variables de entorno: información que el sistema operativo guarda para que los programas la usen.
 
-        {
-            'HOME': '/home/usuario',           # Carpeta home del usuario
-            'USER': 'usuario',                 # Nombre del usuario
-            'PATH': '/usr/bin:/usr/local/bin', # Rutas donde buscar programas
-            'LANG': 'es_AR.UTF-8',            # Idioma del sistema
-            'PWD': '/home/usuario/proyecto',   # Directorio actual
-            'SHELL': '/bin/bash',              # Shell por defecto
-            # ... y muchas más
-        }
+ Ejemplo - Ver todas las variables de entorno:
+    import os
+    print(os.environ)
 
-        Es un diccionario Python normal, puedes usarlo así:
-        import os
-        # Forma 1: Acceso directo (puede lanzar error si no existe)
-        home = os.environ['HOME']  # '/home/usuario'
+    {
+        'HOME': '/home/usuario',           # Carpeta home del usuario
+        'USER': 'usuario',                 # Nombre del usuario
+        'PATH': '/usr/bin:/usr/local/bin', # Rutas donde buscar programas
+        'LANG': 'es_AR.UTF-8',            # Idioma del sistema
+        'PWD': '/home/usuario/proyecto',   # Directorio actual
+        'SHELL': '/bin/bash',              # Shell por defecto
+         # ... y muchas más
+    }
 
-        # Forma 2: Con .get() (más seguro, devuelve None si no existe)
-        puerto = os.environ.get('PORT')  # None si no está definido
+Es un diccionario Python normal, puedes usarlo así:
+    import os
+    # Forma 1: Acceso directo (puede lanzar error si no existe)
+    home = os.environ['HOME']  # '/home/usuario'
 
-        # Forma 3: Con .get() y valor por defecto
-        puerto = os.environ.get('PORT', 5000)  # 5000 si no está definido
+    # Forma 2: Con .get() (más seguro, devuelve None si no existe)
+    puerto = os.environ.get('PORT')  # None si no está definido
 
-        ¿Dónde está `os.environ` en memoria?
-        Cuando Python se inicia, antes de ejecutar tu código, hace esto:
-            1. Python inicia
-            2. Python pregunta al Sistema Operativo: "Dame todas tus variables de entorno"
-            3. El Sistema Operativo responde con un conjunto de datos
-            4. Python convierte esos datos en un diccionario Python
-            5. Ese diccionario se guarda en memoria y se llama os.environ
+    # Forma 3: Con .get() y valor por defecto
+    puerto = os.environ.get('PORT', 5000)  # 5000 si no está definido
 
-        **Visualización en memoria:**
+    ¿Dónde está `os.environ` en memoria?
+    Cuando Python se inicia, antes de ejecutar tu código, hace esto:
+        1. Python inicia
+        2. Python pregunta al Sistema Operativo: "Dame todas tus variables de entorno"
+        3. El Sistema Operativo responde con un conjunto de datos
+        4. Python convierte esos datos en un diccionario Python
+        5. Ese diccionario se guarda en memoria y se llama os.environ
+
+    **Visualización en memoria:**
 
         Memoria del Sistema Operativo (Kernel):
         ┌────────────────────────────────┐
@@ -543,65 +543,447 @@ Antes de que esta línea se ejecute, Python tiene que hablar con el Sistema Oper
         └────────────────────────────────┘
 Punto clave: os.environ es como un espejo en Python de la información del sistema operativo.
 
-    - .get('PORT', 5000) → Busca la variable 'PORT', si no existe devuelve 5000
-    - int(...) → Convierte el resultado a número entero
-    - port = ... → Asigna el resultado a la variable port
+# Paso 2: .get('PORT', 5000) - La Búsqueda con Valor por Defecto
+- .get('PORT', 5000) → Busca la variable 'PORT', si no existe devuelve 5000
 
+¿Qué hace .get()?
+.get() es un método de los diccionarios Python que busca una clave de manera segura.
 
+Sintaxis:
+diccionario.get(clave, valor_por_defecto)
 
-2. La línea: app.run(debug=True, host='0.0.0.0', port=port)
+Comportamiento:
 
-Esta es la llamada al método .run() del objeto app (el que está en la dirección de memoria 0x500). Aquí le pasamos tres "instrucciones" críticas:
-A. debug=True (El modo Vigilante)
+Si la clave existe en el diccionario → devuelve su valor
+Si la clave NO existe → devuelve valor_por_defecto
 
-    En ejecución: Flask activa un proceso extra que se queda mirando tus archivos.
-    Memoria: Si detecta que cambiaste algo en el disco duro, Flask vacía la RAM y vuelve a cargar todo el proyecto automáticamente. No tenés que apagar y prender el servidor a mano.
-    Debugger: Si tu código falla, en lugar de cerrarse, te muestra una página web con el error exacto y una consola para probar cosas.
+Aplicado a nuestro caso: os.environ.get('PORT', 5000)
+    os.environ.get('PORT', 5000)
 
-B. host='0.0.0.0' (La Visibilidad)
+Parámetros:
+'PORT': La clave que buscamos
+5000: El valor que queremos usar si 'PORT' no existe
 
-Esto define quién tiene permiso para hablar con tu aplicación:
+# Paso 3: int(...) - Conversión de String a Entero
+Flask espera que el puerto sea un número entero, no un string.
+- int(...) → Convierte el resultado a número entero. El sistema operativo almacena TODAS las variables de entorno como texto plano. int() es una función built-in de Python que convierte valores a enteros.
 
-    Si usaras 127.0.0.1 (por defecto): Solo vos desde tu propia computadora podrías entrar a la web.
-    Al usar 0.0.0.0: Le decís a la placa de red: "Escuchá a cualquiera".
-    Referencia: Esto permite que si alguien tiene tu dirección IP privada y está en tu mismo Wi-Fi, pueda entrar a tu página desde su celular.
+# Paso 4: port = ... - Asignación a Variable
+- port = ... → Asigna el resultado a la variable port
 
-C. port=port (El Canal)
+## Visualización Completa del Proceso
 
-    Le pasamos el valor que calculamos en la línea anterior (el 5000). Es como decirle a la radio en qué frecuencia transmitir.
-
-1. La línea: port = int(os.environ.get('PORT', 5000))
-
-Antes de que esta línea se ejecute, Python tiene que hablar con el Sistema Operativo (Linux, en tu caso).
-
-    os.environ (La Memoria del Sistema): No es una variable de tu código, es un "mapa" (diccionario) que Python trae del sistema operativo. Contiene cosas como tu nombre de usuario, la ruta de las carpetas (PATH), etc.
-    .get('PORT', 5000) (La Búsqueda):
-
-        Python busca en ese mapa si existe una variable llamada 'PORT'.
-        ¿Por qué? Porque si subís este código a un servidor real (como Render o Heroku), el servidor te dice: "Oye, no uses el puerto 5000, usá el 8080". Esa información la pone en el sistema.
-        El valor por defecto: Si no encuentra nada (como en tu PC local), el método .get devuelve el número 5000.
-
-    int(...) (Conversión): Las variables del sistema siempre son texto ("5000"). Para que Flask lo entienda como un número de puerto, lo convertimos a entero.
-    Referencia en Memoria: Se crea la etiqueta port apuntando al valor entero 5000.
-
-2. La línea: app.run(debug=True, host='0.0.0.0', port=port)
-
-Esta es la llamada al método .run() del objeto app (el que está en la dirección de memoria 0x500). Aquí le pasamos tres "instrucciones" críticas:
-A. debug=True (El modo Vigilante)
-7
-    En ejecución: Flask activa un proceso extra que se queda mirando tus archivos.
-    Memoria: Si detecta que cambiaste algo en el disco duro, Flask vacía la RAM y vuelve a cargar todo el proyecto automáticamente. No tenés que apagar y prender el servidor a mano.
-    Debugger: Si tu código falla, en lugar de cerrarse, te muestra una página web con el error exacto y una consola para probar cosas.
-
-B. host='0.0.0.0' (La Visibilidad)
-
-Esto define quién tiene permiso para hablar con tu aplicación:
-
-    Si usaras 127.0.0.1 (por defecto): Solo vos desde tu propia computadora podrías entrar a la web.
-    Al usar 0.0.0.0: Le decís a la placa de red: "Escuchá a cualquiera".
-        Referencia: Esto permite que si alguien tiene tu dirección IP privada y está en tu mismo Wi-Fi, pueda entrar a tu página desde su celular.
-
-C. port=port (El Canal)
-    Le pasamos el valor que calculamos en la línea anterior (el 5000). Es como decirle a la radio en qué frecuencia transmitir.
+### Escenario: Desarrollo Local
+    
+    ┌───────────────────────────────────────────────────────────┐
+    │  LÍNEA: port = int(os.environ.get('PORT', 5000))          │
+    ├───────────────────────────────────────────────────────────┤
+    │                                                           │
+    │  PASO 1: Evaluar os.environ                               │
+    │  ┌──────────────────────────────────────┐                 │
+    │  │ os.environ = {                       │                 │
+    │  │   'HOME': '/home/usuario',           │                 │
+    │  │   'USER': 'usuario',                 │                 │
+    │  │   # 'PORT' no existe                 │                 │
+    │  │ }                                    │                 │
+    │  └──────────────────────────────────────┘                 │
+    │                    ↓                                      │
+    │  PASO 2: Evaluar .get('PORT', 5000)                       │
+    │  - Buscar 'PORT' en diccionario → NO existe               │
+    │  - Devolver valor por defecto → 5000 (int)                │
+    │                    ↓                                      │
+    │  PASO 3: Evaluar int(5000)                                │
+    │  - Ya es int → devolver 5000 sin cambios                  │
+    │                    ↓                                      │
+    │  PASO 4: Asignar a port                                   │
+    │  ┌──────────────────┐                                     │
+    │  │ port → 5000      │                                     │
+    │  └──────────────────┘                                     │
+    │                                                           │
+    └───────────────────────────────────────────────────────────┘
 
 _________________________________________________________________________________________________________________________________________________________________________________________
+
+# La línea: app.run(debug=True, host='0.0.0.0', port=port)
+
+Esta es la llamada al método .run() del objeto app (el que está en la dirección de memoria 0x500). Esta línea inicia el servidor web de desarrollo de Flask.
+
+Tiene cuatro componentes principales:
+
+# 1. Parte 1: app.run() - Iniciando el Servidor → Método que arranca el servidor.
+
+Qué es app?
+Recuerda que antes hiciste:
+
+    from flask import Flask
+    app = Flask(__name__)
+
+app es una instancia de la clase Flask. Esta instancia tiene un método llamado run().
+
+¿Qué hace app.run()?
+El método run() inicia un servidor web de desarrollo que:
+    -Escucha conexiones entrantes (requests HTTP)
+    -Procesa esas requests según tus rutas definidas
+    -Devuelve respuestas (responses HTTP)
+
+Internamente, Flask usa Werkzeug, una biblioteca WSGI que incluye un servidor de desarrollo.
+
+Proceso Interno Simplificado
+Cuando ejecutas app.run(), Flask hace aproximadamente esto:
+
+class Flask:
+    def run(self, host=None, port=None, debug=None, **options):
+        # 1. Configurar opciones
+        if host is None:
+            host = '127.0.0.1'  # localhost por defecto
+        if port is None:
+            port = 5000
+        if debug is not None:
+            self.debug = debug
+            
+        # 2. Crear el servidor WSGI
+        from werkzeug.serving import run_simple
+        
+        # 3. Iniciar el servidor (esto bloquea el programa)
+        run_simple(
+            hostname=host,
+            port=port,
+            application=self,  # Tu app Flask
+            use_debugger=debug,
+            use_reloader=debug,
+            **options
+        )
+
+Punto clave: app.run() inicia un loop infinito que espera conexiones. Tu programa se "detiene" aquí hasta que lo detengas con Ctrl+C.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 2. debug=True (El modo Vigilante) → Activa el modo de depuración
+
+En ejecución: Flask activa un proceso extra que se queda mirando tus archivos.
+    -Auto-reload (recarga automática): Si detecta que cambiaste algo en el disco duro, Flask vacía la RAM y vuelve a cargar todo el proyecto automáticamente. No tenés que apagar y prender el servidor a mano.
+    -Debugger: Si tu código falla, en lugar de cerrarse, te muestra una página web con el error exacto y una consola para probar cosas.
+
+MUY IMPORTANTE: NUNCA uses debug=True en producción
+Razones:
+    -Seguridad: El debugger interactivo permite ejecutar código Python arbitrario
+    -Rendimiento: El auto-reload consume recursos monitoreando archivos
+    -Estabilidad: El servidor de desarrollo no está diseñado para carga real
+
+if __name__ == '__main__':
+    app.run(debug=False)  # O mejor, usa Gunicorn/uWSGI
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# 3. host='0.0.0.0' (La Visibilidad)  → Define en qué interfaces de red escuchar
+En el contexto de servidores, host especifica en qué dirección IP el servidor escuchará conexiones.
+
+Valor                       Significado                     ¿Quién puede conectarse?
+'127.0.0.1' o 'localhost'   Loopback (tu propia máquina)    Solo tú
+'0.0.0.0'                   Todas las interfaces            Tú + otros en tu red
+'192.168.1.10'              Una IP específica               Depende de la configuración
+
+Referencia: Esto permite que si alguien tiene tu dirección IP privada y está en tu mismo Wi-Fi, pueda entrar a tu página desde su celular.
+
+# `127.0.0.1` (localhost)
+
+Definición: Es una dirección IP especial que siempre apunta a tu propia máquina.
+Analogía: Es como enviarte una carta a ti mismo. No sale de tu casa.
+
+Ejemplo con host='127.0.0.1':
+    app.run(host='127.0.0.1', port=5000)
+
+
+**¿Qué sucede?**
+
+Tu Computadora:
+    ┌────────────────────────────────────┐
+    │                                    │
+    │  Navegador (cliente)               │
+    │  http://127.0.0.1:5000             │
+    │         │                          │
+    │         ↓                          │
+    │  Loopback (interfaz virtual)       │
+    │         │                          │
+    │         ↓                          │
+    │  Flask Server                      │
+    │  Escuchando en 127.0.0.1:5000      │
+    │                                    │
+    └────────────────────────────────────┘
+
+    Otra Computadora en tu Red:
+    ┌────────────────────────────────────┐
+    │  Navegador intenta:                │
+    │  http://192.168.1.10:5000          │
+    │         │                          │
+    │         X  ← NO puede conectarse   │
+    │                                    │
+    └────────────────────────────────────┘
+
+
+**Conexiones permitidas:**
+
+- ✅ `http://127.0.0.1:5000` desde tu navegador
+- ✅ `http://localhost:5000` desde tu navegador
+- ❌ `http://192.168.1.10:5000` desde otra PC en tu red
+
+
+# `0.0.0.0` (todas las interfaces)
+
+**Definición:** Le dice al servidor que escuche en **TODAS** las interfaces de red disponibles.
+
+**¿Qué es una interfaz de red?**
+
+Tu computadora puede tener múltiples "puntos de conexión":
+
+Interfaces de Red de tu PC:
+    ┌────────────────────────────────────┐
+    │ lo (loopback)                      │
+    │   └─ 127.0.0.1                     │
+    │                                    │
+    │ eth0 (Ethernet)                    │
+    │   └─ 192.168.1.10                  │
+    │                                    │
+    │ wlan0 (WiFi)                       │
+    │   └─ 192.168.1.15                  │
+    │                                    │
+    │ docker0 (Docker)                   │
+    │   └─ 172.17.0.1                    │
+    └────────────────────────────────────┘
+
+Con host='0.0.0.0':
+
+Flask escucha en TODAS estas interfaces simultáneamente.
+
+app.run(host='0.0.0.0', port=5000)
+```
+
+**¿Qué sucede?**
+```
+Tu Computadora (192.168.1.10):
+┌────────────────────────────────────┐
+│  Flask Server                      │
+│  Escuchando en:                    │
+│    - 127.0.0.1:5000  ✓             │
+│    - 192.168.1.10:5000  ✓          │
+│    - 192.168.1.15:5000  ✓          │
+│    - 172.17.0.1:5000  ✓            │
+└────────────────────────────────────┘
+
+Conexiones desde tu navegador:
+✅ http://127.0.0.1:5000
+✅ http://localhost:5000
+✅ http://192.168.1.10:5000
+
+Conexiones desde otra PC (192.168.1.20):
+✅ http://192.168.1.10:5000
+
+Conexiones desde tu móvil en la misma WiFi:
+✅ http://192.168.1.10:5000
+
+
+Proceso Interno: ¿Cómo Escucha el Servidor?
+Cuando Flask ejecuta run_simple(host='0.0.0.0', port=5000, ...), internamente hace:
+pythonimport socket
+
+# 1. Crear un socket (endpoint de comunicación)
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# 2. Configurar opciones
+server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+# 3. "Enlazar" (bind) el socket a la dirección y puerto
+server_socket.bind(('0.0.0.0', 5000))
+
+# 4. Empezar a escuchar conexiones (cola de hasta 5)
+server_socket.listen(5)
+
+print("Servidor escuchando en 0.0.0.0:5000")
+
+# 5. Loop infinito aceptando conexiones
+while True:
+    # Esperar una conexión (esto bloquea)
+    client_socket, client_address = server_socket.accept()
+    print(f"Conexión desde {client_address}")
+    
+    # Procesar la request...
+    # Enviar response...
+    
+    client_socket.close()
+```
+
+---
+
+### Visualización en Memoria y Sistema Operativo
+
+**Estado del Sistema Operativo:**
+```
+Kernel de Linux:
+┌────────────────────────────────────────────┐
+│ Tabla de Sockets:                          │
+│                                            │
+│ Socket #42:                                │
+│   Tipo: TCP                                │
+│   Estado: LISTENING (escuchando)           │
+│   Dirección: 0.0.0.0:5000                  │
+│   Proceso: Python (PID: 12345)             │
+│   Cola de conexiones: []                   │
+│                                            │
+│ Interfaces de Red:                         │
+│   ├─ 127.0.0.1 → Socket #42  ✓             │
+│   ├─ 192.168.1.10 → Socket #42  ✓          │
+│   └─ 192.168.1.15 → Socket #42  ✓          │
+└────────────────────────────────────────────┘
+
+Proceso Python (app.run):
+┌────────────────────────────────────────────┐
+│ server_socket ──→ File Descriptor #42      │
+│                                            │
+│ Esperando en: accept()                     │
+│   (bloqueado hasta que llegue conexión)    │
+└────────────────────────────────────────────┘
+```
+
+---
+
+### ¿Qué pasa cuando llega una conexión?
+
+**Escenario:** Abres tu navegador y vas a `http://192.168.1.10:5000/`
+```
+Paso 1: Tu navegador crea un socket
+┌─────────────────────────────────┐
+│ Navegador (192.168.1.10)        │
+│ Socket cliente: puerto 54321    │
+└─────────────────────────────────┘
+        │
+        │ SYN (solicitud de conexión TCP)
+        ↓
+┌─────────────────────────────────┐
+│ Flask Server (0.0.0.0:5000)     │
+│ Socket servidor: puerto 5000    │
+└─────────────────────────────────┘
+
+Paso 2: Handshake TCP (3-way)
+Navegador → SYN → Servidor
+Servidor → SYN-ACK → Navegador
+Navegador → ACK → Servidor
+✓ Conexión establecida
+
+Paso 3: Navegador envía HTTP Request
+GET / HTTP/1.1
+Host: 192.168.1.10:5000
+...
+
+Paso 4: Flask procesa y responde
+HTTP/1.1 200 OK
+Content-Type: text/html
+...
+<h1>Welcome</h1>
+
+Paso 5: Conexión se cierra
+Navegador ← FIN ← Servidor
+Navegador → ACK → Servidor
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 4. port=port (El Canal)  → Define el puerto donde escuchar
+app.run(port=port)
+        ↑    ↑
+        │    │
+        │    └─ Valor: la variable 'port' (5000 o lo que venga de ENV)
+        └─ Nombre del parámetro de la función run()
+
+Le pasamos el valor que calculamos en la línea anterior (el 5000). Es como decirle a la radio en qué frecuencia transmitir.
+    port = int(os.environ.get('PORT', 5000))  # Variable local llamada 'port'
+    app.run(port=port)  # Parámetro 'port=' recibe el valor de la variable 'port'
+
+¿Qué hace Flask con el puerto?
+Flask le dice al sistema operativo:
+
+"Reserva el puerto 5000 para mí. Envíame cualquier dato que llegue a ese puerto."
+
+Internamente:
+server_socket.bind(('0.0.0.0', 5000))
+                                 ↑
+                         Puerto especificado
+
+**Estado del sistema:**
+
+Antes de app.run():
+┌────────────────────────────────┐
+│ Puertos en uso:                │
+│   22: sshd                     │
+│   80: nginx                    │
+│   3306: mysql                  │
+└────────────────────────────────┘
+
+Después de app.run(port=5000):
+┌────────────────────────────────┐
+│ Puertos en uso:                │
+│   22: sshd                     │
+│   80: nginx                    │
+│   3306: mysql                  │
+│   5000: python (Flask) ← NUEVO │
+└────────────────────────────────┘
+
+## Visualización Completa del Proceso
+
+┌─────────────────────────────────────────────────────────────────┐
+│  app.run(debug=True, host='0.0.0.0', port=5000)                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  PASO 1: Configurar debug=True                                  │
+│  ┌──────────────────────────────────┐                           │
+│  │ self.debug = True                │                           │
+│  │ - Activar debugger interactivo   │                           │
+│  │ - Activar auto-reload            │                           │
+│  └──────────────────────────────────┘                           │
+│               ↓                                                 │
+│  PASO 2: Iniciar proceso watchdog (si debug=True)               │
+│  ┌──────────────────────────────────┐                           │
+│  │ Proceso Padre:                   │                           │
+│  │ - Monitorear cambios en *.py     │                           │
+│  │ - Spawn Proceso Hijo             │                           │
+│  └──────────────────────────────────┘                           │
+│               ↓                                                 │
+│  PASO 3: Crear socket TCP                                       │
+│  ┌──────────────────────────────────┐                           │
+│  │ socket.socket(AF_INET, SOCK_STREAM)                          │
+│  └──────────────────────────────────┘                           │
+│               ↓                                                 │
+│  PASO 4: Enlazar a host='0.0.0.0', port=5000                    │
+│  ┌──────────────────────────────────┐                           │
+│  │ socket.bind(('0.0.0.0', 5000))   │                           │
+│  │                                  │                           │
+│  │ Sistema Operativo:               │                           │
+│  │   Reserva puerto 5000            │                           │
+│  │   Asocia con todas las IPs:      │                           │
+│  │     - 127.0.0.1:5000  ✓          │                           │
+│  │     - 192.168.1.10:5000  ✓       │                           │
+│  └──────────────────────────────────┘                           │
+│               ↓                                                 │
+│  PASO 5: Escuchar conexiones                                    │
+│  ┌──────────────────────────────────┐                           │
+│  │ socket.listen(5)                 │                           │
+│  │ - Cola máxima: 5 conexiones      │                           │
+│  └──────────────────────────────────┘                           │
+│               ↓                                                 │
+│  PASO 6: Imprimir mensaje                                       │
+│  ┌──────────────────────────────────┐                           │
+│  │ * Running on http://0.0.0.0:5000 │                           │
+│  │ * Debugger is active!            │                           │
+│  └──────────────────────────────────┘                           │
+│               ↓                                                 │
+│  PASO 7: Loop infinito                                          │
+│  ┌──────────────────────────────────┐                           │
+│  │ while True:                      │                           │
+│  │     client, addr = accept()      │ ← Bloquea aquí            │
+│  │     # Espera conexión...         │                           │
+│  │     procesar_request(client)     │                           │
+│  │     enviar_response(client)      │                           │
+│  │     client.close()               │                           │
+│  └──────────────────────────────────┘                           │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+_________________________________________________________________________________________________________________________________________________________________________________________
+
