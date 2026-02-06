@@ -205,6 +205,7 @@ if __name__ == '__main__':
     app.run(debug=True)
 else:
     print(f"\n__name__ es '{__name__}', entonces NO inicio el servidor")
+
 Caso A: Ejecución directa
 bashpython mi_app.py
 ```
@@ -659,7 +660,7 @@ Punto clave: app.run() inicia un loop infinito que espera conexiones. Tu program
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # 2. debug=True (El modo Vigilante) → Activa el modo de depuración
 
-En ejecución: Flask activa un proceso extra que se queda mirando tus archivos.
+En ejecución: Flask activa un proceso extr a que se queda mirando tus archivos.
     -Auto-reload (recarga automática): Si detecta que cambiaste algo en el disco duro, Flask vacía la RAM y vuelve a cargar todo el proyecto automáticamente. No tenés que apagar y prender el servidor a mano.
     -Debugger: Si tu código falla, en lugar de cerrarse, te muestra una página web con el error exacto y una consola para probar cosas.
 
@@ -986,4 +987,48 @@ Después de app.run(port=5000):
 └─────────────────────────────────────────────────────────────────┘
 
 _________________________________________________________________________________________________________________________________________________________________________________________
+PASO 3: AGREGANDO LA RUTA "ABOUT"
+
+Paso 3: Agregando la Ruta "About"
+@app.route('/about')
+def about():
+    return '<h1>About us</h1>'
+
+@app.route('/about'): Define una nueva ruta en /about
+def about():: Función que se ejecuta cuando visitas /about
+return '<h1>About us</h1>': Devuelve HTML diferente al de home
+
+Imprime:
+http://localhost:5000/ → "Welcome"
+http://localhost:5000/about → "About us"
+
+_________________________________________________________________________________________________________________________________________________________________________________________
+PASO 4:USANDO PLANTILLAS HTML (TEMPLATES)
+Devolver HTML como cadenas de texto es tedioso y difícil de mantener. Flask nos permite usar plantillas HTML separadas.
+
+Creando la Carpeta Templates
+Regla de Flask (simple):
+La carpeta templates va al mismo nivel que el archivo app.py de ese proyecto Flask.
+
+30DaysOfPython/my_flask_app/
+├── app.py
+├── requirements.txt
+├── app.md
+├── templates/ 
+
+cd cambia el directorio de trabajo actual (current working directory).
+    cd ./  “El directorio en el que estoy parado ahora mismo”
+    cd /   “La raíz absoluta del sistema de archivos”
+    cd ..  "Sube un nivel - Directorio padre"
+    cd ~   "home del usuario ➡️ /home/gustavo"
+
+gustavo@Desktop:~/Documentos/Course-30-Days-Of-Python$ cd ./Day 26 - Python_web/30DaysOfPython/my_flask_app/app.py
+bash: cd: demasiados argumento
+
+El nombre tiene espacios → usar comillas
+
+gustavo@Desktop:~/Documentos/Course-30-Days-Of-Python$ cd ./"Day 26 - Python_web/30DaysOfPython/my_flask_app"
+(.venv) gustavo@Desktop:~/Documentos/Course-30-Days-Of-Python/Day 26 - Python_web/30DaysOfPython/my_flask_app$
+
+
 
