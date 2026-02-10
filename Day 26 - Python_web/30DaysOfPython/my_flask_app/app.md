@@ -1030,5 +1030,483 @@ El nombre tiene espacios → usar comillas
 gustavo@Desktop:~/Documentos/Course-30-Days-Of-Python$ cd ./"Day 26 - Python_web/30DaysOfPython/my_flask_app"
 (.venv) gustavo@Desktop:~/Documentos/Course-30-Days-Of-Python/Day 26 - Python_web/30DaysOfPython/my_flask_app$
 
+itc@itc-Latitude-7480:~/Documentos/Course-30-Days-Of-Python/Day 26 - Python_web/30DaysOfPython/my_flask_app$ mkdir templates
+itc@itc-Latitude-7480:~/Documentos/Course-30-Days-Of-Python/Day 26 - Python_web/30DaysOfPython/my_flask_app$ cd ./templates
+itc@itc-Latitude-7480:~/Documentos/Course-30-Days-Of-Python/Day 26 - Python_web/30DaysOfPython/my_flask_app/templates$ touch home.html
+
+home.html
+Estructura HTML estándar
+<!DOCTYPE html>: Declara el tipo de documento (HTML5)
+<meta charset="UTF-8">: Define la codificación de caracteres
+<meta name="viewport"...>: Hace la página responsive en móviles
+<title>Home</title>: Título que aparece en la pestaña del navegador
+<body>: Contenido visible de la página
+
+about.html
+Similar a home.html pero con contenido diferente.
+
+_________________________________________________________________________________
+ import render_template 
+
+ 1. El Pasado: La Instalación (Disco Duro)
+Comando ejecutado anteriormente:
+bashpip install flask
+```
+
+### ¿Qué sucedió?
+
+**Paso a paso:**
+```
+1. pip contacta a PyPI (Python Package Index)
+   └─ URL: https://pypi.org/project/Flask/
+
+2. Descarga el paquete Flask (archivo .whl o .tar.gz)
+   └─ Ejemplo: Flask-3.0.0-py3-none-any.whl
+
+3. Extrae los archivos del paquete
+
+4. Los copia a una ubicación específica en tu disco:
+   tu_proyecto/.venv/lib/python3.x/site-packages/
+```
+
+---
+
+### Estructura real en el disco después de la instalación:
+```
+tu_proyecto/.venv/lib/python3.x/site-packages/
+├── flask/                          ← Carpeta del paquete Flask
+│   ├── __init__.py                 ← Archivo principal del paquete
+│   ├── app.py                      ← Contiene la clase Flask
+│   ├── templating.py               ← Contiene render_template (¡CORRECCIÓN!)
+│   ├── globals.py
+│   ├── helpers.py
+│   ├── wrappers.py
+│   └── ... (más archivos)
+├── werkzeug/                       ← Dependencia de Flask
+├── jinja2/                         ← Otra dependencia
+├── click/
+└── ... (otras librerías)
+⚠️ CORRECCIÓN IMPORTANTE:
+En las versiones modernas de Flask, render_template NO está en templating.py directamente accesible. Veamos la realidad:
+
+¿Dónde está realmente render_template?
+Archivo: flask/__init__.py
+Este es el archivo que Python carga cuando haces import flask o from flask import ...
+python# flask/__init__.py (simplificado)
+
+# Importaciones internas
+from .app import Flask
+from .templating import render_template, render_template_string
+from .globals import current_app, g, request, session
+from .helpers import url_for, flash, get_flashed_messages
+
+# Lista de lo que se exporta públicamente
+__all__ = [
+    'Flask',
+    'render_template',
+    'render_template_string',
+    'url_for',
+    # ... más funciones
+]
+Archivo: flask/templating.py
+Aquí está la implementación real de render_template:
+python# flask/templating.py (simplificado)
+
+from jinja2 import TemplateNotFound
+
+def render_template(template_name_or_list, **context):
+    """Renderiza una plantilla desde la carpeta templates."""
+    ctx = _app_ctx_stack.top
+    ctx.app.update_template_context(context)
+    return _render(
+        ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+        context,
+        ctx.app,
+    )
+Entonces:
+
+templating.py contiene la definición/implementación de render_template
+__init__.py importa esa función y la re-exporta para que tú puedas hacer from flask import render_template
 
 
+2. El Presente: La Ejecución del Import
+Cuando ejecutas:
+bashpython app.py
+Y Python llega a esta línea:
+pythonfrom flask import render_template
+
+A. La Búsqueda (sys.path) - CORRECCIÓN DETALLADA
+⚠️ Tu error: "Python tiene guardadas URL de path en sys.path"
+Corrección: sys.path NO contiene URLs, contiene rutas locales (paths) en tu disco duro.
+
+¿Qué es sys.path realmente?
+Es una lista de Python (type list) que contiene strings con rutas de directorios.
+pythonimport sys
+print(sys.path)
+Salida real:
+python[
+    '/home/gustavo/Documentos/Course-30-Days-Of-Python',  # Directorio actual
+    '/usr/lib/python39.zip',                              # Archivo ZIP de stdlib
+    '/usr/lib/python3.9',                                 # Librería estándar
+    '/usr/lib/python3.9/lib-dynload',                     # Extensiones dinámicas
+    '/home/gustavo/Documentos/Course-30-Days-Of-Python/.venv/lib/python3.9/site-packages',  # ← AQUÍ está Flask
+]
+```
+
+**Cada string es una ruta de disco, NO una URL de internet.**
+
+---
+
+#### Proceso de búsqueda paso a paso:
+
+Cuando Python ejecuta `from flask import render_template`:
+```
+PASO 1: Verificar caché (sys.modules)
+┌────────────────────────────────────────┐
+│ ¿Ya importamos 'flask' antes?          │
+│ Buscar en: sys.modules['flask']        │
+│                                        │
+│ Si SÍ → Usar el módulo ya cargado ✓   │
+│ Si NO → Continuar al PASO 2            │
+└────────────────────────────────────────┘
+
+PASO 2: Buscar en sys.path[0]
+┌────────────────────────────────────────┐
+│ Ruta: '/home/gustavo/.../Course-30...' │
+│ Buscar: flask.py o flask/__init__.py   │
+│ ¿Existe? NO                            │
+│ → Continuar al siguiente path          │
+└────────────────────────────────────────┘
+
+PASO 3: Buscar en sys.path[1]
+┌────────────────────────────────────────┐
+│ Ruta: '/usr/lib/python39.zip'          │
+│ Buscar dentro del ZIP: flask/          │
+│ ¿Existe? NO                            │
+│ → Continuar al siguiente path          │
+└────────────────────────────────────────┘
+
+PASO 4: Buscar en sys.path[2]
+┌────────────────────────────────────────┐
+│ Ruta: '/usr/lib/python3.9'             │
+│ Buscar: flask.py o flask/              │
+│ ¿Existe? NO (aquí solo está stdlib)   │
+│ → Continuar al siguiente path          │
+└────────────────────────────────────────┘
+
+PASO 5: Buscar en sys.path[4]
+┌────────────────────────────────────────┐
+│ Ruta: '.../venv/lib/.../site-packages' │
+│ Buscar: flask/__init__.py              │
+│ ¿Existe? ✓ SÍ                          │
+│ → ¡ENCONTRADO! Proceder a PASO B       │
+└────────────────────────────────────────┘
+
+B. La Carga en Memoria - CORRECCIÓN CRÍTICA
+⚠️ Tu error: "Python crea un objeto módulo gigante llamado flask y no usa la clase Flask"
+Correcciones:
+
+Python crea un objeto módulo (no "gigante", es relativamente pequeño)
+La clase Flask es parte del contenido del módulo, NO es el módulo mismo
+El nombre del módulo es 'flask' (string), el objeto módulo es diferente
+
+
+¿Qué es exactamente un "módulo" en Python?
+Un módulo es un objeto de tipo module que Python crea para representar un archivo .py o un paquete (carpeta con __init__.py).
+Demostración:
+pythonimport flask
+print(type(flask))  # <class 'module'>
+print(flask)        # <module 'flask' from '/ruta/a/flask/__init__.py'>
+```
+
+---
+
+#### Proceso de creación del objeto módulo:
+```
+PASO B1: Crear el objeto módulo vacío
+┌────────────────────────────────────────────────┐
+│ Memoria RAM: Dirección 0x7f8a4c001230          │
+│                                                │
+│ module_object = types.ModuleType('flask')      │
+│                                                │
+│ Contenido inicial:                             │
+│   __name__ = 'flask'                           │
+│   __file__ = '/ruta/.../flask/__init__.py'     │
+│   __package__ = 'flask'                        │
+│   __dict__ = {}  ← Vacío por ahora             │
+└────────────────────────────────────────────────┘
+
+PASO B2: Leer el archivo del disco
+┌────────────────────────────────────────────────┐
+│ Disco: /ruta/.../flask/__init__.py             │
+│                                                │
+│ Python lee el contenido como texto:            │
+│                                                │
+│ "from .app import Flask                        │
+│  from .templating import render_template       │
+│  ..."                                          │
+└────────────────────────────────────────────────┘
+
+PASO B3: Compilar a bytecode (si no está cacheado)
+┌────────────────────────────────────────────────┐
+│ Texto → AST → Bytecode                         │
+│                                                │
+│ Bytecode guardado en:                          │
+│ __pycache__/flask/__init__.cpython-39.pyc      │
+└────────────────────────────────────────────────┘
+
+PASO B4: Ejecutar el bytecode
+┌────────────────────────────────────────────────┐
+│ Python ejecuta el código de __init__.py        │
+│ en el contexto del objeto módulo              │
+│                                                │
+│ Esto ejecuta:                                  │
+│   from .app import Flask                       │
+│   from .templating import render_template      │
+│                                                │
+│ Que a su vez:                                  │
+│ 1. Carga flask/app.py                          │
+│ 2. Extrae la clase Flask                       │
+│ 3. Carga flask/templating.py                   │
+│ 4. Extrae la función render_template           │
+└────────────────────────────────────────────────┘
+
+PASO B5: Poblar el __dict__ del módulo
+┌────────────────────────────────────────────────┐
+│ Memoria 0x7f8a4c001230:                        │
+│                                                │
+│ module_object.__dict__ = {                     │
+│   '__name__': 'flask',                         │
+│   '__file__': '/ruta/.../flask/__init__.py',   │
+│   'Flask': <class 'Flask'> @ 0x7f8a4c005000,   │
+│   'render_template': <function> @ 0x7f8a4c006000, │
+│   'url_for': <function> @ 0x7f8a4c007000,      │
+│   'request': <LocalProxy> @ 0x7f8a4c008000,    │
+│   ...                                          │
+│ }                                              │
+└────────────────────────────────────────────────┘
+```
+
+---
+
+#### Estado en memoria después de cargar el módulo:
+```
+Heap de Python (RAM):
+┌─────────────────────────────────────────────────────────┐
+│                                                         │
+│  Dirección 0x7f8a4c001230: Objeto Module 'flask'       │
+│  ┌───────────────────────────────────────────────────┐ │
+│  │ __name__ = 'flask'                                 │ │
+│  │ __file__ = '/ruta/.../flask/__init__.py'          │ │
+│  │ __dict__ = {                                       │ │
+│  │   'Flask': ───────────────────┐                   │ │
+│  │   'render_template': ─────┐   │                   │ │
+│  │   'url_for': ──────────┐  │   │                   │ │
+│  │ }                      │  │   │                   │ │
+│  └────────────────────────┼──┼───┼───────────────────┘ │
+│                           │  │   │                     │
+│                           │  │   └─────────────────┐   │
+│                           │  │                     ↓   │
+│  Dirección 0x7f8a4c005000: Clase 'Flask'              │
+│  ┌─────────────────────────────────────────────────┐  │
+│  │ __name__ = 'Flask'                               │  │
+│  │ __init__ = <método> @ 0x...                      │  │
+│  │ run = <método> @ 0x...                           │  │
+│  │ route = <método> @ 0x...                         │  │
+│  └─────────────────────────────────────────────────┘  │
+│                           │                            │
+│                           └──────────────────────┐     │
+│                                                  ↓     │
+│  Dirección 0x7f8a4c006000: Función 'render_template'  │
+│  ┌─────────────────────────────────────────────────┐  │
+│  │ __name__ = 'render_template'                     │  │
+│  │ __code__ = <code object> @ 0x...                 │  │
+│  │ __globals__ = {'current_app': ..., '_render':...}│  │
+│  └─────────────────────────────────────────────────┘  │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+
+C. La Extracción de la Referencia - CORRECCIÓN
+Tu explicación (mayormente correcta):
+
+"De todo ese paquete gigante llamado Flask, solo quiero la función render_template. Python busca dentro del objeto flask la dirección de memoria donde vive render_template."
+
+✅ Correcto en concepto, pero impreciso en terminología.
+
+Proceso exacto:
+pythonfrom flask import render_template
+Lo que Python hace internamente:
+python# Pseudocódigo de lo que hace Python
+
+# 1. Importar el módulo completo (si no está en sys.modules)
+module_flask = __import__('flask')  # Retorna el objeto módulo @ 0x7f8a4c001230
+
+# 2. Buscar el atributo 'render_template' en el módulo
+render_template_func = getattr(module_flask, 'render_template')
+# Esto es equivalente a: module_flask.__dict__['render_template']
+# Retorna: <function render_template> @ 0x7f8a4c006000
+
+# 3. NO copia la función, obtiene la REFERENCIA (puntero)
+# render_template_func ahora apunta a 0x7f8a4c006000
+
+# 4. Agregar al namespace local
+locals()['render_template'] = render_template_func
+```
+
+---
+
+#### Visualización con direcciones de memoria:
+```
+ANTES del import:
+┌────────────────────────────────────┐
+│ Namespace de app.py (locals):     │
+│ {}  ← Vacío                        │
+└────────────────────────────────────┘
+
+DESPUÉS del from flask import render_template:
+┌────────────────────────────────────┐
+│ Namespace de app.py (locals):     │
+│ {                                  │
+│   'render_template': ──────────┐   │
+│ }                              │   │
+└────────────────────────────────┼───┘
+                                 │
+                                 │ (referencia/puntero)
+                                 ↓
+┌─────────────────────────────────────────────────┐
+│ Heap @ 0x7f8a4c006000:                          │
+│ Función 'render_template'                       │
+│ ┌─────────────────────────────────────────────┐ │
+│ │ def render_template(template, **context):   │ │
+│ │     ...                                      │ │
+│ └─────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────┘
+Punto clave: Solo se crea una referencia (puntero), NO se copia el código de la función.
+
+D. El Etiquetado Final (Namespace Local) - CORRECCIÓN
+Tu explicación:
+
+"Python crea una etiqueta en app.py llamada render_template y hace que apunte a 0x850"
+
+✅ Conceptualmente correcto, pero hay detalles técnicos importantes.
+
+¿Qué es exactamente un "namespace"?
+Un namespace en Python es simplemente un diccionario que mapea nombres (strings) a objetos.
+Demostración:
+python# app.py
+from flask import render_template
+
+# Ver el namespace local
+print(locals())
+Salida:
+python{
+    '__name__': '__main__',
+    '__doc__': None,
+    '__package__': None,
+    '__file__': '/home/gustavo/.../app.py',
+    'render_template': <function render_template at 0x7f8a4c006000>,
+}
+```
+
+---
+
+#### Estado final en memoria:
+```
+╔═══════════════════════════════════════════════════════════╗
+║              ESTADO COMPLETO EN MEMORIA                   ║
+╚═══════════════════════════════════════════════════════════╝
+
+sys.modules (Caché global de módulos):
+┌─────────────────────────────────────────────┐
+│ {                                           │
+│   'flask': ──────────────────┐              │
+│   'flask.app': ────────────┐ │              │
+│   'flask.templating': ───┐ │ │              │
+│   ...                    │ │ │              │
+│ }                        │ │ │              │
+└──────────────────────────┼─┼─┼──────────────┘
+                           │ │ │
+                           │ │ └──────────────┐
+                           │ └────────────┐   │
+                           └──────────┐   │   │
+                                      ↓   ↓   ↓
+Heap (Objetos en RAM):
+┌──────────────────────────────────────────────────────────┐
+│ @ 0x7f8a4c001230: Module 'flask'                         │
+│ @ 0x7f8a4c002000: Module 'flask.app'                     │
+│ @ 0x7f8a4c003000: Module 'flask.templating'              │
+│ @ 0x7f8a4c005000: Class 'Flask'                          │
+│ @ 0x7f8a4c006000: Function 'render_template'  ← ¡AQUÍ!  │
+│ @ 0x7f8a4c007000: Function 'url_for'                     │
+└──────────────────────────────────────────────────────────┘
+                                      ↑
+                                      │ (referencia)
+Namespace de app.py (locals):
+┌──────────────────────────────────────────────────────────┐
+│ {                                                        │
+│   'render_template': ─────────────┘                      │
+│ }                                                        │
+└──────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Resumen Completo con Correcciones
+
+### ✅ Lo que dijiste CORRECTO:
+
+1. La instalación ocurrió antes y guardó archivos en disco
+2. `import` no descarga nada, solo lee del disco
+3. Python usa `sys.path` para buscar módulos
+4. Se crean referencias/punteros, no se copia el código
+5. El namespace local obtiene una "etiqueta" que apunta a la función
+
+### ❌ Lo que necesitaba CORRECCIÓN:
+
+1. **`sys.path` NO contiene URLs**, contiene rutas locales de disco
+2. **El módulo `flask` NO es "gigante"**, es un objeto módulo normal con un diccionario de atributos
+3. **La clase `Flask` es PARTE del módulo**, no es algo separado
+4. **`render_template` está en `flask/templating.py`**, pero se accede vía `flask/__init__.py` que la re-exporta
+5. **Los "objetos" que se crean** son objetos Python normales (módulos, clases, funciones), con direcciones de memoria específicas
+
+---
+
+## Diagrama Final Corregido
+```
+╔════════════════════════════════════════════════════════════╗
+║   PROCESO COMPLETO: from flask import render_template     ║
+╚════════════════════════════════════════════════════════════╝
+
+1. BÚSQUEDA EN sys.path
+   sys.path = ['/current', '/stdlib', '/site-packages', ...]
+   └─> Encuentra: /site-packages/flask/__init__.py ✓
+
+2. VERIFICAR CACHÉ
+   sys.modules.get('flask')
+   └─> NO existe → Proceder a cargar
+
+3. CREAR OBJETO MÓDULO
+   module_obj = ModuleType('flask') @ 0x7f8a4c001230
+   
+4. LEER Y EJECUTAR __init__.py
+   Disco: flask/__init__.py
+   └─> from .templating import render_template
+       └─> Carga flask/templating.py @ 0x7f8a4c003000
+           └─> Extrae función render_template @ 0x7f8a4c006000
+
+5. POBLAR __dict__ DEL MÓDULO
+   module_obj.__dict__['render_template'] = func @ 0x7f8a4c006000
+
+6. REGISTRAR EN sys.modules
+   sys.modules['flask'] = module_obj @ 0x7f8a4c001230
+
+7. EXTRAER ATRIBUTO
+   getattr(module_obj, 'render_template')
+   └─> Retorna: func @ 0x7f8a4c006000
+
+8. ASIGNAR A NAMESPACE LOCAL
+   locals()['render_template'] = func @ 0x7f8a4c006000
+
+╔════════════════════════════════════════════════════════════╗
+║ RESULTADO: Variable 'render_template' apunta a 0x...006000║
+╚════════════════════════════════════════════════════════════╝

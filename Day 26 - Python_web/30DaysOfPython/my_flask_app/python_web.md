@@ -1,3 +1,8 @@
+my_flask_app/           <-- Tu carpeta raíz (El proyecto)
+├── venv/               <-- El cuarto de herramientas (Aislado)
+├── app.py              <-- Tu código principal (A salvo)
+├── requirements.txt    <-- La lista de compras
+└── ... (otros .md)
 gustavo@Desktop:~/Documentos/Course-30-Days-Of-Python$ virtualenv --version
 virtualenv 20.36.1 from /home/gustavo/.local/lib/python3.10/site-packages/virtualenv/__init__.py
 gustavo@Desktop:~/Documentos/Course-30-Days-Of-Python$ 
