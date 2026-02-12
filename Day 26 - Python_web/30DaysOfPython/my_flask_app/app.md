@@ -2072,4 +2072,744 @@ Cada clave del diccionario se convierte en una variable disponible en Jinja2.
 
 Pero necesitas pasarle los datos desde Python → Aquí es donde entran los argumentos.
 
+# Cómo Funcionan los Argumentos con la Función
+@app.route('/')
+def home():
+    techs = ['HTML', 'CSS', 'Flask', 'Python']
+    name = '30 Days Of Python Programming'
+    return render_template('home.html', techs=techs, name=name, title='Home')
+
+# Paso 1: Crear el Diccionario de Contexto
+    render_template('home.html', techs=techs, name=name, title='Home')
+
+nternamente se convierte en:
+python# Argumento posicional
+template_name = 'home.html'
+
+`Argumentos nombrados (kwargs) se convierten en diccionario`
+context = {
+    'techs': ['HTML', 'CSS', 'Flask', 'Python'],  # Valor de la variable techs
+    'name': '30 Days Of Python Programming',      # Valor de la variable name
+    'title': 'Home'                               # String literal
+}
+
+Llamada real
+render_template(template_name, **context)
+ `El ** desempaqueta el diccionario como keyword arguments`
+
+# Paso 2: Estructura Interna de la Ejecución
+# flask/templating.py (simplificado)
+
+def render_template(template_name_or_list, **context):
+    """Renderiza un template con el contexto dado"""
+    
+    # PASO 1: Obtener la aplicación Flask actual
+    ctx = _app_ctx_stack.top
+    app = ctx.app
+    
+    # PASO 2: Actualizar el contexto con variables globales de Flask
+    app.update_template_context(context)
+    # Esto agrega cosas como: request, session, g, url_for, etc.
+    # Ahora context también tiene estas variables automáticas
+    
+    # PASO 3: Obtener el entorno Jinja2
+    jinja_env = app.jinja_env
+    
+    # PASO 4: Cargar el template
+    template = jinja_env.get_or_select_template(template_name_or_list)
+    
+    # PASO 5: Renderizar el template con el contexto
+    return template.render(context)
+
+---
+
+### Visualización Paso a Paso
+╔════════════════════════════════════════════════════════════╗
+║  render_template('home.html', techs=techs, name=name, ...) ║
+╚════════════════════════════════════════════════════════════╝
+
+PASO 1: Crear contexto inicial
+┌────────────────────────────────────────────────────────┐
+│ context = {                                            │
+│   'techs': ['HTML', 'CSS', 'Flask', 'Python'],         │
+│   'name': '30 Days Of Python Programming',             │
+│   'title': 'Home'                                      │
+│ }                                                      │
+└────────────────────────────────────────────────────────┘
+
+PASO 2: Flask agrega variables globales automáticas
+┌────────────────────────────────────────────────────────┐
+│ app.update_template_context(context)                   │
+│                                                        │
+│ context ahora contiene:                                │
+│ {                                                      │
+│   'techs': ['HTML', 'CSS', 'Flask', 'Python'],         │
+│   'name': '30 Days Of Python Programming',             │
+│   'title': 'Home',                                     │
+│   'request': <Request object>,      ← Agregado        │
+│   'session': <Session object>,      ← Agregado        │
+│   'g': <g object>,                  ← Agregado        │
+│   'url_for': <function url_for>,    ← Agregado        │
+│   'get_flashed_messages': <func>,   ← Agregado        │
+│   'config': <Config object>         ← Agregado        │
+│ }                                                      │
+└────────────────────────────────────────────────────────┘
+
+PASO 3: Cargar template desde disco
+┌────────────────────────────────────────────────────────┐
+│ jinja_env.get_template('home.html')                    │
+│   ↓                                                    │
+│ FileSystemLoader busca:                                │
+│   /home/gustavo/proyecto/templates/home.html           │
+│   ↓                                                    │
+│ Lee el archivo como texto:                             │
+│   "<h1>Bienvenido a {{ name }}</h1>                    │
+│    <ul>                                                │
+│    {% for tech in techs %}                             │
+│      <li>{{ tech }}</li>                               │
+│    {% endfor %}                                        │
+│    </ul>"                                              │
+│   ↓                                                    │
+│ Compila a bytecode de Jinja2                           │
+└────────────────────────────────────────────────────────┘
+
+PASO 4: Renderizar (reemplazar variables)
+┌────────────────────────────────────────────────────────┐
+│ template.render(context)                               │
+│                                                        │
+│ Jinja2 procesa:                                        │
+│                                                        │
+│ {{ name }} → '30 Days Of Python Programming'           │
+│                                                        │
+│ {% for tech in techs %} → Loop:                        │
+│   techs[0] = 'HTML'   → <li>HTML</li>                  │
+│   techs[1] = 'CSS'    → <li>CSS</li>                   │
+│   techs[2] = 'Flask'  → <li>Flask</li>                 │
+│   techs[3] = 'Python' → <li>Python</li>                │
+│                                                        │
+│ HTML Final generado:                                   │
+│ "<h1>Bienvenido a 30 Days Of Python Programming</h1>   │
+│  <ul>                                                  │
+│    <li>HTML</li>                                       │
+│    <li>CSS</li>                                        │
+│    <li>Flask</li>                                      │
+│    <li>Python</li>                                     │
+│  </ul>"                                                │
+└────────────────────────────────────────────────────────┘
+
+PASO 5: Retornar HTML como string
+┌────────────────────────────────────────────────────────┐
+│ return "<h1>Bienvenido a 30 Days...</h1>..."           │
+│   ↓                                                    │
+│ Flask envía este HTML al navegador                     │
+│   ↓                                                    │
+│ Navegador lo renderiza visualmente                     │
+└────────────────────────────────────────────────────────┘
+
+# Desglose Detallado de Cada Argumento
+
+Argumento: techs=techs
+
+techs = ['HTML', 'CSS', 'Flask', 'Python']
+render_template('home.html', techs=techs)
+
+En el template (home.html):
+techs=techs
+  ↑    ↑
+  │    │
+  │    └─ Valor: La variable Python 'techs' (la lista)
+  └─ Nombre: Cómo se llamará en Jinja2
+
+  {% for tech in techs %}
+    <li>{{ tech }}</li>
+{% endfor %}
+
+`Mismo para el resto de variables`
+
+Diferencia importante:
+
+En techs=techs, el valor es una variable
+En title='Home', el valor es un literal
+
+# En el template:
+
+{% for tech in tecnologias %}  <!-- Nombre diferente -->
+    <li>{{ tech }}</li>
+{% endfor %}
+```
+
+---
+
+## Estructura Interna Completa con Memoria
+```
+╔════════════════════════════════════════════════════════════╗
+║           ESTRUCTURA EN MEMORIA                            ║
+╚════════════════════════════════════════════════════════════╝
+
+Python (antes de render_template):
+┌────────────────────────────────────────────────────────┐
+│ Namespace de la función home():                        │
+│                                                        │
+│ techs ──→ @ 0x7f8a1000: ['HTML', 'CSS', 'Flask', ...] │
+│ name ───→ @ 0x7f8a2000: '30 Days Of Python...'        │
+└────────────────────────────────────────────────────────┘
+                        │
+                        │ Llamada a render_template
+                        ↓
+Contexto de Jinja2 (diccionario):
+┌────────────────────────────────────────────────────────┐
+│ context = {                                            │
+│   'techs': ──→ @ 0x7f8a1000  (misma lista)            │
+│   'name':  ──→ @ 0x7f8a2000  (mismo string)           │
+│   'title': ──→ @ 0x7f8a3000: 'Home'                   │
+│ }                                                      │
+└────────────────────────────────────────────────────────┘
+                        │
+                        │ template.render(context)
+                        ↓
+Jinja2 procesa el template:
+┌────────────────────────────────────────────────────────┐
+│ Template: "{{ name }}"                                 │
+│   ↓                                                    │
+│ Busca en context['name']                               │
+│   ↓                                                    │
+│ Encuentra: @ 0x7f8a2000                                │
+│   ↓                                                    │
+│ Lee el valor: '30 Days Of Python Programming'          │
+│   ↓                                                    │
+│ Inserta en el HTML: "<h1>30 Days Of Python...</h1>"    │
+└────────────────────────────────────────────────────────┘
+
+HTML Final (string):
+┌────────────────────────────────────────────────────────┐
+│ @ 0x7f8a4000:                                          │
+│ "<h1>Bienvenido a 30 Days Of Python Programming</h1>   │
+│  <ul>                                                  │
+│    <li>HTML</li>                                       │
+│    <li>CSS</li>                                        │
+│    <li>Flask</li>                                      │
+│    <li>Python</li>                                     │
+│  </ul>"                                                │
+└────────────────────────────────────────────────────────┘
+Punto clave: NO se copian los datos. context contiene referencias (punteros) a los objetos originales.
+
+# Código Interno de template.render()
+python# jinja2/environment.py (muy simplificado)
+
+class Template:
+    def render(self, context):
+        """Renderiza el template con el contexto dado"""
+        
+        # Crear un namespace para el template
+        namespace = dict(context)  # Copia el diccionario
+        
+        # Ejecutar el código compilado del template
+        # El bytecode accede a variables en 'namespace'
+        output = self._execute(namespace)
+        
+        return output
+    
+    def _execute(self, namespace):
+        """Ejecuta el bytecode del template"""
+        result = []
+        
+        # Ejemplo de cómo procesa {{ name }}
+        # (en realidad es bytecode, esto es ilustrativo)
+        
+        # Cuando encuentra {{ name }}:
+        value = namespace.get('name', '')
+        result.append(str(value))
+        
+        # Cuando encuentra {% for tech in techs %}:
+        for tech in namespace.get('techs', []):
+            result.append(f'<li>{tech}</li>')
+        
+        return ''.join(result)
+__________________________________________________________________________________________________________________
+
+Paso 7: Creando un Layout Reutilizable.
+
+Observa que hay mucho código repetido en home.html y about.html:
+
+La estructura <!DOCTYPE>, <html>, <head>
+La navegación <ul><li>...</li></ul>
+
+Podemos eliminar esta repetición usando herencia de templates con Jinja2
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Lato:300,400|Nunito:300,400|Raleway:300,400,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
+    {% if title %}
+    <title>30 Days of Python - {{ title}}</title>
+    {% else %}
+    <title>30 Days of Python</title>
+    {% endif %}
+  </head>
+
+  <body>
+    <header>
+      <div class="menu-container">
+        <div>
+          <a class="brand-name nav-link" href="/">30DaysOfPython</a>
+        </div>
+        <ul class="nav-lists">
+          <li class="nav-list">
+            <a class="nav-link active" href="{{ url_for('home') }}">Home</a>
+          </li>
+          <li class="nav-list">
+            <a class="nav-link active" href="{{ url_for('about') }}">About</a>
+          </li>
+          <li class="nav-list">
+            <a class="nav-link active" href="{{ url_for('post') }}"
+              >Text Analyzer</a
+            >
+          </li>
+        </ul>
+      </div>
+    </header>
+    <main>
+      {% block content %} {% endblock %}
+    </main>
+  </body>
+</html>
+
+# Explicación Detallada del Layout:
+<link
+  href="https://fonts.googleapis.com/css?family=Lato:300,400|Nunito:300,400|Raleway:300,400,500&display=swap"
+  rel="stylesheet"
+/>
+
+Explicación:
+
+Importa fuentes de Google Fonts
+rel="stylesheet": Indica que es una hoja de estilos
+Tres familias de fuentes: Lato, Nunito, Raleway con diferentes pesos (300, 400, 500)
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
+
+Explicación:
+
+url_for('static', ...): Función de Flask para generar URLs a archivos estáticos
+filename='css/main.css': Ruta relativa dentro de la carpeta static/
+Flask buscará en static/css/main.css
+
+¿Por qué url_for() en lugar de escribir la ruta directamente?
+
+Flexibilidad: Si cambias la estructura de carpetas, solo cambias la configuración
+Seguridad: Flask maneja correctamente las rutas en diferentes sistemas operativos
+Versionado: Puedes agregar cache-busting automáticamente
+
+{% if title %}
+<title>30 Days of Python - {{ title}}</title>
+{% else %}
+<title>30 Days of Python</title>
+{% endif %}
+Explicación línea por línea:
+
+{% if title %}: Verifica si la variable title existe y no es falsy
+<title>30 Days of Python - {{ title}}</title>: Si existe, crea un título con el valor
+{% else %}: Si title no existe
+<title>30 Days of Python</title>: Usa un título por defecto
+{% endif %}: Cierra el bloque condicional
+
+Ejemplo:
+
+Si pasas title='Home' → <title>30 Days of Python - Home</title>
+Si no pasas title → <title>30 Days of Python</title>
+
+<a class="nav-link active" href="{{ url_for('home') }}">Home</a>
+
+Explicación:
+
+url_for('home'): Genera la URL para la función home()
+En lugar de escribir href="/", usamos el nombre de la función
+Si cambias la ruta de @app.route('/') a @app.route('/inicio'), los enlaces se actualizarán automáticamente
+
+Ventaja principal: Desacoplas las URLs de tu navegación. Si cambias rutas, no necesitas actualizar todos los templates manualmente.
+
+{% block content %} {% endblock %}
+
+Explicación:
+
+{% block content %}: Define un "bloque" llamado content
+Este es un placeholder que los templates hijos pueden reemplazar
+{% endblock %}: Cierra el bloque
+
+Analogía: Es como dejar un espacio en blanco en una carta modelo que diferentes personas pueden llenar con su mensaje personal.
+---------------------------------------------------------------------------------------------------------------------
+# home.html - Heredando del Layout
+html{% extends 'layout.html' %} 
+{% block content %}
+<div class="container">
+  <h1>Welcome to {{name}}</h1>
+  <p>
+    This application clean texts and analyse the number of word, characters and
+    most frequent words in the text. Check it out by click text analyzer at the
+    menu. You need the following technologies to build this web application:
+  </p>
+  <ul class="tech-lists">
+    {% for tech in techs %}
+    <li class="tech">{{tech}}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
+
+Explicación de la Herencia:
+    {% extends 'layout.html' %}
+Explicación:
+
+extends: Palabra clave de Jinja2 para heredar de otro template
+'layout.html': El template padre
+Esto le dice a Jinja2: "Usa toda la estructura de layout.html como base"
+
+Qué sucede?**
+
+Jinja2 carga layout.html completo
+Busca los bloques definidos en home.html
+Reemplaza los bloques correspondientes
+
+{% block content %}
+<div class="container">
+  ...
+</div>
+{% endblock %}
+
+Explicación:
+
+{% block content %}: Comienza a definir el contenido para el bloque content
+Todo entre {% block %} y {% endblock %} reemplazará el bloque vacío en layout.html
+El resto de layout.html (header, navegación, etc.) se mantiene intacto
+--------------------------------------------------------------------------------------------------------------------------
+# HTML final generado:
+<!DOCTYPE html>
+<html>
+  <head>
+    ... (de layout.html)
+  </head>
+  <body>
+    <header>
+      ... (navegación de layout.html)
+    </header>
+    <main>
+      <div class="container">
+        <h1>Welcome to 30 Days Of Python Programming</h1>
+        ... (contenido de home.html)
+      </div>
+    </main>
+  </body>
+</html>
+
+--------------------------------------------------------------------------------------------------------------------------
+# about.html - Heredando del Layout
+{% extends 'layout.html' %} 
+{% block content %}
+<div class="container">
+  <h1>About {{name}}</h1>
+  <p>
+    This is a 30 days of python programming challenge. If you have been coding
+    this far, you are awesome. Congratulations for the job well done!
+  </p>
+</div>
+{% endblock %}
+
+Explicación:
+- Exactamente el mismo patrón que home.html
+- Hereda de layout.html
+- Define solo el contenido único de la página About
+--------------------------------------------------------------------------------------------------------------------------
+# post.html - Formulario
+{% extends 'layout.html' %} 
+{% block content %}
+<div class="container">
+  <h1>Text Analyzer</h1>
+  <form action="https://thirtydaysofpython-v1.herokuapp.com/post" method="POST">
+    <div>
+      <textarea rows="25" name="content" autofocus></textarea>
+    </div>
+    <div>
+      <input type="submit" class="btn" value="Process Text" />
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+Elementos del Formulario Explicados:
+
+<form action="https://thirtydaysofpython-v1.herokuapp.com/post" method="POST">
+Explicación:
+
+- <form>: Elemento HTML con formato de formulario.
+- action="...": URL donde se enviarán los datos, es decir url es la dirección exacta del Back-end donde van a aterrizar los datos que el usuario escribió en el formulario.
+- method="POST": Método HTTP a usar (POST para enviar datos), es decir el usuario al enviar el formulario usara metodo post.
+    Aquí le estás diciendo al navegador CÓMO enviar esa carta.
+    Si fuera GET: Los datos irían escritos en la URL (como cuando buscas en Google y ves ?q=busqueda). Es inseguro para contraseñas o textos largos.
+    Al ser POST: Los datos van escondidos dentro del sobre (en el cuerpo de la petición HTTP). El servidor los recibe de forma privada y segura.
+
+Métodos HTTP:
+-GET: Para obtener datos (visible en la URL)
+-POST: Para enviar datos (no visible en la URL, más seguro)
+
+
+<textarea rows="25" name="content" autofocus></textarea>
+
+Explicación:
+<textarea>: Campo de texto multilínea
+rows="25": Altura del campo (25 líneas)
+name="content": Nombre del campo (clave para acceder al dato en Python)
+autofocus: El cursor se posiciona automáticamente aquí al cargar la página
+
+
+<input type="submit" class="btn" value="Process Text" />
+
+Explicación:
+type="submit": Botón que envía el formulario
+class="btn": Clase CSS para estilos
+value="Process Text": Texto visible en el botón
+
+---------------------------------------------------------------------------------------------------------
+Paso 8: Manejando Datos del Formulario
+
+Ahora actualizamos app.py para manejar el formulario:
+
+from flask import Flask, render_template, request, redirect, url_for
+import os
+
+app = Flask(__name__)
+# to stop caching static file
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
+@app.route('/')
+def home ():
+    techs = ['HTML', 'CSS', 'Flask', 'Python']
+    name = '30 Days Of Python Programming'
+    return render_template('home.html', techs=techs, name=name, title='Home')
+
+@app.route('/about')
+def about():
+    name = '30 Days Of Python Programming'
+    return render_template('about.html', name=name, title='About Us')
+
+@app.route('/result')
+def result():
+    return render_template('result.html')
+
+@app.route('/post', methods=['GET','POST'])
+def post():
+    name = 'Text Analyzer'
+    if request.method == 'GET':
+         return render_template('post.html', name=name, title=name)
+    if request.method =='POST':
+        content = request.form['content']
+        print(content)
+        return redirect(url_for('result'))
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=True, host='0.0.0.0', port=port)
+
+# Nuevas Líneas Explicadas:
+------------------------------------------------------------------------------------------------------------------
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
+Explicación:
+
+app.config: Diccionario de configuración de Flask
+'SEND_FILE_MAX_AGE_DEFAULT': Tiempo máximo de caché para archivos estáticos
+= 0: Deshabilita el caché completamente
+
+¿Por qué?
+Durante el desarrollo, quieres ver cambios en CSS/JS inmediatamente. Sin esto, el navegador podría mostrar versiones antiguas en caché.
+Importante: En producción, querrás caché para mejor rendimiento.
+
+1. El Problema: El Navegador es "Vago" (Eficiente)
+
+Los navegadores (Chrome, Firefox) están diseñados para ahorrar datos y batería.
+
+    Sin esa línea: Cuando tu navegador pide style.css, Flask le responde y le pega una etiqueta invisible (Header) que dice: "Este archivo es válido por 12 horas (43200 segundos)".
+
+    La Trampa: Si cambias el color de fondo a rojo en tu código y recargas la página (F5), el navegador dice: "Espera, yo ya tengo style.css guardado en mi memoria y Flask me dijo que servía por 12 horas. No lo voy a pedir de nuevo, uso el viejo".
+
+    Resultado: Vos ves la pantalla vieja (azul) aunque el código sea nuevo (rojo).
+
+2. La Solución: SEND_FILE_MAX_AGE_DEFAULT = 0
+
+Al poner esto en 0, estás cambiando esa "etiqueta invisible" que Flask le pega a los archivos.
+
+    Petición: El navegador pide style.css.
+
+    Respuesta de Flask: Le entrega el archivo y le dice: "Cache-Control: max-age=0". (Traducción: "Este archivo caduca ya mismo. No lo guardes").
+
+    Efecto: Cada vez que aprietes F5, el navegador se ve obligado a ignorar su memoria y pedirle una copia fresca al servidor.
+
+`Importante: En producción, querrás caché para mejor rendimiento.`
+
+------------------------------------------------------------------------------------------------------------------
+
+@app.route('/result')
+def result():
+    return render_template('result.html')
+
+Explicación:
+
+Ruta simple para mostrar resultados
+Por ahora solo renderiza una plantilla vacía
+Aquí es donde mostrarías el análisis del texto
+------------------------------------------------------------------------------------------------------------------
+@app.route('/post', methods=['GET','POST'])
+
+Explicación:
+
+methods=['GET','POST']: Lista de métodos HTTP permitidos para esta ruta
+Sin este parámetro, solo se permite GET por defecto
+
+¿Por qué necesitamos ambos?
+
+GET: Para mostrar el formulario (cuando visitas la página)
+POST: Para procesar los datos enviados (cuando envías el formulario)
+------------------------------------------------------------------------------------------------------------------
+
+def post():
+    name = 'Text Analyzer'
+    if request.method == 'GET':
+         return render_template('post.html', name=name, title=name)
+    if request.method =='POST':
+        content = request.form['content']
+        print(content)
+        return redirect(url_for('result'))
+
+Explicación línea por línea:
+    
+if request.method == 'GET':
+- request.method: Propiedad que contiene el método HTTP de la solicitud actual
+- Si es GET (visita normal), muestra el formulario
+
+
+return render_template('post.html', name=name, title=name)
+- Renderiza el formulario vacío
+
+if request.method =='POST':
+-Si el usuario envió el formulario
+
+content = request.form['content']
+- request.form: Diccionario con todos los datos del formulario
+- ['content']: Accede al campo con name="content"
+- Esto obtiene el texto que el usuario escribió en el textarea
+
+print(content)
+- Imprime el contenido en la consola (para debugging)
+
+
+return redirect(url_for('result'))
+
+- url_for('result'): Genera la URL para la función result()
+- redirect(): Redirige al usuario a esa URL
+- Patrón común: POST → procesar → redirigir (evita reenvíos duplicados)
+------------------------------------------------------------------------------------------------------------------
+# Paso 9: Sirviendo Archivos Estáticos (CSS)
+Creando la Estructura de Carpetas
+mkdir static
+mkdir static/css
+touch static/css/main.css
+
+
+**Estructura:**
+
+python_for_web/
+├── static/
+│   └── css/
+│       └── main.css
+
+El tutorial menciona copiar el CSS (no lo escribiremos aquí por su longitud), pero es importante entender cómo funciona:
+
+CSS.STYLE
+
+Ejemplo simplificado 
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.nav-lists {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+}
+
+.btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+-----------------------------------------------------------------------------------------------------------------------
+Cómo Flask sirve archivos estáticos:
+
+Flask busca automáticamente en la carpeta static/
+Usas url_for('static', filename='ruta/archivo') en templates
+Flask genera la URL correcta: /static/css/main.css
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------
+# Paso 10: Deployment en Heroku
+-----------------------------------------------------------------------------------------------------------------------
+
+# Resumen de Conceptos Clave
+1. Rutas en Flask
+python@app.route('/ruta')
+def funcion():
+    return "respuesta"
+
+El decorador @app.route() conecta URLs con funciones Python
+
+2. Templates y Jinja2
+html{{ variable }}          <!-- Imprime valor -->
+{% for item in lista %} <!-- Lógica -->
+{% endfor %}
+
+Separa HTML de Python
+Permite contenido dinámico
+
+3. Herencia de Templates
+html{% extends 'base.html' %}
+{% block nombre %}
+  contenido
+{% endblock %}
+```
+- Elimina código repetido
+- Facilita mantenimiento
+
+### 4. Métodos HTTP
+- **GET**: Obtener/mostrar datos
+- **POST**: Enviar/procesar datos
+
+### 5. Estructura de Proyecto Flask
+```
+proyecto/
+├── app.py              # Código Python
+├── requirements.txt    # Dependencias
+├── Procfile           # Config deployment
+├── templates/         # HTML
+│   ├── layout.html
+│   └── *.html
+└── static/            # CSS, JS, imágenes
+    └── css/
+        └── main.css
+----------------------------------------------------------------------------------------------------------------------
 
