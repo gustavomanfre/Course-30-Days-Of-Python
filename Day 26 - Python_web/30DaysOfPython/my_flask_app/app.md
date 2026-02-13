@@ -2813,3 +2813,339 @@ proyecto/
         └── main.css
 ----------------------------------------------------------------------------------------------------------------------
 
+1. El Objeto request
+
+Cuando un usuario hace clic en "Enviar" en un formulario, el navegador envía una petición HTTP. Flask recibe esa maraña de datos y la ordena en un objeto llamado request.
+
+Dentro de ese objeto, hay un atributo específico llamado form.
+2. ¿Qué es request.form técnicamente?
+
+En memoria, request.form es un objeto tipo Diccionario (técnicamente un ImmutableMultiDict).
+
+Contiene pares de Clave: Valor:
+
+    La Clave: Es el atributo name que le pusiste al <input> o <textarea> en tu HTML.
+
+    El Valor: Es lo que el usuario escribió físicamente en el cuadro de texto.
+
+3. El proceso paso a paso (Memoria y Ejecución)
+
+Imagina este escenario: HTML:
+HTML
+
+<input type="text" name="content" value="Hola Flask">
+
+Python:
+Python
+
+content = request.form['content']
+
+El viaje de los datos:
+
+    En el Navegador: El usuario escribe "Hola Flask" y aprieta enviar. El navegador ve que el name de ese campo es "content".
+
+    En el Servidor (RAM): Flask recibe la petición y crea el diccionario request.form. En memoria se ve así: request.form = { "content": "Hola Flask" }
+
+    En tu código: Al ejecutar request.form['content'], Python busca en ese diccionario la etiqueta "content".
+
+    La Referencia: Encuentra el valor "Hola Flask" y se lo asigna a tu variable local content.
+
+4. Estructura en Memoria
+Nombre	Tipo de Objeto	Contenido / Valor
+request	Objeto Request	Toda la información de la visita (IP, navegador, datos).
+request.form	Diccionario	{"content": "Hola Flask", "autor": "Gustavo"}
+content	Variable (String)	"Hola Flask"
+5. ¿Qué pasa si el name no coincide?
+
+Este es el error más común.
+
+    Si en tu HTML pusiste <input name="mensaje">.
+
+    Y en tu Python pides request.form['content'].
+
+Resultado: Flask lanzará un error 400 Bad Request o una excepción KeyError, porque el "cajón" llamado content no existe en el diccionario; el cajón se llama mensaje.
+En resumen:
+
+form es el puente que traduce el atributo name del HTML en una clave de diccionario en Python. Es la forma que tiene Flask de decirte: "Aquí tienes lo que el usuario escribió en el formulario".
+----------------------------------------------------------------------------------------------------------------------
+Template HTML (result.html)
+
+Linea 1: {% extends 'layout.html' %}
+
+Desglose:
+{% extends 'layout.html' %}: Hereda de la plantilla base
+Esto significa que result.html usa la estructura de layout.html
+Solo necesita definir el contenido específico en los bloques
+----------------------------------------------------------------------------------------------------------
+
+Línea 2: Inicio del Bloque de Contenido
+{% block content %}
+
+Desglose:
+{% block content %}: Define el inicio del bloque llamado content
+Este bloque reemplazará el {% block content %} vacío en layout.html
+Todo entre {% block content %} y {% endblock %} irá en esa sección
+
+----------------------------------------------------------------------------------------------------------
+
+Línea 3: Contenedor Principal
+<div class="container">
+
+Desglose:
+
+<div>: Elemento de división (bloque genérico)
+class="container": Clase CSS para estilos
+
+Probablemente definida en main.css
+Típicamente: ancho máximo, centrado, padding
+
+
+
+Propósito:
+
+Agrupa todo el contenido de la página
+Permite aplicar estilos consistentes
+
+----------------------------------------------------------------------------------------------------------
+
+Línea 4: Título Principal
+html  <h1>Analysis Results</h1>
+Desglose:
+
+<h1>: Encabezado de nivel 1 (más importante)
+Analysis Results: Texto estático
+No usa variables porque es un título fijo
+
+Salida en navegador:
+html<h1>Analysis Results</h1>
+
+Línea 5: Mostrar Conteo de Palabras
+html  <p><strong>Word Count:</strong> {{ word_count }}</p>
+Desglose:
+
+<p>: Párrafo
+<strong>: Texto en negrita (semántico: importante)
+Word Count:: Etiqueta estática
+{{ word_count }}: Variable de Jinja2
+
+Jinja2 busca word_count en el contexto
+Encuentra el valor que pasaste: 8
+Lo inserta en el HTML
+
+
+
+Flujo:
+Python pasa:
+pythonword_count = 8
+Jinja2 procesa:
+html{{ word_count }} → 8
+HTML final:
+html<p><strong>Word Count:</strong> 8</p>
+```
+
+**Navegador muestra:**
+```
+Word Count: 8
+----------------------------------------------------------------------------------------------------------
+
+Línea 6: Mostrar Conteo de Caracteres
+html  <p><strong>Character Count:</strong> {{ char_count }}</p>
+Desglose:
+
+Exactamente igual que la línea anterior
+{{ char_count }}: Variable con el conteo de caracteres
+
+Ejemplo:
+Python:
+pythonchar_count = 39
+HTML final:
+html<p><strong>Character Count:</strong> 39</p>
+----------------------------------------------------------------------------------------------------------
+
+Línea 8: Subtítulo
+html  <h2>Most Frequent Words:</h2>
+Desglose:
+
+<h2>: Encabezado de nivel 2 (sub-sección)
+Most Frequent Words:: Texto estático
+
+----------------------------------------------------------------------------------------------------------
+
+Línea 9-13: Lista de Palabras Frecuentes
+<ul>
+    {% for word, count in most_common %}
+      <li>{{ word }}: {{ count }} times</li>
+    {% endfor %}
+  </ul>
+----------------------------------------------------------------------------------------------------------
+
+Desglose línea por línea:
+Línea 9: Lista Desordenada
+html  <ul>
+
+<ul>: Unordered List (lista con viñetas)
+
+----------------------------------------------------------------------------------------------------------
+
+Línea 10: Inicio del Loop
+html    {% for word, count in most_common %}
+Desglose:
+
+{% for ... %}: Estructura de control de Jinja2 para loops
+word, count: Dos variables que reciben cada tupla
+
+word: Primer elemento de la tupla (la palabra)
+count: Segundo elemento de la tupla (la cantidad)
+
+
+in most_common: Itera sobre la lista most_common
+
+Desempaquetado de tuplas:
+Python pasó:
+pythonmost_common = [('this', 2), ('test', 2), ('is', 2), ('a', 1), ('simple', 1)]
+Primera iteración:
+pythonword = 'this'
+count = 2
+Segunda iteración:
+pythonword = 'test'
+count = 2
+Y así sucesivamente...
+----------------------------------------------------------------------------------------------------------
+
+Línea 11: Contenido del Loop
+html      <li>{{ word }}: {{ count }} times</li>
+Desglose:
+
+<li>: List Item (elemento de lista)
+{{ word }}: Inserta la palabra actual
+: : Texto estático (dos puntos y espacio)
+{{ count }}: Inserta la cantidad
+ times: Texto estático
+
+Ejemplo de una iteración:
+Variables:
+pythonword = 'this'
+count = 2
+HTML generado:
+html<li>this: 2 times</li>
+----------------------------------------------------------------------------------------------------------
+
+Línea 12: Fin del Loop
+html    {% endfor %}
+Desglose:
+
+{% endfor %}: Marca el final del bloque for
+Jinja2 ha generado un <li> por cada elemento de most_common
+----------------------------------------------------------------------------------------------------------
+
+Línea 13: Cierre de Lista
+html  </ul>
+
+</ul>: Cierra la lista desordenada
+
+HTML completo generado:
+html<ul>
+  <li>this: 2 times</li>
+  <li>test: 2 times</li>
+  <li>is: 2 times</li>
+  <li>a: 1 times</li>
+  <li>simple: 1 times</li>
+</ul>
+----------------------------------------------------------------------------------------------------------
+
+Línea 15: Enlace de Vuelta
+html  <a href="{{ url_for('post') }}">Analyze Another Text</a>
+Desglose:
+
+<a>: Anchor (enlace)
+href="{{ url_for('post') }}": Atributo de destino
+
+{{ url_for('post') }}: Función de Flask/Jinja2
+Genera la URL para la función post()
+Resultado: /post
+
+
+Analyze Another Text: Texto del enlace
+
+¿Por qué url_for('post') en lugar de href="/post"?
+Ventaja 1: Flexibilidad
+Si cambias la ruta:
+python@app.route('/text-analyzer', methods=['GET','POST'])  # Ruta cambiada
+def post():
+    ...
+```
+
+`url_for('post')` automáticamente genera `/text-analyzer` ✅
+
+`href="/post"` seguiría apuntando a `/post` ❌ (roto)
+
+**Ventaja 2: Prefijos**
+Si tu app está en un subdirectorio:
+```
+https://example.com/myapp/post
+url_for('post') incluye el prefijo automáticamente
+
+HTML final generado:
+html<a href="/post">Analyze Another Text</a>
+----------------------------------------------------------------------------------------------------------
+
+Línea 16-17: Cierre
+html</div>
+{% endblock %}
+Desglose:
+Línea 16:
+html</div>
+
+Cierra el <div class="container"> de la línea 3
+----------------------------------------------------------------------------------------------------------
+
+Línea 17:
+html{% endblock %}
+```
+- Cierra el bloque `content`
+- Marca el final del contenido específico de esta página
+
+----------------------------------------------------------------------------------------------------------
+
+## Flujo Completo de la Aplicación
+
+### Escenario 1: Usuario Visita `/post` (GET)
+```
+1. Usuario abre: http://localhost:5000/post
+   ↓
+2. Navegador envía: GET /post
+   ↓
+3. Flask ejecuta: def post()
+   ↓
+4. Detecta: request.method == 'GET'
+   ↓
+5. Renderiza: render_template('post.html', name='Text Analyzer', title='Text Analyzer')
+   ↓
+6. Usuario ve: Formulario vacío
+```
+
+---
+
+### Escenario 2: Usuario Envía Formulario (POST)
+```
+1. Usuario escribe: "This is a test. This test is simple."
+   ↓
+2. Usuario hace clic: Submit
+   ↓
+3. Navegador envía: POST /post
+   body: content=This+is+a+test.+This+test+is+simple.
+   ↓
+4. Flask ejecuta: def post()
+   ↓
+5. Detecta: request.method == 'POST'
+   ↓
+6. Extrae: content = 'This is a test. This test is simple.'
+   ↓
+7. Procesa:
+   word_count = 8
+   char_count = 39
+   most_common = [('this', 2), ('test', 2), ...]
+   ↓
+8. Renderiza: render_template('result.html', ...)
+   ↓
+9. Usuario ve: Página de resulta

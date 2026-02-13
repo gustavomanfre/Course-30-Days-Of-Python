@@ -47,11 +47,57 @@ def post():
                                             # Incluye: letras, números, espacios, puntuación, saltos de línea
                                             # content = 'Hello World'
                                             # char_count = len(content)  # 11 (incluye el espacio)
-        
+
+        from collections import Counter     # from collections: Del módulo collections (biblioteca estándar de Python), import Counter: Importa la clase Counter
+                                            # Clase especializada para contar elementos en una lista
+                                            # Hereda de dict
+                                            # Cuenta automáticamente cuántas veces aparece cada elemento
+                                            # from collections import Counter
+                                            # items = ['a', 'b', 'a', 'c', 'a', 'b']
+                                            # counter = Counter(items)
+                                            # print(counter)  # Counter({'a': 3, 'b': 2, 'c': 1})
+
+        words = content.lower().split()     # content.lower(): Convierte todo el texto a minúsculas, Propósito: Tratar 'This' y 'this' como la misma palabra
+                                            # .split(): Divide en palabras
+                                            # 'this is a test'.split()  # ['this', 'is', 'a', 'test']
+
+        word_freq = Counter(words)          # Counter(words): Crea un objeto Counter contando cada palabra
+                                            # word_freq =: Asigna el contador a la variable
+                                            # words = ['this', 'is', 'a', 'test', 'this', 'test', 'is', 'simple']
+                                            # word_freq = Counter(words)
+                                            # print(word_freq) # Counter({'this': 2, 'is': 2, 'test': 2, 'a': 1, 'simple': 1})
+                                            # Counter({'this': 2, 'is': 2, 'test': 2, 'a': 1, 'simple': 1})
+
+        most_common = word_freq.most_common(5)# word_freq.most_common(5): Método de Counter
+                                              # Retorna las 5 palabras más frecuentes
+                                              # Devuelve una lista de tuplas: [(palabra, cantidad), ...]
+                                              # Ordenadas de mayor a menor frecuencia # [('this', 2), ('is', 2), ('test', 2), ('a', 1), ('simple', 1)]
+                                              # Tipo: list de tuple Cada tupla: (palabra_string, cantidad_int)
+                                              
+        return render_template('result.html', content=content, word_count=word_count, char_count=char_count, most_common=most_common)
+                                              # return render_template('result.html', ...): Renderiza el template de resultados
+                                              # Múltiples líneas: Por legibilidad, cada argumento en su propia línea
+                                              # content=content:
+
+                                              # Izquierda: Nombre en Jinja2
+                                              # Derecha: Valor en Python (el texto original del usuario)
+                                              # Tipo: str
+
+                                              # word_count=word_count:
+                                              # Cantidad de palabras
+                                              # Tipo: int
+                                              # Ejemplo: 8
 
 
+                                              # char_count=char_count:
+                                              # Cantidad de caracteres
+                                              # Tipo: int
+                                              # Ejemplo: 39
 
-
+                                              # most_common=most_common:
+                                              # Lista de palabras más frecuentes
+                                              # Tipo: list of tuple
+                                              # Ejemplo: [('this', 2), ('test', 2), ('is', 2), ...]
     
 @app.route('/result')
 def result():
