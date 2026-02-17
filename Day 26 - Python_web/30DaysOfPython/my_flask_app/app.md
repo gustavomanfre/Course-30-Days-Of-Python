@@ -3149,3 +3149,4 @@ html{% endblock %}
 8. Renderiza: render_template('result.html', ...)
    ↓
 9. Usuario ve: Página de resulta
+
