@@ -28,13 +28,6 @@ Si quieres ver qué hay dentro de tus acumuladores (sum_par, word_list) paso a p
     Inspecciona: El código se detendrá en ese punto. En el panel de la izquierda verás la sección "Variables". Podrás ver cómo cambian los valores en cada vuelta del bucle.
     Consola de depuración: En la parte inferior, busca la pestaña "Debug Console". Ahí puedes escribir el nombre de una variable (ej: invert_fruits) y presiona Enter para ver su estado actual en ese segundo.
 
-
-
-
-
-
-
-
     El error que ves en la terminal (imagen 2) ocurre porque estás intentando ejecutar un comando de Python directamente en la Bash (la terminal de Linux), y la terminal no entiende esa sintaxis.
 
 Aquí te explico los dos motivos principales:

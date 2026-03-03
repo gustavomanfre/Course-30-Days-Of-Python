@@ -308,59 +308,7 @@ Resumen Técnico
 
 _____________________________________________________________________________________________________________________________________________________________________________________________________________
 
-#Ruta principal
-@app.route('/')
-def home():
-    return '<h1>Welcome</h1>'
-
-En Python, a esto se le llama un "Factory Decorator" (una fábrica de decoradores). Vamos a destriparlo paso a paso en el orden en que la CPU lo procesa.
-Vamos a entrar al laboratorio de Flask. Lo que estás viendo con @app.route('/') es un nivel más avanzado que el decorador simple, porque este recibe un argumento (la ruta '/').
-
-En Python, a esto se le llama un "Factory Decorator" (una fábrica de decoradores). Vamos a destriparlo paso a paso en el orden en que la CPU lo procesa.
-PASO 1: El Escenario (Memoria Inicial)
-
-Antes de llegar a la ruta, ya ejecutaste app = Flask(__name__).
-    En memoria: Existe un objeto gigante llamado app.
-    Referencia: app apunta a una dirección (ej: 0x100).
-    Atributo interno: Este objeto tiene una lista vacía llamada url_map (el mapa de carreteras de tu web).
-
-PASO 2: La Llamada a la Fábrica (Antes de decorar)
-
-Python lee la línea @app.route('/'). Ojo aquí: Antes de decorar a home, Python primero tiene que resolver qué hay adentro de app.route('/').
-    Ejecución: Python llama a la función route del objeto app y le pasa el valor '/'.
-    Valor devuelto: Esa función NO decora todavía; lo que hace es devolver una función interna (llamémosla decorator_real) que queda flotando en memoria (ej: 0x200).
-    Estado: Ahora el código se ve así para Python: @<función en 0x200>.
-
-PASO 3: El "Secuestro" de home (Definición)
-
-Ahora Python lee def home():.
-    Carga: Guarda el código de home en la dirección 0x300.
-    Ejecución Automática: Como vio el @, Python hace el truco que ya conoces: home = decorator_real(home)
-    ¿Qué pasa dentro de Flask en ese momento? Aquí está el secreto. El decorador de Flask no solo envuelve la función, sino que hace una Registración:
-        Accede al objeto app (el que está en 0x100).
-        Busca su url_map.
-        Agrega una entrada: "Si el usuario pide '/', ejecutá lo que esté en la dirección 0x300".
-    Valor de retorno: Flask generalmente te devuelve la función tal cual la pusiste, pero ya la dejó "anotada" en su libreta de rutas.
-
-PASO 4: Estructura Final en Memoria
-Nombre/Referencia	Dirección	Valor / Contenido
-app	0x100	Objeto Flask (contiene el url_map).
-app.url_map	---	{'/' : 0x300} <--- ¡Aquí está el puente!
-home	0x300	El código que hace return '<h1>Welcome</h1>'.
-
-PASO 5: La Ejecución (Cuando alguien entra a la web)
-
-Cuando vos abrís el navegador en http://127.0.0.1:5000/:
-    Petición: El navegador envía un mensaje al servidor: "Quiero la ruta /".
-    Búsqueda: Flask (el objeto app) recibe el mensaje y mira su url_map.
-    Encuentro: Dice: "Para la ruta / tengo guardada la dirección de memoria 0x300".
-    Ejecución: Flask hace el llamado: memoria[0x300]().
-    Respuesta: Tu función se ejecuta, devuelve el HTML y Flask se lo manda al navegador.
-
-Resumen de la diferencia
-En el ejemplo de las mayúsculas, el decorador cambiaba el resultado de la función. En Flask, el decorador @app.route se usa principalmente para registrar la función en una lista de contactos.
-Es como si app fuera una central telefónica y el decorador fuera el técnico que conecta el cable del teléfono / a la oficina home.
-
+# TEORIA DECORADORES (Ir a decoradores.md)
 _______________________________________________________________________________________________________________________________________________________________________________________________
 
 # 1. El Nacimiento de la Etiqueta (Fase de Carga)
