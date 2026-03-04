@@ -36,10 +36,82 @@ def students ():
 from flask import Flask, Response
 import json
 from bson.objectid import ObjectId
-import json
-from bson.json_util imports dumps
+from bson.json_util import dumps
 import pymongo
 import os
+
+app = Flask(__name__)
+MONGODB_URI = 'mongodb+srv://asabeneh:your_password@30daysofpython-twxkr.mongodb.net/test?retryWrites=true&w=majority' 
+
+client = pymongo.MongoClient(MONGODB_URI)
+db = client['thirty_days_of_python']
+
+@app.route('/api/v1.0/students/<id>', methods = ['GET'])
+def single_student(id):
+    student = db.students.find({'id':ObjectId(id)})
+    return Response(dumps(student),mimetype='application/json')
+
+#-------------------------------------------------------------------------------------------#
+from datetime import datetime
+
+app = Flask(__name__)
+MONGODB_URI = 'mongodb+srv://asabeneh:your_password@30daysofpython-twxkr.mongodb.net/test?retryWrites=true&w=majority' 
+
+client = pymongo.MongoClient(MONGODB_URI)
+db = client['thirty_days_of_python']
+
+@app.route('/api/v1.0',methods =['POST'])
+def create_student():
+    name = request.form['name'] 
+    country = request.form['country'] 
+    city = request.form['city'] 
+    skills = request.form['skills'].split(',') 
+    bio = request.form['bio'] 
+    birthyear = request.form['birthyear'] 
+
+    create_student = datetime.now()
+    student = { 
+        'name': name, 
+        'country': country, 
+        'city': city, 
+        'birthyear': birthyear, 
+        'skills': skills, 
+        'bio': bio, 
+        'created_at': create_student 
+    }
+    db.students.insert_one(student) 
+    return 
+#-------------------------------------------------------------------------------------------#
+
+@app.route('/api/v1.0/students/<id>', methods = ['PUT'])
+def update_student (id):
+    query = {"_id":ObjectId(id)}
+    name = request.form['name'] 
+    country = request.form['country'] 
+    city = request.form['city'] 
+    skills = request.form['skills'].split(', ') 
+    bio = request.form['bio'] 
+    birthyear = request.form['birthyear'] 
+    created_at = datetime.now()
+
+    student = { 
+        'name': name, 
+        'country': country, 
+        'city': city, 
+        'birthyear': birthyear, 
+        'skills': skills, 
+        'bio': bio, 
+        'created_at': created_at 
+    }
+
+    db.students.update_one(query, student) 
+    return 
+
+#-------------------------------------------------------------------------------------------#
+
+
+
+
 
 
 

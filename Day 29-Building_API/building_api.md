@@ -462,6 +462,184 @@ ________________________________________________________________________________
 _______________________________________________________________________________________________________________
 
 # Metodos del Modulo json
-json.dumps(student): Convierte la lista de Python a una cadena JSON
-Response(): Crea un objeto de respuesta HTTP
-mimetype='application/json': Le dice al navegador que estamos enviando datos en formato JSON
+def students ():
+    return Response(json.dumps(student), mimetype='application/json')
+
+-json.dumps(student): Convierte la lista de Python a una cadena JSON
+
+-mimetype='application/json': Le dice al navegador que estamos enviando datos en formato JSON
+
+-Response(): Crea un objeto de respuesta HTTP
+_______________________________________________________________________________________________________________
+
+from bson.objectid import ObjectId
+MongoDB usa ObjectId como identificador único para cada document
+
+from bson.json_util import dumps
+Una versión especializada de dumps que maneja tipos de datos específicos de MongoD
+_______________________________________________________________________________________________________________
+
+@app.route('/api/v1.0/students/<id>', methods = ['GET']) 
+●  <id>': Es un parámetro variable en la URL. Por ejemplo: /api/v1.0/students/12345 
+●  def single_student(id): La función recibe el ID como parámetro
+_______________________________________________________________________________________________________________
+
+ student = db.students.find({'_id':ObjectId(id)}) 
+    return Response(dumps(student), mimetype='application/json') 
+
+●  db.students.find(): Busca en la colección "students" 
+●  {'_id':ObjectId(id)}: Filtra por el campo _id que coincida con el ID proporcionado 
+
+●  ObjectId(id): Convierte el string del ID a un objeto ObjectId que MongoDB entiende 
+●  dumps(student): Convierte el resultado (incluyendo tipos especiales de MongoDB) a JSON.
+
+La razón técnica por la cual se utiliza {'_id': ObjectId(id)} y no simplemente {'_id': id} radica en la incompatibilidad de tipos de datos. MongoDB es estricto con los tipos para garantizar la integridad y evitar errores silenciosos.
+
+1. Diferencia de Naturaleza de los Datos
+    El String (id): En tu código Python, la variable id suele ser una cadena de texto (str) de 24 caracteres hexadecimales (por ejemplo, '5df68a23...').
+    El ObjectId: En la base de datos, el campo _id no se guarda como texto, sino como un objeto binario de 12 bytes. Técnicamente, un string no es igual a un ObjectId, aunque visualmente parezcan iguales. Las fuentes enfatizan que son tipos de datos diferentes e incompatibles.
+
+2. Por qué falla la búsqueda con un String
+Si intentas buscar usando {'_id': id} (el string), MongoDB buscará una coincidencia exacta de tipo "texto" en el índice. Como el valor almacenado es de tipo "binario" (ObjectId), la comparación resultará falsa y la consulta devolverá None o ningún resultado, aunque los caracteres coincidan.
+
+Las fuentes utilizan una analogía clara: es como buscar el número entero 25 pero pasando como criterio el texto "25"; para el sistema, no son el mismo valor.
+
+3. La función de ObjectId(id)
+Al envolver la variable en ObjectId(), estás realizando una conversión explícita:
+    Transformas esos 24 caracteres hexadecimales legibles en su representación binaria real de 12 bytes.
+    Esto permite que PyMongo serialice la consulta a BSON de forma correcta, enviando a MongoDB el formato exacto que este espera encontrar en su índice de disco.
+
+4. Razón de diseño de MongoDB
+MongoDB no realiza esta conversión automáticamente por seguridad. Si permitiera conversiones automáticas, el sistema se volvería caótico al intentar adivinar si el usuario quiere buscar un string, un número o un identificador de objeto, lo que podría llevar a errores graves en aplicaciones complejas.
+En resumen: Usamos ObjectId(id) porque es la única forma de "hablar el mismo idioma" que la base de datos, convirtiendo una referencia textual de Python en el objeto binario real que MongoDB utiliza como clave primaria
+
+1. La regla de oro: El tipo de dato debe coincidir
+Tal como sospechas, MongoDB es estricto con los tipos de datos.
+
+    Si guardaste un Entero: Debes buscar con int(150). Si buscas con el string '150', MongoDB no lo encontrará porque para el motor son valores distintos.
+    Si usas el _id por defecto: MongoDB genera automáticamente un ObjectId, que es un objeto binario de 12 bytes. Por lo tanto, buscar con el string '5df6...' devolverá None (nada), porque un String no es igual a un objeto binario.
+
+2. ¿Qué hace exactamente ObjectId()?
+La función ObjectId(id_string) actúa como un conversor de formato.
+
+    Toma la representación legible (el string hexadecimal que tú ves) y la empaqueta en los 12 bytes binarios reales que están grabados en el disco duro.
+    Sin esta conversión, PyMongo enviaría a la base de datos una consulta de tipo "texto", pero el índice de la base de datos está esperando un tipo "binario", por lo que la comparación falla.
+
+3. La restricción técnica del valor (El caso del '150')
+Aquí hay un detalle vital: para que la función ObjectId() funcione, el string que le pases debe ser obligatoriamente una cadena de 24 caracteres hexadecimales.
+
+    Si intentas hacer ObjectId('150'): El código te dará un error, porque '150' es muy corto y no cumple con la anatomía de un ObjectId (4 bytes de tiempo + 5 bytes aleatorios + 3 bytes de contador).
+    Si tu ID es realmente '150': Significa que tú (o el sistema) lo insertaste manualmente como un string o un número. En ese caso, no debes usar ObjectId(), sino buscarlo exactamente como se guardó: db.students.find_one({'_id': '150'}) o int(150).
+
+Resumen técnico: La respuesta es SÍ. Siempre que trabajes con los identificadores automáticos de MongoDB, debes pasar el string por ObjectId() para convertirlo al "serial binario" que el motor entiende. Si no haces esa conversión, la base de datos te dirá que el documento no existe, aunque los caracteres del ID parezcan iguales a simple vista
+_______________________________________________________________________________________________________________
+
+from datetime import datetime 
+●  Importamos datetime para registrar cuándo se creó el estudiante python 
+
+@app.route('/api/v1.0/students', methods = ['POST']) 
+def create_student (): 
+●  Misma ruta que GET, pero ahora acepta método POST 
+●  POST se usa para crear nuevos recursos 
+    name = request.form['name'] 
+    country = request.form['country'] 
+    city = request.form['city'] 
+    skills = request.form['skills'].split(', ') 
+    bio = request.form['bio'] 
+    birthyear = request.form['birthyear'] 
+
+●  request.form['name']: Obtiene el valor del campo 'name' del formulario enviado 
+
+●  .split(', '): Convierte la cadena de habilidades en una lista (por ejemplo: 
+"Python, Java" → ['Python', 'Java']) 
+
+●  Hacemos esto para cada campo que el usuario envía 
+ 
+   created_at = datetime.now() 
+
+●  Obtiene la fecha y hora actual 
+ 
+   student = { 
+        'name': name, 
+        'country': country, 
+        'city': city, 
+        'birthyear': birthyear, 
+        'skills': skills, 
+        'bio': bio, 
+        'created_at': created_at 
+    } 
+
+●  Creamos un diccionario con todos los datos del estudiante 
+
+●  Este diccionario se convertirá en un documento de MongoDB 
+   db.students.insert_one(student) 
+    return ; 
+●  insert_one(): Inserta el nuevo estudiante en la base de datos 
+●  return: Debería retornar una respuesta (el código está incompleto aquí)
+
+1. ¿Qué es request?
+Técnicamente, request es un objeto global proporcionado por el framework Flask que contiene toda la información de la petición HTTP que el cliente (usuario) envía al servidor.
+
+    Cuando un usuario completa un formulario y presiona "Enviar", toda esa información viaja empaquetada. Flask intercepta ese paquete y lo pone a tu disposición dentro del objeto request.
+
+2. El atributo form
+Efectivamente, como sospechabas, el objeto request tiene un atributo llamado form.
+    Tipo de dato: Técnicamente es un objeto similar a un Diccionario de Python (específicamente un MultiDict).
+    Contenido: Este "diccionario" contiene los pares clave-valor de los datos enviados.
+        La llave (key) es el nombre (name) que tiene el campo en el HTML (por ejemplo: name="skills").
+        El valor (value) es lo que el usuario escribió físicamente en la caja de texto.
+
+3. Análisis del ejemplo: request.form['skills'].split(', ')
+En esta línea ocurren varios pasos técnicos:
+    Extracción: request.form['skills'] busca en el diccionario de la petición el valor asociado a la llave 'skills'. Supongamos que el usuario escribió el texto "Python, Java, MongoDB". En este punto, el dato es de tipo String.
+    Transformación: Se aplica el método .split(', '). Este es un método nativo de Python para cadenas de texto que divide el String cada vez que encuentra una coma y un espacio.
+    Resultado en Python: La variable skills ahora contiene una Lista de Python: ['Python', 'Java', 'MongoDB'].
+
+4. Relación con MongoDB
+El flujo de estos datos hacia la base de datos es el siguiente:
+    Diccionario de Python: Creas el objeto student que es un Diccionario que contiene campos simples (String) y campos complejos como skills, que ahora es una Lista.
+    Conversión a BSON: Cuando ejecutas db.students.insert_one(student), la librería PyMongo toma ese diccionario y lo serializa automáticamente a BSON (formato binario).
+    Tipos de datos resultantes:
+        El nombre y la ciudad se guardan como BSON String.
+        La lista skills se guarda como un BSON Array, permitiendo que MongoDB realice búsquedas eficientes dentro de ese arreglo.
+        created_at se guarda como un tipo Date, gracias a que usaste el objeto datetime de Python.
+
+Resumen técnico: request.form['name'] accede a un diccionario interno de la petición donde las llaves son los nombres de los campos del formulario. Al procesar estos datos (como con .split()) antes de insertarlos, aseguras que MongoDB almacene estructuras ricas (como arreglos) en lugar de simples cadenas de texto largas.
+_______________________________________________________________________________________________________________
+
+@app.route('/api/v1.0/students/<id>', methods = ['PUT']) 
+def update_student (id): 
+●  PUT se usa para actualizar recursos existentes 
+●  Recibe el ID del estudiante a actualizar 
+python 
+   query = {"_id":ObjectId(id)} 
+●  query: Define qué documento queremos actualizar (el que tenga este _id) 
+python 
+   name = request.form['name'] 
+    country = request.form['country'] 
+    city = request.form['city'] 
+    skills = request.form['skills'].split(', ') 
+    bio = request.form['bio'] 
+    birthyear = request.form['birthyear'] 
+    created_at = datetime.now() 
+●  Obtenemos todos los nuevos valores del formulario 
+●  Similar al POST, pero estos datos reemplazarán los existentes 
+python 
+   student = { 
+        'name': name, 
+        'country': country, 
+        'city': city, 
+        'birthyear': birthyear, 
+        'skills': skills, 
+        'bio': bio, 
+        'created_at': created_at 
+    } 
+●  Creamos un diccionario con los datos actualizados 
+python 
+   db.students.update_one(query, student) 
+    return 
+●  update_one(): Actualiza el documento que coincide con el query 
+●  Primer argumento: qué documento actualizar (query) 
+●  Segundo argumento: con qué datos actualizarlo (student)
+
+_______________________________________________________________________________________________________________
