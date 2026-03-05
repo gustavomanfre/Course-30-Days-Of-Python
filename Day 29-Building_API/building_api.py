@@ -109,6 +109,11 @@ def update_student (id):
 
 #-------------------------------------------------------------------------------------------#
 
+@app.route('/api/v1.0/<id>',methods = ['DELETE'])
+def delete_student(id):
+    db.students.delete_one({"_id":ObjectId(id)})
+    return
+
 
 
 

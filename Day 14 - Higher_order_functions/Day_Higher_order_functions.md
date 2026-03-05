@@ -1,24 +1,22 @@
-Aquí tienes la explicación detallada de la Pila de Ejecución (Call Stack) en Python.
 
-1. ¿Qué es el Stack realmente? (El Algoritmo LIFO)
-
+# 1. DEFINICION CALLSTACK (El Algoritmo LIFO)
 Imagina una pila de platos sucios en un restaurante.
     El Algoritmo: Es LIFO (Last In, First Out - Último en entrar, Primero en salir).
     Solo puedes poner un plato nuevo encima del anterior (PUSH).
     Solo puedes lavar (sacar) el plato que está arriba de todo (POP).
-
 En Python, cada "plato" es un Frame (Marco de Ejecución).
-2. ¿Qué hay dentro de cada "Plato" (Frame)?
 
+# 2. FRAME
 Cada vez que llamas a una función, Python crea un Frame nuevo y lo pone en el tope de la pila. Ese Frame es un espacio aislado que contiene:
     Las Variables Locales (Nombres): Aquí están los nombres que definiste dentro de la función (ej: summation, nums, f).
-    Las Referencias (Las Flechas): Aquí es donde entra tu duda. En el Stack NO se guardan los objetos.
-        Si tienes x = [1, 2], el Stack guarda el nombre x y una dirección de memoria (puntero) que dice: "El objeto real está en el Heap en la dirección 0x55A...".
+    Las Referencias (Las Flechas): En el Stack NO se guardan los objetos.
+        Si tienes x = [1, 2], el Stack guarda el 
+            - Nombre x 
+            - Dirección de memoria (puntero) que indica "El objeto real está en el Heap en la dirección 0x55A...".
     El "Return Address": La instrucción de a dónde debe volver el control del programa cuando esta función termine.
 
-3. ¿Contexto Global vs. Contexto de Función?
-
-Sí, se guardan en la misma estructura (la Pila), pero en niveles diferentes.
+# 3. Contexto Global vs. Contexto de Función
+Se guardan en la misma estructura (la Pila), pero en niveles diferentes.
     Contexto Global (Módulo): Es el primer plato que se pone en la mesa. Es el "Frame base".
         Contiene las variables definidas fuera de cualquier función.
         Este Frame nunca muere (nunca se hace pop) hasta que el programa termina por completo.

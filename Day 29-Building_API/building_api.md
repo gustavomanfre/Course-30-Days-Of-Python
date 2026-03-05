@@ -643,3 +643,12 @@ python
 ●  Segundo argumento: con qué datos actualizarlo (student)
 
 _______________________________________________________________________________________________________________
+@app.route('/api/v1.0/students/<id>', methods = ['DELETE']) 
+def delete_student (id): 
+●  DELETE se usa para eliminar recursos 
+●  Recibe el ID del estudiante a eliminar 
+python 
+   db.students.delete_one({"_id":ObjectId(id)}) 
+    return 
+●  delete_one(): Elimina un documento de la base de datos 
+●  {"_id":ObjectId(id)}: Busca el documento con este ID específico y lo elimina
