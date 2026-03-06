@@ -1,15 +1,16 @@
-
-# 1. DEFINICION CALLSTACK (El Algoritmo LIFO)
+# 1. DEFINICION STACK (El Algoritmo LIFO)
 Imagina una pila de platos sucios en un restaurante.
-    El Algoritmo: Es LIFO (Last In, First Out - Último en entrar, Primero en salir).
-    Solo puedes poner un plato nuevo encima del anterior (PUSH).
-    Solo puedes lavar (sacar) el plato que está arriba de todo (POP).
+El Algoritmo: Es LIFO (Last In, First Out - Último en entrar, Primero en salir).
+    -Solo puedes poner un plato nuevo encima del anterior (PUSH).
+    -Solo puedes lavar (sacar) el plato que está arriba de todo (POP).
+
 En Python, cada "plato" es un Frame (Marco de Ejecución).
 
 # 2. FRAME
-Cada vez que llamas a una función, Python crea un Frame nuevo y lo pone en el tope de la pila. Ese Frame es un espacio aislado que contiene:
-    Las Variables Locales (Nombres): Aquí están los nombres que definiste dentro de la función (ej: summation, nums, f).
-    Las Referencias (Las Flechas): En el Stack NO se guardan los objetos.
+Cada vez que llamas a una función, Python crea un Frame nuevo y lo pone en el tope de la pila. 
+Ese Frame es un espacio aislado que contiene:
+    -Las Variables Locales (Nombres): Aquí están los nombres que definiste dentro de la función (ej: summation, nums, f).
+    -Las Referencias (Las Flechas): En el Stack NO se guardan los objetos.
         Si tienes x = [1, 2], el Stack guarda el 
             - Nombre x 
             - Dirección de memoria (puntero) que indica "El objeto real está en el Heap en la dirección 0x55A...".
@@ -17,95 +18,122 @@ Cada vez que llamas a una función, Python crea un Frame nuevo y lo pone en el t
 
 # 3. Contexto Global vs. Contexto de Función
 Se guardan en la misma estructura (la Pila), pero en niveles diferentes.
-    Contexto Global (Módulo): Es el primer plato que se pone en la mesa. Es el "Frame base".
-        Contiene las variables definidas fuera de cualquier función.
-        Este Frame nunca muere (nunca se hace pop) hasta que el programa termina por completo.
-    Contexto de Función: Son los platos que se apilan encima.
-        Nacen cuando llamas a la función.
-        Mueren inmediatamente cuando la función hace return.
+    - Contexto Global (Módulo): Es el primer plato que se pone en la mesa. Es el "Frame base".
+        Contiene las variables definidas fuera de cualquier función. Este Frame nunca muere (nunca se hace pop) hasta que el programa termina por completo.
+    - Contexto de Función: Son los platos que se apilan encima.
+        -Nacen cuando llamas a la función.
+        -Mueren inmediatamente cuando la función hace return.
 
-4. Visualización del Proceso: "Todo es un Objeto"
+# 4. Visualización del Proceso: "Todo es un Objeto"
 
-Vamos a ver cómo interactúa el Stack con el Heap usando tu duda sobre las referencias.
+# CODIGO
+// Paso A: Contexto global
+a = 10   # Python crea el objeto 10 en el heap y 'a' guarda la referencia
+def saludo():
+    # Paso B: Nuevo frame en el stack cuando se llama la función
+    texto = "Hola"   # objeto "Hola" en el heap, variable 'texto' en el frame de saludo
+    return texto     # devuelve la referencia al objeto "Hola"
 
-Imagina este código simple:
+// Llamada a la función
+resultado = saludo()   # se crea el frame de saludo (PUSH)
+print(resultado)       # cuando termina saludo() el frame se destruye (POP)
 
-Aquí tienes la explicación detallada de la Pila de Ejecución (Call Stack) en Python.
-1. ¿Qué es el Stack realmente? (El Algoritmo LIFO)
+Vamos a ver cómo interactúa el Stack con el Heap usando tu duda sobre las referencias. Imagina este código simple:
 
-Imagina una pila de platos sucios en un restaurante.
-    El Algoritmo: Es LIFO (Last In, First Out - Último en entrar, Primero en salir).
-    Solo puedes poner un plato nuevo encima del anterior (PUSH).
-    Solo puedes lavar (sacar) el plato que está arriba de todo (POP).
-
-En Python, cada "plato" es un Frame (Marco de Ejecución).
-2. ¿Qué hay dentro de cada "Plato" (Frame)?
-
-Cada vez que llamas a una función, Python crea un Frame nuevo y lo pone en el tope de la pila. Ese Frame es un espacio aislado que contiene:
-
-    Las Variables Locales (Nombres): Aquí están los nombres que definiste dentro de la función (ej: summation, nums, f).
-    Las Referencias (Las Flechas): Aquí es donde entra tu duda. En el Stack NO se guardan los objetos.
-        Si tienes x = [1, 2], el Stack guarda el nombre x y una dirección de memoria (puntero) que dice: "El objeto real está en el Heap en la dirección 0x55A...".
-    El "Return Address": La instrucción de a dónde debe volver el control del programa cuando esta función termine.
-
-3. ¿Contexto Global vs. Contexto de Función?
-
-Sí, se guardan en la misma estructura (la Pila), pero en niveles diferentes.
-
-    Contexto Global (Módulo): Es el primer plato que se pone en la mesa. Es el "Frame base".
-        Contiene las variables definidas fuera de cualquier función.
-        Este Frame nunca muere (nunca se hace pop) hasta que el programa termina por completo.
-
-    Contexto de Función: Son los platos que se apilan encima.
-        Nacen cuando llamas a la función.
-        Mueren inmediatamente cuando la función hace return.
-
-4. Visualización del Proceso: "Todo es un Objeto"
-
-Vamos a ver cómo interactúa el Stack con el Heap usando tu duda sobre las referencias.
-
-Imagina este código simple:
-
-Paso A: Inicio (Contexto Global)
+- Paso A: Inicio (Contexto Global)
 Python inicia.
-    Crea el objeto int(10) en el Heap.
-    Crea el Global Frame en el Stack.
-    En ese Frame, escribe el nombre a y le asigna la referencia al objeto 10.
+    -Crea el objeto int(10) en el Heap.
+    -Crea el Global Frame en el Stack.
+En ese Frame, escribe el nombre a y le asigna la referencia al objeto 10.
 
-Paso B: Llamada a saludo() (PUSH)
-
+- Paso B: Llamada a saludo() (PUSH)
 Se llama a la función.
-
     PUSH: Python crea un nuevo Frame para saludo y lo pone encima del Global Frame.
     Ahora el "foco" de ejecución está arriba. El Global Frame queda "congelado" abajo.
     Dentro del Frame de saludo:
-        Se crea el objeto str("Hola") en el Heap.
-        Se escribe el nombre texto en el Stack (Frame saludo) con la referencia al "Hola".
+        -Se crea el objeto str("Hola") en el Heap.
+        -Se escribe el nombre texto en el Stack (Frame saludo) con la referencia al "Hola".
 
-Paso C: Retorno (POP)
-
+- Paso C: Retorno (POP)
 La función termina (return texto).
     Devuelve la referencia del objeto "Hola" a quien lo llamó.
     POP: El Frame de saludo se destruye.
         ¡Ojo! La variable texto (el nombre) desaparece.
         Pero el objeto "Hola" en el Heap sigue existiendo si alguien más lo atrapó. Si nadie lo atrapó, pasa el basurero (Garbage Collector) y lo borra.
 
----------------------------------------------------------------------------------------------------------------------
-Funciones de orden superior.
+# REFERENCIAS
+🎯 MI RECOMENDACIÓN DE ORDEN (SOLO PYTHON)
+Día 1: Visualización (30 min)
 
+Python Tutor (15 min)
+🔗 http://pythontutor.com/visualize.html
+Ejecuta ejemplos de funciones y recursión
+
+Video: Corey Schafer - LEGB Rule (15 min)
+🔗 https://www.youtube.com/watch?v=QVdf0LgmICw
+Minutos 3:00-8:00 sobre frames
+
+Día 2: Lectura Profunda (60 min)
+Think Python - Chapter 3.9 (20 min)
+🔗 https://greenteapress.com/thinkpython2/html/thinkpython2004.html
+Stack diagrams básicos
+
+Think Python - Chapter 5.9 y 5.10 (20 min)
+🔗 https://greenteapress.com/thinkpython2/html/thinkpython2006.html
+Recursión y stack diagrams avanzados
+
+Automate the Boring Stuff - Chapter 3 (CORREGIDO)
+https://automatetheboringstuff.com/2e/chapter3/
+Capítulo completo: Chapter 3: Functions
+Buscar en la página: Ctrl+F "call stack" o "stack"
+100% Python con ejemplos
+
+Real Python - Recursion (20 min)
+🔗 https://realpython.com/python-recursion/
+Buscar sección "Call Stack"
+
+Día 3: Profundización (45 min)
+
+Programiz - Recursion (15 min)
+🔗 https://www.programiz.com/python-programming/recursion
+Ejemplos claros
+
+
+Docs Python - Execution Model (30 min)
+🔗 https://docs.python.org/3/reference/executionmodel.html
+Referencia oficial
+
+Día 4: Práctica con video (30 min)
+
+Video: Socratica - Recursion (10 min)
+🔗 https://www.youtube.com/watch?v=Mv9NEXX1VHc
+Video: Tech With Tim - Recursion (11 min)
+🔗 https://www.youtube.com/watch?v=zbfRgC3kukk
+Práctica en Python Tutor (10 min)
+
+Crea tus propios ejemplos
+Opcional: Profundización académica
+
+MIT 6.0001 - Lecture 4 (60 min)
+🔗 https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-4-decomposition-abstraction-and-functions/
+Minuto 40:00 en adelante
+
+MIT 6.0001 - Lecture 6 (60 min)
+🔗 https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-6-recursion-and-dictionaries/
+Recursión completa
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+# FUNCIONES DE ORDEN SUPERIOR.
     -Una función puede tomar una o más funciones como parámetros
     -Una función puede ser devuelta como resultado de otra función
     -Una función puede ser modificada
     -Una función puede ser asignada a una variable
 
 En esta sección cubriremos:
-
     -Funciones de manejo como parámetros
     -Devolución de funciones como valor de retorno de otras funciones
     -Uso de cierres y decoradores de Python
 
 Funcionar como un parámetro:
-
 def sum_numbers(nums):  # normal function
     return sum(nums)    # a sad function abusing the built-in sum function :<
 
@@ -157,9 +185,143 @@ Dentro de la función de orden superior, llamamos a f(lst).
     Referencias (Las Flechas): El Stack no guarda los datos pesados (como la lista completa o el código de la función), solo guarda "direcciones" o punteros para saber dónde encontrarlos en el Heap.
     Aliasing: sum_numbers (en Global) y f (en local) son dos nombres distintos para el mismo objeto Func1.
 
+# 🎯 MI RECOMENDACIÓN DE ORDEN
+Día 1: Fundamentos y Visualización (60 min)
+1. Python Tutor - Visualización (15 min)
+🔗 http://pythontutor.com/visualize.html
 
----------------------------------------------------------------------------------------------------------------------
-Funcionar como un valor de retorno.
+Ejecuta el ejemplo que te di
+Observa cómo f apunta a sum_numbers
+Ve el aliasing en acción.
+
+# CODIGO
+def sum_numbers(nums):
+    return sum(nums)
+
+def higher_order_function(f, lst):
+    summation = f(lst)
+    return summation
+
+result = higher_order_function(sum_numbers, [1, 2, 3, 4, 5])
+
+2. Video: Corey Schafer - First-Class Functions (11 min)
+🔗 https://www.youtube.com/watch?v=kr0mpwqttM0
+
+IMPRESCINDIBLE
+Ver completo
+Ejecutar todos los ejemplos
+
+3. Lectura: Real Python - First-Class Functions (30 min)
+🔗 https://realpython.com/python-first-class-functions/
+
+Lee hasta "Higher-Order Functions"
+Ejecuta todos los ejemplos de código
+
+
+Día 2: Profundización (90 min)
+4. Lectura: Think Python - Chapter 19.3 y 19.4 (30 min)
+🔗 https://greenteapress.com/thinkpython2/html/thinkpython2020.html
+
+Secciones 19.3 y 19.4
+Ejemplos con map(), filter()
+
+5. Video: Tech With Tim - Higher Order Functions (8 min)
+🔗 https://www.youtube.com/watch?v=6ow7UdLrSMw
+
+Refuerza conceptos
+
+6. Lectura: GeeksforGeeks - Higher Order Functions (20 min)
+🔗 https://www.geeksforgeeks.org/higher-order-functions-in-python/
+
+Lee completo
+Ejecuta ejemplos
+
+7. Documentación: Python Functional HOWTO (30 min)
+🔗 https://docs.python.org/3/howto/functional.html
+
+Lee sección "Higher-Order Functions"
+Lee sección sobre map(), filter(), reduce()
+
+
+Día 3: Closures (60 min)
+8. Video: Corey Schafer - Closures (9 min)
+🔗 https://www.youtube.com/watch?v=swU3c34d2NQ
+
+Funciones que retornan funciones
+Ver completo
+
+9. Lectura: Programiz - Closures (20 min)
+🔗 https://www.programiz.com/python-programming/closure
+
+Ejemplos de closures
+Ejecutar código
+
+10. Práctica en Python Tutor (30 min)
+
+Crear 5 ejemplos propios de:
+Funciones como parámetros
+Funciones que retornan funciones
+Built-in higher-order functions
+
+Día 4: Decoradores (90 min)
+11. Video: Corey Schafer - Decorators (15 min)
+🔗 https://www.youtube.com/watch?v=FsAPt_9Bf3U
+
+Higher-order functions avanzado
+Ver completo
+
+12. Lectura: Real Python - Decorators (60 min)
+🔗 https://realpython.com/primer-on-python-decorators/
+
+Artículo largo pero vale la pena
+Lee secciones básicas primero
+Ejecuta todos los ejemplos
+
+13. Práctica (15 min)
+
+Crear tus propios decoradores simples
+
+
+Día 5: Built-in Higher-Order Functions (60 min)
+14. Lectura: Real Python - map() (30 min)
+🔗 https://realpython.com/python-map-function/
+
+Función map() en profundidad
+
+15. Lectura: Dive Into Python 3 - Comprehensions (30 min)
+🔗 https://diveintopython3.net/comprehensions.html
+
+Alternativas a map() y filter()
+List comprehensions vs higher-order functions
+
+
+Opcional: Profundización Académica
+16. CS61A Berkeley - Higher-Order Functions
+🔗 https://cs61a.org/
+
+Buscar lectures sobre HOF
+Curso completo de functional programming
+
+17. MIT 6.0001 - Lecture 5
+🔗 https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-5-tuples-lists-aliasing-mutability-and-cloning/
+
+Aliasing y referencias
+
+
+✅ ORDEN RESUMIDO (RUTA RÁPIDA)
+Si tienes poco tiempo, sigue este orden MÍNIMO:
+
+Python Tutor (15 min) - Visualizar
+Corey Schafer - First-Class Functions (11 min) - Video
+Real Python - First-Class Functions (30 min) - Lectura
+GeeksforGeeks - Higher Order Functions (20 min) - Lectura
+Corey Schafer - Closures (9 min) - Video
+Corey Schafer - Decorators (15 min) - Video
+
+Total: ~100 minutos (1h 40min)
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+# Funcionar como un valor de retorno.
 def square(x):          # a square function
     return x ** 2
 
@@ -594,7 +756,7 @@ Prepara todo antes de que el programa empiece a correr de verdad.
 ¿Te quedó más claro este orden de ejecución? 
 Si querés, podemos meter un print("Hola, soy el decorador") dentro de la función para que veas que sale en la terminal antes de que vos llames a la función.
     
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Decoradores de Python - Explicación desde cero
 
@@ -3284,7 +3446,7 @@ def get_country_letter_N(country_list: list[str]) -> dict[str, int]:
 
 Esta versión hace exactamente lo mismo pero es más legible y directa.
 FIN DEL ANÁLISIS TÉCNICO
-__________________________________________________________________________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________________________________________________________
 Explicame el siguiente codigo, explicando los conceptos aplicados y orden en que se ejecuta valores en ciertos momentos y que significa cada cosa.
 #Ordenar los países por nombre, por capital, por población
 
@@ -3630,8 +3792,6 @@ Comportamiento:
     Si la clave NO existe: lanza excepción KeyError
 
 Ejemplo:
-python
-
 pais = {"name": "Argentina", "capital": "Buenos Aires"}
 
 pais["name"]      # "Argentina" ✓
@@ -3700,10 +3860,9 @@ for pais in resultado:
 print("\n¿La lista original cambió?")
 print(f"Primera posición original: {paises[0]['name']}")
 print(f"Primera posición resultado: {resultado[0]['name']}")
-```
 
 **Salida esperada**:
-```
+
 Lista original:
   Uruguay
   Argentina
@@ -3720,7 +3879,7 @@ Lista ordenada por nombre:
 Primera posición original: Uruguay
 Primera posición resultado: Argentina
 
-__________________________________________________________________________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________________________________________________________
 
 Análisis Técnico Detallado: Función sort_10languages
 1. CÓDIGO COMPLETO
