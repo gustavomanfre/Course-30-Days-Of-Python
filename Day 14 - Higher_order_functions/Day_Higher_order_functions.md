@@ -322,23 +322,7 @@ En Python, las funciones son objetos, cuando escribes square (sin paréntesis), 
 square: Es el objeto función (el "control remoto"), contiene la direccion de memoria donde esta el objeto con su codigo.
 square(3): Es la ejecución de la función (el "botón presionado").
 
-2. ¿Es esto Polimorfismo?
-Sí, absolutamente. En el sentido más puro, el polimorfismo es la capacidad de algo para tomar múltiples formas.
-En tu código, la variable result es polimórfica:
-    En una línea, result apunta a la lógica de x2.
-    En otra, apunta a la lógica de x3.
-    La interfaz es la misma: Tú siempre llamas a result(3). No te importa qué hay adentro, solo sabes que "se puede llamar".
-
-    Dato Clave: En programación orientada a objetos (POO), el polimorfismo suele hacerse con clases y herencia. 
-    En Python, gracias al Duck Typing ("si camina como pato y suena como pato..."), 
-    el polimorfismo es mucho más natural: si un objeto tiene el método __call__ (es decir, se puede llamar), Python lo trata como una función y listo.
-
-Esta técnica se usa constantemente para:
-    Configuración dinámica: Elegir un algoritmo de ordenamiento según el tamaño de los datos.
-    Decoradores: Modificar el comportamiento de una función envolviéndola en otra.
-    Callbacks: Decirle a un botón: "No sé qué vas a hacer cuando te presionen, pero aquí tienes la función que debes ejecutar".
-
----------------------------------------------------------------------------------------------------------------------
+# CLOSURE Y AMBITOS
 
 Entender cómo funciona este código requiere visualizar el concepto de Closure (Cierre) y cómo Python maneja los ámbitos (scopes) de las variables.
 
