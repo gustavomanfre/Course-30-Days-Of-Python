@@ -145,45 +145,22 @@ result = higher_order_function(sum_numbers, [1, 2, 3, 4, 5])
 print(result)       # 15
 
 1. La División Principal: Stack vs. Heap
-
-    (STACK / Pila): Es la zona de "ejecución ordenada". 
+(STACK / Pila): Es la zona de "ejecución ordenada". 
         Aquí se apilan los contextos (Frames) de las funciones que están corriendo. 
         Es temporal; cuando la función termina (hace return), su cuadro desaparece (POP).
-    (HEAP / Montón): Es la zona de "almacenamiento". 
+(HEAP / Montón): Es la zona de "almacenamiento". 
     Aquí viven los Objetos reales. 
     En Python, todo es un objeto (números, listas y funciones). 
     Los datos aquí persisten mientras alguien los necesite.
 
-2. El Flujo Paso a Paso (Siguiendo las flechas)
-
-A. El Global Frame (Inicio)
-En la parte inferior del Stack ves el Global Frame.
-    Python lee tu código y crea dos objetos de tipo function en el Heap: 
-        -Func1 (sum_numbers)
-        -Func2 (higher_order_function).
-    Las variables sum_numbers y higher_order_function en el Stack son solo etiquetas (flechas) que apuntan a esos objetos en el Heap.
-
-B. La llamada a higher_order_function (Frame del Medio)
-Cuando ejecutas result = higher_order_function(...), se crea un nuevo cuadro en el Stack. 
-Aquí ocurre la magia del "Funcionar como parámetro":
-    El parámetro f: Fíjate en la flecha que sale de f. 
-    Apunta exactamente al mismo objeto que sum_numbers.
-        No se creó una copia de la función.
-        Simplemente, f es un nuevo nombre temporal para referirse a la lógica de sum_numbers.
-    El parámetro lst: Apunta al objeto List1 en el Heap ([1, 2, 3...]).
-
-C. La ejecución interna sum_numbers (Frame Superior)
-Dentro de la función de orden superior, llamamos a f(lst). 
-    Como f es sum_numbers, se abre un nuevo cuadro arriba del todo:
-    El parámetro nums: Observa que la flecha de nums va al mismo objeto List1 que lst. 
-    Python no duplicó la lista, solo pasó la referencia (dirección de memoria).
-    El cálculo: La función suma los valores y crea un nuevo objeto entero en el Heap (Int1 con valor 15).
+2. El Flujo Paso a Paso (Siguiendo las flechas) [ VER # FUNCIONES DE ORDEN SUPERIOR..pdf]
 
 3. Conclusiones Clave de la Imagen
-    Las funciones son datos: En el Heap, ves que Func1 y Func2 ocupan espacio igual que la lista List1. 
-    Esto demuestra que para Python, una función es un objeto más que se puede pasar de mano en mano.
-    Referencias (Las Flechas): El Stack no guarda los datos pesados (como la lista completa o el código de la función), solo guarda "direcciones" o punteros para saber dónde encontrarlos en el Heap.
-    Aliasing: sum_numbers (en Global) y f (en local) son dos nombres distintos para el mismo objeto Func1.
+Las funciones son datos: En el Heap, ves que Func1 y Func2 ocupan espacio igual que la lista List1. 
+Esto demuestra que para Python, una función es un objeto más que se puede pasar de mano en mano.
+    -Referencias (Las Flechas): El Stack no guarda los datos pesados (como la lista completa o el código de la función), solo guarda "direcciones" o -punteros para saber dónde encontrarlos en el Heap.
+    -Aliasing: sum_numbers (en Global) y f (en local) son dos nombres distintos para el mismo objeto Func1.
+
 
 # 🎯 MI RECOMENDACIÓN DE ORDEN
 Día 1: Fundamentos y Visualización (60 min)
@@ -192,17 +169,7 @@ Día 1: Fundamentos y Visualización (60 min)
 
 Ejecuta el ejemplo que te di
 Observa cómo f apunta a sum_numbers
-Ve el aliasing en acción.
-
-# CODIGO
-def sum_numbers(nums):
-    return sum(nums)
-
-def higher_order_function(f, lst):
-    summation = f(lst)
-    return summation
-
-result = higher_order_function(sum_numbers, [1, 2, 3, 4, 5])
+Ve el aliasing en acción
 
 2. Video: Corey Schafer - First-Class Functions (11 min)
 🔗 https://www.youtube.com/watch?v=kr0mpwqttM0
@@ -259,6 +226,7 @@ Ejecutar código
 10. Práctica en Python Tutor (30 min)
 
 Crear 5 ejemplos propios de:
+
 Funciones como parámetros
 Funciones que retornan funciones
 Built-in higher-order functions
@@ -318,10 +286,9 @@ GeeksforGeeks - Higher Order Functions (20 min) - Lectura
 Corey Schafer - Closures (9 min) - Video
 Corey Schafer - Decorators (15 min) - Video
 
-Total: ~100 minutos (1h 40min)
-
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
-# Funcionar como un valor de retorno.
+# FUNCIONES COMO VALOR DE RETORNO 
+
 def square(x):          # a square function
     return x ** 2
 
@@ -350,11 +317,10 @@ result = higher_order_function('absolute')
 print(result(-3))      # 3
 
 1. Funciones como "Ciudadanos de Primera Clase"
-En Python, las funciones son objetos. 
-Cuando escribes square (sin paréntesis), no estás ejecutando nada; 
-estás haciendo referencia a la dirección de memoria donde vive el código de esa función en el Heap.
-    square: Es el objeto función (el "control remoto").
-    square(3): Es la ejecución de la función (el "botón presionado").
+En Python, las funciones son objetos, cuando escribes square (sin paréntesis), no estás ejecutando nada; estás haciendo referencia a la dirección de memoria donde vive el código de esa función en el Heap.
+
+square: Es el objeto función (el "control remoto"), contiene la direccion de memoria donde esta el objeto con su codigo.
+square(3): Es la ejecución de la función (el "botón presionado").
 
 2. ¿Es esto Polimorfismo?
 Sí, absolutamente. En el sentido más puro, el polimorfismo es la capacidad de algo para tomar múltiples formas.
@@ -933,7 +899,7 @@ Sirve para:
 Ejemplo de lectura completa:
 def get_last_ten_countries(country_list: list[str]) -> list[str]:
 👉 “Esta función recibe una lista de strings y devuelve una lista de strings”
----------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Wanted to practice list comprehension (Day_13):
 def get_multiWord_countriesV2(country_list: list[str]) -> list[str]:
