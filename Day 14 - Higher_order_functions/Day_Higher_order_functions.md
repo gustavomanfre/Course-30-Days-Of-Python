@@ -128,6 +128,14 @@ Recursión completa
     -Una función puede ser modificada
     -Una función puede ser asignada a una variable
 
+Una función de orden superior (Higher-Order Function) no necesita cumplir todas esas condiciones.
+Con que cumpla al menos una, ya se considera función de orden superior.
+
+La definición formal es:
+
+Una función de orden superior es una función que recibe otra función como argumento o devuelve una función.
+Esas son las dos condiciones verdaderamente importantes. Con una sola de esas dos ya alcanza.
+
 En esta sección cubriremos:
     -Funciones de manejo como parámetros
     -Devolución de funciones como valor de retorno de otras funciones
@@ -153,7 +161,8 @@ print(result)       # 15
     En Python, todo es un objeto (números, listas y funciones). 
     Los datos aquí persisten mientras alguien los necesite.
 
-2. El Flujo Paso a Paso (Siguiendo las flechas) [ VER # FUNCIONES DE ORDEN SUPERIOR..pdf]
+2. El Flujo Paso a Paso (Siguiendo las flechas) 
+    #  [ VER # FUNCIONES DE ORDEN SUPERIOR..pdf]
 
 3. Conclusiones Clave de la Imagen
 Las funciones son datos: En el Heap, ves que Func1 y Func2 ocupan espacio igual que la lista List1. 
@@ -287,7 +296,7 @@ Corey Schafer - Closures (9 min) - Video
 Corey Schafer - Decorators (15 min) - Video
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
-# FUNCIONES COMO VALOR DE RETORNO 
+# FUNCIONES COMO VALOR DE RETORNO - Funciones como "Ciudadanos de Primera Clase"
 
 def square(x):          # a square function
     return x ** 2
@@ -310,318 +319,45 @@ def higher_order_function(type): # a higher order function returning a function
         return absolute
 
 result = higher_order_function('square')
+print(result)          # <function square at 0x101278950>, ubicacion en el Globalnamespace de el objeto function.
 print(result(3))       # 9
+
 result = higher_order_function('cube')
+print(result)          # <function cube at 0x101278970>, ubicacion en el Globalnamespace de el objeto function.
 print(result(3))       # 27
+
 result = higher_order_function('absolute')
+print(result)          # <function absolute at 0x101278990>, ubicacion en el Globalnamespace de el objeto function.
 print(result(-3))      # 3
 
-1. Funciones como "Ciudadanos de Primera Clase"
 En Python, las funciones son objetos, cuando escribes square (sin paréntesis), no estás ejecutando nada; estás haciendo referencia a la dirección de memoria donde vive el código de esa función en el Heap.
+    -square: Es el objeto función (el "control remoto"), contiene la direccion de memoria donde esta el objeto con su codigo.
+    -square(3): Es la ejecución de la función (el "botón presionado").
 
-square: Es el objeto función (el "control remoto"), contiene la direccion de memoria donde esta el objeto con su codigo.
-square(3): Es la ejecución de la función (el "botón presionado").
-
-# CLOSURE Y AMBITOS
-
-Entender cómo funciona este código requiere visualizar el concepto de Closure (Cierre) y cómo Python maneja los ámbitos (scopes) de las variables.
-
-Aquí tienes la explicación detallada del proceso y el algoritmo de búsqueda que utiliza Python.
-El Algoritmo: Regla LEGB
+# [VER EJEMPLO FUNCIONES COMO VALOR DE RETORNO.pdf]
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+# El Algoritmo: Regla LEGB
 
 Para alcanzar cada valor, Python aplica un algoritmo de búsqueda llamado LEGB. Cuando el programa encuentra un nombre (como ten o num), busca en este orden estricto:
-
     L (Local): Dentro de la función actual.
-
     E (Enclosing): En el ámbito de las funciones que envuelven a la actual (aquí es donde ocurre la magia del closure).
-
     G (Global): En el nivel superior del archivo/módulo.
-
     B (Built-in): Nombres preinstalados en Python (como print o len).
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+# CLOSURES
+Un closure ocurre cuando:
 
-Paso a Paso: El viaje de la memoria
-1. La llamada add_ten() (Creación del Closure)
+1️⃣ Hay una función dentro de otra
+2️⃣ La función interna usa variables de la función externa
+3️⃣ La función interna sobrevive después de que la externa terminó
 
-    Se crea un Frame en el Stack para add_ten.
+# [VER EJEMPLO Python_closures_libro.pdf]
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+# DECORADORES DE PYTHON. 
 
-    Se crea la variable ten = 10 dentro de ese Frame.
 
-    Se define la función interna add. En este momento, Python nota que add necesita la variable ten de su "padre".
-
-    La Clave: Aunque add_ten termina y su Frame debería desaparecer del Stack (hacer POP), Python mueve la variable ten a un lugar especial en el Heap vinculado a la función add. Esto es el Closure.
-
-    closure_result ahora es una referencia a esa función add que "lleva puesta una mochila" con el valor 10.
-
-2. La llamada closure_result(5)
-
-    Se crea un nuevo Frame para add.
-
-    Búsqueda de num: Python aplica LEGB. Lo encuentra inmediatamente en L (Local) porque es el argumento (valor 5).
-
-    Búsqueda de ten:
-
-        Busca en L (Local): No está.
-
-        Busca en E (Enclosing): ¡Lo encuentra! Es el valor 10 que quedó guardado en el closure.
-
-    Suma 5+10 y retorna 15.
-
-3. La llamada closure_result(10)
-
-    Se repite el mismo proceso.
-
-    num se encuentra en Local como 10.
-
-    ten se vuelve a encontrar en Enclosing como 10.
-
-    Suma 10+10 y retorna 20.
-
-Visualización del Mapa de Memoria
-
-Para este caso específico, el mapa se vería así:
-
-    Global Frame: Contiene el nombre closure_result apuntando al objeto función en el Heap.
-
-    Heap: El objeto función add tiene un atributo oculto (__closure__) que mantiene una referencia al objeto int(10).
-
-    Stack: Cada vez que llamas a closure_result(), aparece un Frame temporal para la ejecución que desaparece al terminar, pero el valor ten permanece en el Heap mientras la función exista.
-
-Buenísima pregunta, porque la imagen confunde a mucha gente si no se entiende qué está mostrando el visualizador (tipo Python Tutor). Vamos por partes y con precisión técnica.
-
-1️⃣ ¿Por qué en el Global frame aparecen add_ten y closure_result “dentro del mismo recuadro”?
-🔹 Qué representa el Global frame
-
-El Global frame es un solo frame, no varios.
-
-Ese recuadro representa:
-
-El namespace global del programa (el diccionario globals())
-
-Todo lo que se define al nivel del archivo vive ahí:
-add_ten = <function>
-closure_result = <function>
-
-Por eso en la imagen ves:
-Global frame
-├── add_ten
-└── closure_result
-
-👉 No significa que estén relacionados lógicamente, solo que:
-
-Comparten el mismo ámbito
-
-Están almacenados en el mismo diccionario global
-
-Técnicamente:
-
-
-globals() == {
-    'add_ten': <function add_ten>,
-    'closure_result': <function add>
-}
-
-🔹 Por qué parecen “al mismo nivel visual”
-
-El visualizador dibuja frames como cajas, no como pila de llamadas:
-
-Un frame = un entorno de variables
-
-El global frame siempre existe
-
-No se destruye nunca mientras el programa corre
-
-Por eso:
-
-add_ten y closure_result están en el mismo recuadro
-
-No hay jerarquía entre ellos
-
-Son nombres distintos apuntando a objetos distintos
-
-2️⃣ Entonces… ¿qué es la flecha hacia add(num) [parent=f1]?
-
-Esa flecha indica referencia a un objeto función, no ejecución.
-
-closure_result ─────▶ function add(num) [parent=f1]
-
-Significa:
-
-closure_result apunta al objeto función add
-
-Ese objeto función tiene un entorno padre (parent=f1)
-
-Ese parent=f1 es la clave del cierre.
-
-3️⃣ ¿Cómo se busca el valor de ten? (parte más importante)
-
-Vamos paso a paso, exactamente como lo hace Python.
-
-Código ejecutado:
-
-return num + ten
-
-🔍 Resolución de nombres (LEGB)
-
-Python busca ten usando esta regla:
-
-L – Local → ¿ten está en el frame de add?
-
-FRAME add
-└── num = 5
-
-❌ No
-
-E – Enclosing → ¿ten está en el entorno envolvente?
-✔️ Sí
-
-Pero ojo:
-👉 ese entorno NO es el frame de add_ten, porque ese frame ya fue destruido.
-
-4️⃣ Entonces, ¿dónde está realmente ten?
-🔹 Está en una closure cell
-
-Cuando Python crea la función add, detecta que:
-
-ten no es local
-
-No es global
-
-Es una variable libre
-
-Entonces crea una cell object.
-
-Conceptualmente:
-function add
-├── __closure__
-│    └── cell ──▶ 10
-└── code object
-El parent=f1 en la imagen representa:
-
-“Esta función tiene acceso a un entorno envolvente preservado”
-
-5️⃣ Búsqueda real de ten en tiempo de ejecución
-
-Cuando llamás:
-closure_result(5)
-
-Python hace:
-
-Frame actual
-FRAME add
-└── num = 5
-
-Resolución de ten
-
-    Local → ❌
-
-    Enclosing → ✔️
-
-    Busca en add.__closure__
-
-    Encuentra la cell
-
-    Extrae cell_contents = 10
-
-num + ten
-5   + 10 = 15
-
-6️⃣ Por qué la flecha va de add a add(num) [parent=f1]
-
-Esa flecha NO significa llamada, significa:
-
-El objeto función add mantiene una referencia a su entorno léxico
-
-Es una relación estructural, no dinámica.
-
-7️⃣ Resumen visual simplificado
-
-GLOBAL FRAME
-├── add_ten ─────────▶ function
-└── closure_result ──▶ function add
-                         │
-                         └── __closure__
-                              └── cell → 10
-
-Cada llamada crea:
-
-FRAME add
-└── num → valor
-
-8️⃣ Frase técnica clave (para que te quede claro)
-
-ten no se busca en el global frame ni en un frame activo, sino en una closure cell asociada al objeto función, la cual preserva el entorno léxico de la función envolvente.
-------------------------------- idem anterior
-Entender cómo funciona este código requiere visualizar el concepto de Closure (Cierre) y cómo Python maneja los ámbitos (scopes) de las variables.
-
-Aquí tienes la explicación detallada del proceso y el algoritmo de búsqueda que utiliza Python.
-El Algoritmo: Regla LEGB
-
-Para alcanzar cada valor, Python aplica un algoritmo de búsqueda llamado LEGB. Cuando el programa encuentra un nombre (como ten o num), busca en este orden estricto:
-
-    L (Local): Dentro de la función actual.
-
-    E (Enclosing): En el ámbito de las funciones que envuelven a la actual (aquí es donde ocurre la magia del closure).
-
-    G (Global): En el nivel superior del archivo/módulo.
-
-    B (Built-in): Nombres preinstalados en Python (como print o len).
-
-Paso a Paso: El viaje de la memoria
-1. La llamada add_ten() (Creación del Closure)
-
-    Se crea un Frame en el Stack para add_ten.
-
-    Se crea la variable ten = 10 dentro de ese Frame.
-
-    Se define la función interna add. En este momento, Python nota que add necesita la variable ten de su "padre".
-
-    La Clave: Aunque add_ten termina y su Frame debería desaparecer del Stack (hacer POP), Python mueve la variable ten a un lugar especial en el Heap vinculado a la función add. Esto es el Closure.
-
-    closure_result ahora es una referencia a esa función add que "lleva puesta una mochila" con el valor 10.
-
-2. La llamada closure_result(5)
-
-    Se crea un nuevo Frame para add.
-
-    Búsqueda de num: Python aplica LEGB. Lo encuentra inmediatamente en L (Local) porque es el argumento (valor 5).
-
-    Búsqueda de ten:
-
-        Busca en L (Local): No está.
-
-        Busca en E (Enclosing): ¡Lo encuentra! Es el valor 10 que quedó guardado en el closure.
-
-    Suma 5+10 y retorna 15.
-
-3. La llamada closure_result(10)
-
-    Se repite el mismo proceso.
-
-    num se encuentra en Local como 10.
-
-    ten se vuelve a encontrar en Enclosing como 10.
-
-    Suma 10+10 y retorna 20.
-
-Visualización del Mapa de Memoria
-
-Para este caso específico, el mapa se vería así:
-
-    Global Frame: Contiene el nombre closure_result apuntando al objeto función en el Heap.
-
-    Heap: El objeto función add tiene un atributo oculto (__closure__) que mantiene una referencia al objeto int(10).
-
-    Stack: Cada vez que llamas a closure_result(), aparece un Frame temporal para la ejecución que desaparece al terminar, pero el valor ten permanece en el Heap mientras la función exista.
-
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-Decoradores de Python 
-
-Un decorador es un patrón de diseño en Python que permite a un usuario añadir nueva funcionalidad a un objeto existente sin modificar su estructura. 
-Los decoradores generalmente se llaman antes de la definición de una función que desea decorar. 
-
-Creación de decoradores 
-Para crear una función de decorador, necesitamos una función externa con una función de envoltura interna. 
-
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+# EJEMPLO DECORADORES.
 # Normal 
 function def greeting(): 
     return 'Welcome to Python' 
@@ -704,105 +440,8 @@ No espera a que alguien entre a la web para decorar las funciones; ya las deja "
 Prepara todo antes de que el programa empiece a correr de verdad.
 
 ¿Te quedó más claro este orden de ejecución? 
-Si querés, podemos meter un print("Hola, soy el decorador") dentro de la función para que veas que sale en la terminal antes de que vos llames a la función.
-    
-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Si querés, podemos meter un print("Hola, soy el decorador") dentro de la función para que veas que sale en la terminal antes de que vos llames a la función.   
 
-Decoradores de Python - Explicación desde cero
-
-Voy a explicarte los decoradores paso a paso, empezando desde lo más básico.
-1️⃣ Concepto fundamental: Las funciones son objetos
-
-En Python, las funciones son "ciudadanos de primera clase", lo que significa que puedes tratarlas como cualquier otra variable:
-def saludar():
-    return "Hola"
-
-# Puedo guardar la función en una variable
-mi_funcion = saludar
-print(mi_funcion())  # Hola
-
-2️⃣ Funciones dentro de funciones
-Puedes definir una función dentro de otra función:
-
-def funcion_externa():
-    mensaje = "Hola desde afuera"
-    
-    def funcion_interna():
-        return "Hola desde adentro"
-    
-    return funcion_interna()
-
-print(funcion_externa())  # Hola desde adentro
-
-3️⃣ Retornar una función
-Aquí viene lo interesante: una función puede retornar otra función:
-def funcion_externa():
-    
-    def funcion_interna():
-        return "Hola"
-    
-    return funcion_interna  # Retorno la función, no la ejecuto
-
-# Guardo la función retornada
-mi_func = funcion_externa()
-# Ahora la ejecuto
-print(mi_func())  # Hola
-
-4️⃣ Funciones que reciben funciones
-Una función puede recibir otra función como parámetro:
-
-def saludar():
-    return "hola mundo"
-
-def gritar(alguna_funcion):
-    # Ejecuto la función que recibí
-    texto = alguna_funcion()
-    # La convierto a mayúsculas
-    return texto.upper()
-
-resultado = gritar(saludar)
-print(resultado)  # HOLA MUNDO
-
-5️⃣ Combinando todo: El decorador básico
-def saludar():
-    return "hola mundo"
-
-def decorador_mayusculas(funcion_original):
-    # Creo una nueva función que "envuelve" a la original
-    def envoltura():
-        # Ejecuto la función original
-        resultado = funcion_original()
-        # Le agrego funcionalidad (convertir a mayúsculas)
-        return resultado.upper()
-    
-    # Retorno la nueva función
-    return envoltura
-
-# "Decoro" mi función
-saludar_decorado = decorador_mayusculas(saludar)
-print(saludar_decorado())  # HOLA MUNDO
-
-6️⃣ Usando el símbolo @ (azúcar sintáctico)
-El símbolo @ es solo una forma más elegante de hacer lo anterior:
-
-# En lugar de hacer esto:
-# saludar_decorado = decorador_mayusculas(saludar)
-
-# Puedes hacer esto:
-@decorador_mayusculas
-def saludar():
-    return "hola mundo"
-
-print(saludar())  # HOLA MUNDO
-```
-
-## 📝 Resumen visual
-```
-Función original: saludar() → "hola mundo"
-                    ↓
-Decorador la envuelve y agrega funcionalidad
-                    ↓
-Función decorada: saludar() → "HOLA MUNDO"
 
 ---------------------------------------------------------------------------------------------------------------------
 print(list(map(lambda x: x.upper(), countries)))
