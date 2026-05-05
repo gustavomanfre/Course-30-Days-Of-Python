@@ -349,7 +349,7 @@ eficiente
 
 _________________________________________________________________________________________________________________________________
 
-Crítica del Ejercicio 10
+# Crítica del Ejercicio 10
 
 ✅ Lo que está bien
 Antes de criticar, lo que hiciste bien:
@@ -359,11 +359,12 @@ Usás str.count() en lugar de comparar char por char, que es más Pythónico
 El código funciona y es legible
 
 
-🔴 Problema 1: Mutás la variable original
+# 🔴 Problema 1: Mutás la variable original
 pythonstr1 = "Hello World"
 str1 = str1.lower()   # ← pisás el dato original
 Referencia → A Philosophy of Software Design (Ousterhout, Cap. 2 — Complexity)
-Ousterhout habla de que la complejidad emerge cuando las variables tienen múltiples roles a lo largo del código. Acá str1 empieza siendo el dato original y después se convierte en una versión procesada del mismo — son dos cosas distintas metidas en el mismo nombre.
+Ousterhout habla de que la complejidad emerge cuando las variables tienen múltiples roles a lo largo del código. 
+Acá str1 empieza siendo el dato original y después se convierte en una versión procesada del mismo — son dos cosas distintas metidas en el mismo nombre.
 Corrección:
 pythonstr1 = "Hello World"
 str1_lower = str1.lower()   # dato procesado, nombre que lo dice
@@ -403,3 +404,4 @@ count_vowels = sum(1 for char in str1.lower() if char in 'aeiou')
 print('Vowel Count:', count_vowels)
 Tres líneas, legible, sin mutación de variable, dirección de iteración natural, nombre descriptivo. La generator expression es exactamente el tipo de construcción que Ramalho promueve en el Cap. 2 de Fluent Python como forma idiomática de procesar secuencias en Python.
 _________________________________________________________________________________________________________________________________
+

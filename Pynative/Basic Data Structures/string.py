@@ -26,7 +26,6 @@ print(str2)
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------#
 
-
 #Ejercicio 2. Crear una cadena hecha de los tres caracteres del medio.
 '''Propósito del ejercicio: Esto se basa en la indexación mediante la introducción de corte en cadena.
 El corte es una poderosa característica de Python que le permite extraer “trozos” completos de datos de manera eficiente.'''
@@ -48,7 +47,6 @@ middle_index = len(str1)//2
 str2 = str1[middle_index-1:middle_index+1]
 #---------------------------------------------------------------------------------------------------------------------------------------------------------#
 
-
 #Ejercicio 3. Añada una nueva cadena en medio de una cadena determinada.
 # Problema de práctica: Dados dos string, s1 y s2, crear una nueva cadena mediante la adición s2. En medio de s1.
 '''Proposito del ejercicio: Este ejercicio introduce la partición y la concatenación de cuerdas.
@@ -68,9 +66,7 @@ str4 = str1 + s2 + str3
 print(str4)
 
 
-#---------------------------------------------------------------------------------------------------------------------------------------------------------#
-
-
+#---------------------------------------------------------------------------------------------------------------------------------------------------------
 # Ejercicio 5. Invierta una cadena dada
 
 
@@ -92,8 +88,6 @@ print(str2)                                         # cadena[inicio:fin:paso]
 
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------#
-
-
 #Ejercicio 6. Encuentre la última posición de una subcadena determinada
 
 
@@ -110,10 +104,7 @@ Esta funcionalidad es esencial a la hora de analizar rutas de archivo o URL que 
 str1 = "Emma is a data scientist who knows Python. Emma works at google."
 last_index = str1.rfind('Emma')
 #---------------------------------------------------------------------------------------------------------------------------------------------------------#
-
-
 # Ejercicio 7. Dividir una cuerda en guiones
-
 
 # Problema de práctica: Escriba un programa para dividir una cadena determinada en guiones y mostrar cada subcadena.
 '''Objetivo del ejercicio:
@@ -211,40 +202,45 @@ print('Is valid URL:', is_valid_url)
 #Ejercicio 12. Caso de swap
 
 #Problema de práctica: Escriba un programa para alternar el caso de todos los caracteres de una cadena (la mayúscula se convierte en minúscula y viceversa).
-
-#Finalidad del ejercicio: Esto demuestra la transformación de casos. Aunque simple, a menudo se utiliza en algoritmos de búsqueda para normalizar datos o en editores de texto para proporcionar la funcionalidad de “Caso de palanca”.
-
-#Insumos dados: str1 = "PyThOn"
-
+'''Finalidad del ejercicio: Esto demuestra la transformación de casos. 
+Aunque simple, a menudo se utiliza en algoritmos de búsqueda para normalizar 
+datos o en editores de texto para proporcionar la funcionalidad de “Caso de palanca”.'''
 #Salida Esperada: pYtHoN
+
+str1 = "PyThOn"
+str2 = str1.swapcase()
+print(str2)
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------#
 #Ejercicio 13. Quitar el espacio en blanco
 
 #Problema de práctica: elimine cada espacio de una cadena determinada, incluidos los espacios entre palabras.
-
-#Propósito del ejercicio: Esto resalta la diferencia entre el recorte y el filtrado. Mientras .strip()Solo se eliminan los espacios de ataque/trasero, .replace()Puede alcanzar dentro de una cadena para eliminar caracteres globalmente.
-
-#Insumos dados: str1 = " P y t h o n "
-
+'''Propósito del ejercicio: Esto resalta la diferencia entre el recorte y el filtrado. 
+.strip() solo se eliminan los espacios de comienzo/final de la cadena.
+.replace() puede alcanzar dentro de una cadena para eliminar caracteres globalmente.'''
 #Salida Esperada: Python
+
+str1 = " P y t h o n "
+str2 = str1.replace(' ', '')
+print(str2)
+
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------#
 #Ejercicio 14. Eliminación de N-ésimo carácter
 
-#Problema de práctica: Escriba un programa para eliminar el carácter en el índice iDe una cuerda.
+#Problema de práctica: Escriba un programa para eliminar el carácter en el índice i De una cuerda.
 
-#Propósito del ejercicio: Dado que las cadenas de Python son inmutables (no se puede simplemente eliminar un carácter en un índice), este ejercicio le enseña cómo “reconstruir” una cadena saltando una parte específica.
+'''Propósito del ejercicio: Dado que las cadenas de Python son inmutables (no se puede simplemente eliminar un carácter en un índice), 
+este ejercicio le enseña cómo “reconstruir” una cadena saltando una parte específica.'''
 
-#Insumos dados: str1 = "Python", i = 2
+#Salida Esperada: Pyhon(Se eliminó el carácter 't' en el índice 2)
 
-#Salida Esperada:
-
- #Pyhon(Se eliminó el carácter 't' en el índice 2)
+str1 = "Python"
+i = 2
+str2 = str1[:i] + str1[i+1:]
 
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------#
-# -----------------------------------------------------------------------------------
 # Ejercicio 15. Partición de cuerdas
 
 # Problema:
@@ -253,9 +249,9 @@ print('Is valid URL:', is_valid_url)
 # 2) el separador en sí
 # 3) la parte después del separador
 
-# Finalidad:
-# Entender que .partition() siempre devuelve una tupla de 3 elementos.
-# Es útil cuando necesitamos conservar el separador (ej: emails, key=value, etc).
+''' Finalidad:
+ Entender que .partition() siempre devuelve una tupla de 3 elementos.
+ Es útil cuando necesitamos conservar el separador (ej: emails, key=value, etc).'''
 
 # Datos de entrada:
 # str1 = "username@company.com"
@@ -265,7 +261,7 @@ print('Is valid URL:', is_valid_url)
 # ('username', '@', 'company.com')
 
 
-# -----------------------------------------------------------------------------------
+# #---------------------------------------------------------------------------------------------------------------------------------------------------------#
 # Ejercicio 16. Extraer Extensión De Archivo
 
 # Problema:
