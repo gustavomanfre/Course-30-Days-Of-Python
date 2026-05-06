@@ -244,22 +244,25 @@ str2 = str1[:i] + str1[i+1:]
 # Ejercicio 15. Partición de cuerdas
 
 # Problema:
-# Utilizar el método .partition() para dividir una cadena en tres partes:
-# 1) la parte antes de un separador
-# 2) el separador en sí
-# 3) la parte después del separador
+# Utilizar el método .split() para dividir una cadena en tres partes:
+# 1) La parte antes de un separador
+# 2) El separador en sí
+# 3) La parte después del separador
 
 ''' Finalidad:
- Entender que .partition() siempre devuelve una tupla de 3 elementos.
+ Entender que .split() siempre devuelve una tupla de 3 elementos.
  Es útil cuando necesitamos conservar el separador (ej: emails, key=value, etc).'''
-
-# Datos de entrada:
-# str1 = "username@company.com"
-# sep = "@"
 
 # Salida esperada:
 # ('username', '@', 'company.com')
 
+str1 = "username@company.com"
+sep = "@"
+
+str2 =  str1.partition(sep)
+print(str2)
+
+# ('username', '@', 'company.com')
 
 # #---------------------------------------------------------------------------------------------------------------------------------------------------------#
 # Ejercicio 16. Extraer Extensión De Archivo
