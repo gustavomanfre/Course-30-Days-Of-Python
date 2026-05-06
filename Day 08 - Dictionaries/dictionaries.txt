@@ -1,0 +1,315 @@
+DICCIONARIO.
+Un diccionario es una colección de tipos de datos ORDENADOS, MUTABLES, INDEXADOS (clave: valor).
+
+Para crear un diccionario utilizamos corchetes rizados, {} o la función integrada dict().
+
+# syntax
+empty_dict = {}
+# Dictionary with data values
+dct = {'key1':'value1', 'key2':'value2', 'key3':'value3', 'key4':'value4'}
+
+
+Acceso a los artículos del diccionario
+Podemos acceder a los elementos del diccionario haciendo referencia a su nombre clave.
+
+# syntax
+dct = {'key1':'value1', 'key2':'value2', 'key3':'value3', 'key4':'value4'}
+print(dct['key1']) # value1
+print(dct['key4']) # value4
+
+person = {
+    'first_name':'Asabeneh',
+    'last_name':'Yetayeh',
+    'age':250,
+    'country':'Finland',
+    'is_marred':True,
+    'skills':['JavaScript', 'React', 'Node', 'MongoDB', 'Python'],
+    'address':{
+        'street':'Space street',
+        'zipcode':'02210'
+    }
+    }
+print(person['first_name']) # Asabeneh
+print(person['country'])    # Finland
+print(person['skills'])     # ['JavaScript', 'React', 'Node', 'MongoDB', 'Python']
+print(person['skills'][0])  # JavaScript
+print(person['address']['street']) # Space street
+print(person['city'])       # Error
+
+
+El acceso a un elemento por nombre de clave plantea un error si la clave no existe. Para evitar este error primero tenemos que comprobar si existe una clave o podemos utilizar el método get. El método get devuelve None, que es un tipo de datos de objeto NoneType, si la clave no existe.
+person = {
+    'first_name':'Asabeneh',
+    'last_name':'Yetayeh',
+    'age':250,
+    'country':'Finland',
+    'is_marred':True,
+    'skills':['JavaScript', 'React', 'Node', 'MongoDB', 'Python'],
+    'address':{
+        'street':'Space street',
+        'zipcode':'02210'
+    }
+    }
+print(person.get('first_name')) # Asabeneh
+print(person.get('country'))    # Finland
+print(person.get('skills')) #['HTML','CSS','JavaScript', 'React', 'Node', 'MongoDB', 'Python']
+print(person.get('city'))   # None
+
+Añadir artículos a un diccionario
+Podemos añadir nuevas claves y pares de valores a un diccionario
+# syntax
+dct = {'key1':'value1', 'key2':'value2', 'key3':'value3', 'key4':'value4'}
+dct['key5'] = 'value5'
+
+
+Modificar los artículos en un diccionario
+# syntax
+dct = {'key1':'value1', 'key2':'value2', 'key3':'value3', 'key4':'value4'}
+dct['key1'] = 'value-one'
+
+Diccionario Longitud
+Comprueba el número de pares de 'clave: valor' en el diccionario.
+# syntax
+dct = {'key1':'value1', 'key2':'value2', 'key3':'value3', 'key4':'value4'}
+print(len(dct)) # 4
+
+Comprobar las llaves en un diccionario
+Utilizamos el operador de entrada para comprobar si existe una clave en un diccionario
+# syntax
+dct = {'key1':'value1', 'key2':'value2', 'key3':'value3', 'key4':'value4'}
+print('key2' in dct) # True
+print('key5' in dct) # False
+
+Eliminar pares de claves y valores de un diccionario
+    -pop(key): elimina el elemento con el nombre de la clave especificada.
+            Retorno: Devuelve el valor asociado a la clave eliminada.
+    -popitem(): elimina el último elemento
+    -del : elimina un elemento con el nombre de la clave especificada. del es una palabra clave de Python (un statement), no un método. 
+            Su función es puramente destructiva: elimina la referencia.
+            Retorno: No devuelve nada (None).
+            Bajo nivel: Es ligeramente más rápida que pop porque no tiene que gestionar el retorno de valores ni argumentos opcionales.
+
+# syntax
+dct = {'key1':'value1', 'key2':'value2', 'key3':'value3', 'key4':'value4'}
+dct.pop('key1') # removes key1 item
+dct = {'key1':'value1', 'key2':'value2', 'key3':'value3', 'key4':'value4'}
+dct.popitem() # removes the last item
+del dct['key2'] # removes key2 item
+
+Cambiar el diccionario a una lista de artículos
+El método items() cambia el diccionario a una lista de tuplas.
+# syntax
+dct = {'key1':'value1', 'key2':'value2', 'key3':'value3', 'key4':'value4'}
+print(dct.items()) # dict_items([('key1', 'value1'), ('key2', 'value2'), ('key3', 'value3'), ('key4', 'value4')])
+
+Borrar un diccionario
+Si no queremos los elementos en un diccionario podemos borrarlos usando el método clear()
+# syntax
+dct = {'key1':'value1', 'key2':'value2', 'key3':'value3', 'key4':'value4'}
+print(dct.clear()) # None
+
+Borrar un diccionario
+Si no utilizamos el diccionario podemos eliminarlo por completo
+
+# syntax
+dct = {'key1':'value1', 'key2':'value2', 'key3':'value3', 'key4':'value4'}
+del dct
+
+Copiar un diccionario
+Podemos copiar un diccionario usando un método copy(). Usando la copia podemos evitar la mutación del diccionario original.
+# syntax
+dct = {'key1':'value1', 'key2':'value2', 'key3':'value3', 'key4':'value4'}
+dct_copy = dct.copy() # {'key1':'value1', 'key2':'value2', 'key3':'value3', 'key4':'value4'}
+
+Obtener claves de diccionario como una lista
+El método keys() nos da todas las teclas de un diccionario como lista.
+# syntax
+dct = {'key1':'value1', 'key2':'value2', 'key3':'value3', 'key4':'value4'}
+keys = dct.keys()
+print(keys)     # dict_keys(['key1', 'key2', 'key3', 'key4'])
+
+Obtener valores de diccionario como lista
+El método de valores nos da todos los valores de un diccionario como lista.
+# syntax
+dct = {'key1':'value1', 'key2':'value2', 'key3':'value3', 'key4':'value4'}
+values = dct.values()
+print(values)     # dict_values(['value1', 'value2', 'value3', 'value4'])
+
+
+______________________________________________________________________________________________________________________________________________
+
+Arquitectura interna de CPython
+
+my_dict = {
+    'name': 'Alice',
+    'age': 30
+}
+key_ref = 'age'
+value_ref = my_dict['name']
+
+Muestra cómo se separan las referencias de los datos reales y cómo el diccionario optimiza la búsqueda.
+
+Aquí tienes el desglose técnico de lo que sucede en cada sección:
+
+1. El Stack (Call Stack)
+
+El Stack es donde viven las variables locales dentro de una función (en este caso, el main() frame).
+    Referencias (Punteros): Nota que my_dict, key_ref y value_ref no contienen los datos. Son simplemente "etiquetas" que guardan una dirección de memoria que apunta hacia el Heap.
+    Interconexión: Varias variables pueden apuntar al mismo objeto. Por ejemplo, tanto la variable value_ref en el Stack como la entrada del diccionario en el Heap apuntan al mismo objeto String: 'Alice'.
+
+2. El Heap: El Objeto Diccionario (PyDictObject)
+
+Aquí es donde ocurre la "magia" de los diccionarios. Desde Python 3.6+, los diccionarios están divididos en dos partes para ahorrar memoria:
+
+    -Hash Table (Sparse Array): Es una tabla "dispersa" que guarda valores hash e índices. 
+    Cuando buscas una clave, Python calcula su Hash. El resultado le indica exactamente en qué fila del "Dense Array" están los datos. 
+    Esto es lo que hace que los diccionarios sean increíblemente rápidos (O(1)).
+    
+    -Key-Value Entries (Dense Array): Aquí es donde se guardan los punteros reales.
+        -Key Pointer: Apunta al objeto que es la clave (ej. String: 'name').
+        -Value Pointer: Apunta al objeto que es el valor (ej. String: 'Alice').
+
+3. El Heap: Objetos de Datos
+
+Fuera del diccionario, en el resto del Heap, residen los objetos individuales:
+    -Independencia: Los strings ('name', 'age', 'Alice') y los enteros (30) existen por sí mismos. El diccionario solo guarda la "dirección de su casa" (punteros).
+    -Reutilización: Si creas diez diccionarios que usen la clave 'name', todos apuntarán al mismo objeto único en el Heap, ahorrando mucha memoria.
+
+4. Gestión de Memoria y Garbage Collector
+
+En la esquina superior derecha vemos el ciclo de vida de la memoria:
+    -Unused Object (Objeto no usado): Aparece un string 'old_value'. Como ya no hay ninguna flecha (puntero) desde el Stack ni desde ninguna estructura en el Heap que apunte hacia él, su contador de referencias es 0.
+    -Garbage Collector (Recolector de Basura): El GC detecta estos objetos "huérfanos" y libera su espacio en el Heap para que pueda ser usado por nuevos objetos.
+
+Resumen de la dinámica
+
+    Búsqueda: Pides my_dict['name'].
+    Cálculo: Python genera el hash de 'name', busca en la Hash Table y encuentra que la información está en el índice 0.
+    Acceso: Va a la fila 0 del Dense Array, lee el Value Pointer y te lleva directamente al objeto 'Alice'.
+
+    ______________________________________________________________________________________________________________________________________________
+
+1. El Escenario Inicial: El Stack (Tu mesa de trabajo)
+
+El Stack solo guarda nombres de variables y direcciones de memoria (punteros). No guarda los objetos reales.
+Al ejecutar el código, tu Stack tiene 3 variables:
+
+    my_dict: Guarda la dirección (ej. 0x100) donde vive el Objeto Diccionario.
+
+    key_ref: Guarda la dirección (ej. 0x200) donde vive el String 'age'.
+
+    value_ref: Guarda la dirección (ej. 0x300) donde vive el String 'Alice'.
+
+2. El Objeto Diccionario (En el Heap)
+
+Aquí es donde se pone interesante. Cuando my_dict apunta a la dirección 0x100, apunta a una estructura compleja llamada PyDictObject.
+
+Este objeto no es solo una tabla hash. Contiene:
+
+    Metadatos: Cuántos ítems tiene, contadores de referencia, etc.
+
+    Dos Arrays (Arreglos) internos (desde Python 3.6+):
+
+        Array de Índices (Sparse/Disperso): Es la tabla hash real.
+
+        Array de Entradas (Dense/Compacto): Donde se guardan los datos en orden de llegada.
+
+A. La Búsqueda del Hash (El Sparse Array)
+
+Python calcula hash('name'). Supongamos que da un número gigante, pero al reducirlo para el tamaño de la tabla, nos dice que corresponde a la posición 2.
+
+El Array de Índices se ve así (simplificado): [ -1, -1, 0, -1, 1, ... ]
+
+    Python va a la posición 2.
+
+    Encuentra un 0.
+
+    Ese 0 significa: "Los datos reales de esta clave están en la Fila 0 del Array de Entradas".
+
+B. Los Datos Reales (El Dense Array)
+
+El Array de Entradas guarda las filas de datos apretadas, sin espacios vacíos. Cada fila tiene 3 cosas: { Hash, Puntero a Clave, Puntero a Valor }.
+
+Fila 0 (correspondiente a 'name'):
+
+    Hash: El número hash de 'name'.
+
+    Key Pointer: Dirección 0x500 (Apunta al objeto String 'name' en el Heap).
+
+    Value Pointer: Dirección 0x300 (Apunta al objeto String 'Alice' en el Heap).
+
+Fila 1 (correspondiente a 'age'):
+
+    Hash: El número hash de 'age'.
+
+    Key Pointer: Dirección 0x200 (Apunta al objeto String 'age' en el Heap).
+
+    Value Pointer: Dirección 0x800 (Apunta al objeto Entero 30 en el Heap).
+
+3. Tus dudas específicas resueltas
+Duda 1: key_ref y su dirección
+
+    "key_ref contiene la direccion de memoria un string Object con el valor age?? por que en la imagen, esta apuntando a string Object 'name'."
+
+Corrección: key_ref contiene la dirección del String Object 'age'.
+
+    Si en una imagen anterior la flecha iba hacia 'name', el diagrama estaba mal.
+
+    Lo correcto es:
+
+        El diccionario tiene un puntero hacia el objeto 'age' (porque es una clave).
+
+        La variable key_ref tiene un puntero hacia el mismo objeto 'age'.
+
+        Ambos apuntan al mismo sitio 0x200.
+
+Duda 2: ¿A qué apunta my_dict?
+
+    "my_dict contiene direccion de memoria de Hash Table..."
+
+No exactamente. my_dict apunta al Contenedor Principal (PyDictObject). Imagina que my_dict es el puntero a un "Archivero físico". Dentro de ese archivero (el objeto) es donde están los cajones (los arrays de índices y entradas). El flujo es: my_dict (Stack) -> Objeto Diccionario (Heap) -> Array Índices -> Array Entradas.
+Duda 3: ¿Por qué apuntan al mismo objeto 'Alice'?
+
+    "por que apunta otro objeto distinto de value_ref ambos apuntan a string object Alice."
+
+¡Esto es eficiencia pura de Python!
+
+    Cuando creas el diccionario {'name': 'Alice'}, Python crea el objeto String 'Alice' en la dirección 0x300. El diccionario guarda ese puntero 0x300 en su columna Value Pointer.
+
+    Cuando haces value_ref = my_dict['name']:
+
+        Python va al diccionario.
+
+        Busca la clave 'name'.
+
+        Encuentra el Value Pointer (0x300).
+
+        Copia esa dirección y se la da a tu variable value_ref en el Stack.
+
+Resultado: Tienes dos flechas saliendo de lugares distintos (una desde la variable del Stack value_ref y otra desde dentro del diccionario), pero ambas aterrizan en el mismo objeto 'Alice'. No se crea una copia del texto "Alice", solo se comparte la dirección.
+Resumen Visual Correcto
+
+Imagina las flechas así:
+
+    Stack: key_ref -----------------------> Heap: String 'age'
+
+    Diccionario (Fila 1, Key Pointer) ------> Heap: String 'age' (Nota como 1 y 2 apuntan al mismo objeto)
+
+    Stack: value_ref ---------------------> Heap: String 'Alice'
+
+    Diccionario (Fila 0, Value Pointer) ----> Heap: String 'Alice' (Nota como 3 y 4 apuntan al mismo objeto)
+
+
+Hay un error en la referencia de key_ref:
+key_ref = 'age'
+Pero en la imagen, key_ref (en el Stack) está apuntando al String Object 'name' en lugar de 'age'.
+
+✅ Lo que está correcto:
+
+my_dict apunta correctamente al Dictionary Object en el heap
+value_ref apunta correctamente a 'Alice' (ya que value_ref = my_dict['name'])
+La estructura interna del diccionario está bien representada
+Los string objects 'name', 'age', 'Alice' y el Integer Object 30 existen en el heap
+
+🔧 Corrección necesaria:
+La flecha de key_ref debería apuntar al String Object 'age' (el que actualmente está siendo apuntado por la key-value entry con hash 32), no al String Object 'name'.
