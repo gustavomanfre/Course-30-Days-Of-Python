@@ -270,16 +270,17 @@ print(str2)
 # Problema:
 # Dado un nombre de archivo como string, extraer solo la extensión del archivo.
 
-# Finalidad:
-# Practicar análisis de strings y encontrar la última aparición de un carácter (".").
-# Importante para archivos con múltiples puntos (ej: archivo.tar.gz).
-
-# Datos de entrada:
-# file_name = "report_final_v2.pdf"
+'''Finalidad:
+Practicar análisis de strings y encontrar la última aparición de un carácter (".").
+Importante para archivos con múltiples puntos (ej: archivo.tar.gz).'''
 
 # Salida esperada:
 # pdf
 
+file_name = "report_final_v2.pdf"
+sep_index = file_name.rfind('.')                                 # Encuentra el índice del último punto
+extension = file_name[sep_index+1:]                              # Extrae la extensión (todo después del punto)
+print(extension)
 
 # -----------------------------------------------------------------------------------
 # Ejercicio 17. Minúscula Primero
